@@ -14,6 +14,14 @@
   </ol>
 </details>
 
+## Design Pages Beta Version
+
+![plan_d](https://user-images.githubusercontent.com/76553647/200326593-7ca37770-ecb8-4146-b3c0-64b72396ef3b.png)
+
+![Plan_f](https://user-images.githubusercontent.com/76553647/200326631-1620ac9c-53b9-4e43-8a09-052103b6d9f3.png)
+
+![plan_e](https://user-images.githubusercontent.com/76553647/200326679-8a7539de-aa29-4dc2-a0e9-cc7185170e3d.png)
+
 
 ![card](https://user-images.githubusercontent.com/76553647/200201731-372ac792-4504-4df8-b216-3a6677c71109.png)
 
