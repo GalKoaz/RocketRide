@@ -147,14 +147,15 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
+                    android:id="@+id/forgotpass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Forget Password?"
+                    android:onClick="forgotpass"
                     android:textAlignment="textEnd"
-                    android:textColor="#616161"
+                    android:textColor="#000000"
                     android:textSize="11sp"
                     android:textStyle="normal" />
-
 
                 <Button
                     android:id="@+id/singIn"
@@ -314,12 +315,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="13dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:text="OR"
                 android:textAlignment="center"
-                android:textColor="#474646"
+                android:textColor="#000000"
                 android:textSize="18sp"
                 android:textStyle="normal" />
 
