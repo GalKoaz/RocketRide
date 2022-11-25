@@ -234,6 +234,7 @@
                         android:inputType="text|number"
                         android:textColor="@color/black"
                         android:textSize="13sp"
+                        android:maxLength="13"
                         android:textStyle="normal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
