@@ -154,6 +154,24 @@
                     android:textColor="#616161"
                     android:textSize="11sp"
                     android:textStyle="normal" />
+
+
+                <Button
+                    android:id="@+id/singIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginTop="15dp"
+                    android:elevation="15dp"
+                    android:gravity="center"
+                    android:text="SIGN IN"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    app:backgroundTint="@color/black"
+                    app:shapeAppearanceOverlay="@style/Button5" />
             </LinearLayout>
 
             <LinearLayout
@@ -188,6 +206,32 @@
                         android:drawablePadding="12dp"
                         android:ems="10"
                         android:inputType="textPersonName|textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        android:textStyle="normal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:hint="Phone Number"
+                    app:boxStrokeColor="#4E4A4A"
+                    app:boxStrokeWidth="1dp"
+                    app:hintTextColor="#4E4A4A"
+                    app:shapeAppearanceOverlay="@style/Button4">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_baseline_phone_24"
+                        android:drawablePadding="12dp"
+                        android:ems="10"
+                        android:inputType="text|number"
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         android:textStyle="normal" />
@@ -246,31 +290,31 @@
                         android:textSize="13sp"
                         android:textStyle="normal" />
                 </com.google.android.material.textfield.TextInputLayout>
+                <Button
+                    android:id="@+id/SIGNUPBUT"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="15dp"
+                    android:elevation="15dp"
+                    android:gravity="center"
+                    android:text="SIGN UP"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    app:backgroundTint="@color/black"
+                    app:shapeAppearanceOverlay="@style/Button5" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/singIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:elevation="15dp"
-                android:gravity="center"
-                android:text="SIGN IN"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="17sp"
-                app:backgroundTint="@color/black"
-                app:shapeAppearanceOverlay="@style/Button5" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="13dp"
                 android:gravity="center"
                 android:text="OR"
                 android:textAlignment="center"
