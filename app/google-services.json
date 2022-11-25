@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "50782651542",
+    "project_id": "rocketride-72894",
+    "storage_bucket": "rocketride-72894.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50782651542:android:cccde7c19f915fd318eeb7",
+        "android_client_info": {
+          "package_name": "com.example.rocketride"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50782651542-rujh0tnkftetkh7p3vvdoe66kfrdoq97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rocketride",
+            "certificate_hash": "46820fe0606d7a5ef0945bf323d8887871d80095"
+          }
+        },
+        {
+          "client_id": "50782651542-rfq3u9ucpohef6aaj4ppfjm9utcl8oam.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1McJxe9ESGDQqt0NGaPlyAqs6CfZKm3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50782651542-rfq3u9ucpohef6aaj4ppfjm9utcl8oam.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
