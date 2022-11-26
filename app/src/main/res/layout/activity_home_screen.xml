@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".HomeScreenActivity">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="302dp"
-        android:layout_height="548dp"
-        tools:layout_editor_absoluteX="54dp"
-        tools:layout_editor_absoluteY="30dp" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="165dp"
+        android:layout_height="90dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

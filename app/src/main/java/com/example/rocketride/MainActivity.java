@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
+        //get view flag
+        Bundle extras = getIntent().getExtras();
+        boolean viewFlag = false;
+        if(extras != null){
+            viewFlag = extras.getBoolean("ViewFlag");
+        }
 
         // Sign in & sign up buttons
         Button signInButton = findViewById(R.id.signInButton),
@@ -63,6 +71,30 @@ public class MainActivity extends AppCompatActivity {
         // LinearLayout objects
         LinearLayout signUpLayout = findViewById(R.id.singUpLayout),
                      logInLayout = findViewById(R.id.logInLayout);
+
+        if(viewFlag){
+            signUP.setTextColor(getResources().getColor(R.color.white));
+            logIn.setTextColor(getResources().getColor(R.color.black));
+            signUP.setBackground(getResources().getDrawable(R.drawable.switch_trcks, null));
+            logIn.setBackground(null);
+            signUpLayout.setVisibility(View.VISIBLE);
+            logInLayout.setVisibility(View.GONE);
+        }
+
+        signUpUserPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO: 26/11/2022 add a gui green red yellow
+                System.out.println(signUpUserPassword.getText().toString());
+            }
+        });
 
 
         // On clicking the sign up textView
@@ -114,7 +146,16 @@ public class MainActivity extends AppCompatActivity {
             String userEmail = signUpUserEmail.getText().toString();
             String userPassword = signUpUserPassword.getText().toString();
             String confirmUserPassword = signUpUserConfirmPassword.getText().toString();
-
+            if(!userPassword.equals(confirmUserPassword)){
+                Toast.makeText(MainActivity.this, "Passwords not matching.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(!userEmail.contains("@")){
+                Toast.makeText(MainActivity.this, "Mail address is not legal.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
@@ -122,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
             switchActivityIntent.putExtra("userEmail", userEmail);
             switchActivityIntent.putExtra("userPassword", userPassword);
             startActivity(switchActivityIntent);
+
         });
 
 

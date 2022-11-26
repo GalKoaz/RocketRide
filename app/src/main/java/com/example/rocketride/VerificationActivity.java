@@ -2,16 +2,19 @@ package com.example.rocketride;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -37,7 +40,6 @@ public class VerificationActivity extends AppCompatActivity {
         // Verification text inputs
         TextInputEditText userPhone = findViewById(R.id.phone),
                 CodeVerification = findViewById(R.id.CodeVerification);
-
         sendButton.setOnClickListener(signUp -> {
             codeLayout.setVisibility(View.VISIBLE);
             phoneLayout.setVisibility(View.GONE);
@@ -48,6 +50,7 @@ public class VerificationActivity extends AppCompatActivity {
             // Register the user to firebase
             createFirebaseUserEmailPassword(userEmail, userPassword);
             System.out.println(userEmail + '\n'  + userPassword);
+
         });
     }
 
@@ -60,11 +63,19 @@ public class VerificationActivity extends AppCompatActivity {
                     // Check if succeeded creating the user in firebase
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "Authentication failed. " + task.getException());
+                        Toast.makeText(VerificationActivity.this, "SignUp failed - try again.",
+                                Toast.LENGTH_SHORT).show();
+                        // Activate the verification activity
+                        this.finish();
+                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                        switchActivityIntent.putExtra("ViewFlag", true);
+                        startActivity(switchActivityIntent);
+                        return;
                     }
-//                        else {
-//                            SignupActivity.this.startActivity(new Intent(SignupActivity.this, MainActivity.class));
-//                            SignupActivity.this.finish();
-//                        }
+//                  // Activate the verification activity
+                    this.finish();
+                    Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                    startActivity(switchActivityIntent);
                 });
     }
 }
