@@ -107,18 +107,15 @@ public class MainActivity extends AppCompatActivity {
 
             // User's typed information
             String userEmail = signUpUserEmail.getText().toString();
-            //String userPhone = signUpUserPhoneNumber.getText().toString();
             String userPassword = signUpUserPassword.getText().toString();
             String confirmUserPassword = signUpUserConfirmPassword.getText().toString();
-
-            // Register the user to firebase
-            createFirebaseUserEmailPassword(userEmail, userPassword);
-            System.out.println(userEmail + '\n'  + userPassword + '\n' + confirmUserPassword);
 
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+            switchActivityIntent.putExtra("userEmail", userEmail);
+            switchActivityIntent.putExtra("userPassword", userPassword);
             startActivity(switchActivityIntent);
         });
 
@@ -137,21 +134,5 @@ public class MainActivity extends AppCompatActivity {
         twitterSignIn.setOnClickListener(l -> {
             System.out.println("Signing with twitter...");
         });
-    }
-
-    protected void createFirebaseUserEmailPassword(String userEmail, String userPassword) {
-        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(this, task -> {
-                    Log.d(TAG, "New user " + userEmail + " registration: " + task.isSuccessful());
-
-                    // Check if succeeded creating the user in firebase
-                    if (!task.isSuccessful()) {
-                        Log.d(TAG,"Authentication failed. " + task.getException());
-                    }
-//                        else {
-//                            SignupActivity.this.startActivity(new Intent(SignupActivity.this, MainActivity.class));
-//                            SignupActivity.this.finish();
-//                        }
-                });
     }
 }
