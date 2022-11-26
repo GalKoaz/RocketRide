@@ -35,7 +35,8 @@ public class VerificationActivity extends AppCompatActivity {
 
         // Buttons
         Button sendButton = findViewById(R.id.sendButton),
-                confirmButton = findViewById(R.id.confirmButton);
+                confirmButton = findViewById(R.id.confirmButton),
+                backButton = findViewById(R.id.backButton);
 
         // Verification text inputs
         TextInputEditText userPhone = findViewById(R.id.phone),
@@ -51,6 +52,16 @@ public class VerificationActivity extends AppCompatActivity {
             createFirebaseUserEmailPassword(userEmail, userPassword);
             System.out.println(userEmail + '\n'  + userPassword);
 
+        });
+
+        backButton.setOnClickListener(l -> {
+            // Activate the verification activity
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, MainActivity.class);
+            switchActivityIntent.putExtra("ViewFlag", true);
+            switchActivityIntent.putExtra("userEmail", userEmail);
+            switchActivityIntent.putExtra("userPassword", userPassword);
+            startActivity(switchActivityIntent);
         });
     }
 
@@ -69,6 +80,8 @@ public class VerificationActivity extends AppCompatActivity {
                         this.finish();
                         Intent switchActivityIntent = new Intent(this, MainActivity.class);
                         switchActivityIntent.putExtra("ViewFlag", true);
+                        switchActivityIntent.putExtra("userEmail", userEmail);
+                        switchActivityIntent.putExtra("userPassword", userPassword);
                         startActivity(switchActivityIntent);
                         return;
                     }

@@ -38,11 +38,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
-        //get view flag
+
+        // get view flag
         Bundle extras = getIntent().getExtras();
         boolean viewFlag = false;
+        String userEmailExtras = "", userPasswordExtras = "";
         if(extras != null){
-            viewFlag = extras.getBoolean("ViewFlag");
+            viewFlag = extras.getBoolean("ViewFlag", false);
+            userEmailExtras = extras.getString("userEmail", "");
+            userPasswordExtras = extras.getString("userPassword", "");
         }
 
         // Sign in & sign up buttons
@@ -79,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
             logIn.setBackground(null);
             signUpLayout.setVisibility(View.VISIBLE);
             logInLayout.setVisibility(View.GONE);
+            signUpUserEmail.setText(userEmailExtras);
+            signUpUserPassword.setText(userPasswordExtras);
+            signUpUserConfirmPassword.setText(userPasswordExtras);
         }
 
         signUpUserPassword.addTextChangedListener(new TextWatcher() {
