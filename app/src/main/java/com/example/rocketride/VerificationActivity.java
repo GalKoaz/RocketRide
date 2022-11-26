@@ -58,7 +58,7 @@ public class VerificationActivity extends AppCompatActivity {
 
         });
 
-        backButton.setOnClickListener(l -> {
+        backArrow.setOnClickListener(l -> {
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
