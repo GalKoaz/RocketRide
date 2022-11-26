@@ -68,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
                  forgotPassword = findViewById(R.id.forgotpass);
 
         // ImageView objects
-        ImageView facebookSignIn = findViewById(R.id.facebookSignIn),
-                  googleSignIn = findViewById(R.id.googleSignIn),
-                  twitterSignIn = findViewById(R.id.twitterSignIn);
+        ImageView googleSignIn = findViewById(R.id.googleSignIn);
 
         // LinearLayout objects
         LinearLayout signUpLayout = findViewById(R.id.singUpLayout),
@@ -177,16 +175,8 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Sign in via providers
          */
-        facebookSignIn.setOnClickListener(l -> {
-            System.out.println("Signing with facebook...");
-        });
-
         googleSignIn.setOnClickListener(l -> {
             System.out.println("Signing with google...");
-        });
-
-        twitterSignIn.setOnClickListener(l -> {
-            System.out.println("Signing with twitter...");
         });
     }
 
