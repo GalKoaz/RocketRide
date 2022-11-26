@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,7 +25,8 @@ public class VerificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         Bundle extras = getIntent().getExtras();
         String userEmail = extras.getString("userEmail"),
                userPassword = extras.getString("userPassword");

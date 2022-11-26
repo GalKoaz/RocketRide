@@ -2,6 +2,7 @@ package com.example.rocketride;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,7 +22,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         // TextView objects
         TextView backToSign = findViewById(R.id.backSigning);
 

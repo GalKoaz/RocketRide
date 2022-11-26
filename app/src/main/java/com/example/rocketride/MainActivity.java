@@ -3,6 +3,7 @@ package com.example.rocketride;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -35,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         // get view flag
         Bundle extras = getIntent().getExtras();
         boolean viewFlag = false;
