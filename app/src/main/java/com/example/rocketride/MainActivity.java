@@ -99,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
             String userEmail = signInUserEmail.getText().toString();
             String userPassword = signInUserPassword.getText().toString();
             System.out.println(userEmail + "\n" + userPassword);
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, HomeScreenActivity.class);
+            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+            startActivity(switchActivityIntent);
         });
 
         // Sign up user after clicking the SIGN UP button
