@@ -114,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
             // Register the user to firebase
             createFirebaseUserEmailPassword(userEmail, userPassword);
             System.out.println(userEmail + '\n'  + userPassword + '\n' + confirmUserPassword);
+
+            // Activate the verification activity
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
+            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+            startActivity(switchActivityIntent);
         });
 
 

@@ -1,11 +1,9 @@
 package com.example.rocketride;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,7 +20,7 @@ public class VerificationActivity extends AppCompatActivity {
 
         // LinearLayout objects
         LinearLayout codeLayout = findViewById(R.id.codeLayout),
-                    phoneLayout = findViewById(R.id.phoneLayout);
+                phoneLayout = findViewById(R.id.phoneLayout);
 
         // Buttons
         Button sendButton = findViewById(R.id.sendButton),
@@ -30,7 +28,7 @@ public class VerificationActivity extends AppCompatActivity {
 
         // Verification text inputs
         TextInputEditText userPhone = findViewById(R.id.phone),
-                        CodeVerification = findViewById(R.id.CodeVerification);
+                CodeVerification = findViewById(R.id.CodeVerification);
 
         sendButton.setOnClickListener(signUp -> {
             codeLayout.setVisibility(View.VISIBLE);
