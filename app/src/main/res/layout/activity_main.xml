@@ -333,18 +333,21 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/facebookSignIn"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/ic_facebook" />
 
                 <ImageView
+                    android:id="@+id/googleSignIn"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/ic_google" />
 
                 <ImageView
+                    android:id="@+id/twitterSignIn"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="10dp"

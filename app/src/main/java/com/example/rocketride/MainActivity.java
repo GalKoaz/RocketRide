@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
         TextView signUP = findViewById(R.id.singUp),
                  logIn = findViewById(R.id.logIn),
                  forgotPassword = findViewById(R.id.forgotpass);
+
+        // ImageView objects
+        ImageView facebookSignIn = findViewById(R.id.facebookSignIn),
+                  googleSignIn = findViewById(R.id.googleSignIn),
+                  twitterSignIn = findViewById(R.id.twitterSignIn);
 
         // LinearLayout objects
         LinearLayout signUpLayout = findViewById(R.id.singUpLayout),
@@ -111,6 +117,21 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(userEmail + '\n' + userPhone + '\n' + userPassword + '\n' + confirmUserPassword);
         });
 
+
+        /**
+         * Sign in via providers
+         */
+        facebookSignIn.setOnClickListener(l -> {
+            System.out.println("Signing with facebook...");
+        });
+
+        googleSignIn.setOnClickListener(l -> {
+            System.out.println("Signing with google...");
+        });
+
+        twitterSignIn.setOnClickListener(l -> {
+            System.out.println("Signing with twitter...");
+        });
     }
 
     protected void createFirebaseUserEmailPassword(String userEmail, String userPassword) {

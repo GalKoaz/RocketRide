@@ -1,18 +1,24 @@
 package com.example.rocketride;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordActivity extends AppCompatActivity {
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firebaseAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
@@ -35,10 +41,20 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         resetButton.setOnClickListener(l -> {
             System.out.println("Reset the password...");
+            String userMailStr = userEmail.getText().toString();
+            resetUserPassword(userMailStr, "");
         });
     }
 
     protected void resetUserPassword(String userEmail, String userPhoneNumber){
+        firebaseAuth.sendPasswordResetEmail(userEmail)
+                .addOnCompleteListener(this, task -> {
+                    Log.d(TAG, "Sending reset password to:  " + userEmail + " " + task.isSuccessful());
 
+                    // Check if succeeded creating the user in firebase
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG,"Incorrect details: " + task.getException());
+                    }
+        });
     }
 }
