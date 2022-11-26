@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -37,8 +38,9 @@ public class VerificationActivity extends AppCompatActivity {
 
         // Buttons
         Button sendButton = findViewById(R.id.sendButton),
-                confirmButton = findViewById(R.id.confirmButton),
-                backButton = findViewById(R.id.backButton);
+                confirmButton = findViewById(R.id.confirmButton);
+
+        TextView backArrow = findViewById(R.id.backArrow);
 
         // Verification text inputs
         TextInputEditText userPhone = findViewById(R.id.phone),
