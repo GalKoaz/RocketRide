@@ -219,33 +219,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
-                    android:hint="Phone Number"
-                    app:boxStrokeColor="#4E4A4A"
-                    app:boxStrokeWidth="1dp"
-                    app:hintTextColor="#4E4A4A"
-                    app:shapeAppearanceOverlay="@style/Button4">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_baseline_phone_24"
-                        android:drawablePadding="12dp"
-                        android:ems="10"
-                        android:inputType="text|number"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"
-                        android:maxLength="13"
-                        android:textStyle="normal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="5dp"
                     android:hint="Password"
                     app:boxStrokeColor="#4E4A4A"
                     app:boxStrokeWidth="1dp"

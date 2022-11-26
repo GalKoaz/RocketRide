@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Sign up text inputs
         TextInputEditText signUpUserEmail = findViewById(R.id.eMails),
-                          signUpUserPhoneNumber = findViewById(R.id.phone),
                           signUpUserPassword = findViewById(R.id.passwordss),
                           signUpUserConfirmPassword = findViewById(R.id.passwords01);
 
@@ -108,13 +107,13 @@ public class MainActivity extends AppCompatActivity {
 
             // User's typed information
             String userEmail = signUpUserEmail.getText().toString();
-            String userPhone = signUpUserPhoneNumber.getText().toString();
+            //String userPhone = signUpUserPhoneNumber.getText().toString();
             String userPassword = signUpUserPassword.getText().toString();
             String confirmUserPassword = signUpUserConfirmPassword.getText().toString();
 
             // Register the user to firebase
             createFirebaseUserEmailPassword(userEmail, userPassword);
-            System.out.println(userEmail + '\n' + userPhone + '\n' + userPassword + '\n' + confirmUserPassword);
+            System.out.println(userEmail + '\n'  + userPassword + '\n' + confirmUserPassword);
         });
 
 
