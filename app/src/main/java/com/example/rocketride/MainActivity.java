@@ -14,12 +14,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * ----- TEST ---
@@ -99,10 +101,9 @@ public class MainActivity extends AppCompatActivity {
             String userEmail = signInUserEmail.getText().toString();
             String userPassword = signInUserPassword.getText().toString();
             System.out.println(userEmail + "\n" + userPassword);
-            this.finish();
-            Intent switchActivityIntent = new Intent(this, HomeScreenActivity.class);
-            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
-            startActivity(switchActivityIntent);
+
+            // Connect the user to firebase
+            signUserWithEmailPassword(userEmail, userPassword, this);
         });
 
         // Sign up user after clicking the SIGN UP button
@@ -138,5 +139,32 @@ public class MainActivity extends AppCompatActivity {
         twitterSignIn.setOnClickListener(l -> {
             System.out.println("Signing with twitter...");
         });
+    }
+
+
+    protected void signUserWithEmailPassword(String userEmail, String userPassword, MainActivity mainActivity) {
+        firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                            mainActivity.finish();
+                            Intent switchActivityIntent = new Intent(mainActivity, HomeScreenActivity.class);
+                            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+                            startActivity(switchActivityIntent);
+                            // updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            // updateUI(null);
+                        }
+                    }
+                });
     }
 }
