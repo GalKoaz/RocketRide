@@ -7,10 +7,10 @@
     tools:context=".HomeScreenActivity">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/signOutButton"
         android:layout_width="165dp"
         android:layout_height="90dp"
-        android:text="Button"
+        android:text="Sign Out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
