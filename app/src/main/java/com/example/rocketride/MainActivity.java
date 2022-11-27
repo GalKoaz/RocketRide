@@ -19,12 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
  * ----- TEST ---
@@ -36,12 +43,13 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        setTheme(R.style.Theme_RocketRide);
         setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
         // get view flag
         Bundle extras = getIntent().getExtras();
         boolean viewFlag = false;
@@ -180,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
          */
         googleSignIn.setOnClickListener(l -> {
             System.out.println("Signing with google...");
+            signUserWithGoogle();
         });
     }
 
@@ -213,6 +222,79 @@ public class MainActivity extends AppCompatActivity {
                             // updateUI(null);
                         }
                     }
+                });
+    }
+
+
+    protected void signUserWithGoogle(){
+        // Google sign-in client
+        GoogleSignInClient mGoogleSignInClient;
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, 2);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == 2) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d("TAGtoken", "firebaseAuthWithGoogle:" + account.getId());
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("TAGFailed", "Google sign in failed", e);
+            }
+        }
+    }
+
+    protected void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("TAGsigninsuccess", "signInWithCredential:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
+                        // Check if the user is new and update UI accordingly.
+                        boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
+                        if (isNewUser) {
+                            Log.d("TAG", "Is New User!");
+
+                            // Switch to phone verification screen
+                            this.finish();
+                            Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
+                            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+                            startActivity(switchActivityIntent);
+                        } else {
+                            Log.d("TAG", "Is Old User!");
+
+                            // Switch to home screen
+                            this.finish();
+                            Intent switchActivityIntent = new Intent(this, HomeScreenActivity.class);
+                            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+                            startActivity(switchActivityIntent);
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+                        // If sign in fails, display a message to the user.
+                        Log.w("TAGsoigninfail", "signInWithCredential:failure", task.getException());
+                    }
+
                 });
     }
 }
