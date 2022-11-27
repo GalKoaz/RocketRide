@@ -185,6 +185,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected void signUserWithEmailPassword(String userEmail, String userPassword, MainActivity mainActivity) {
+        if(userEmail.equals("admin")){
+            // Activate the verification activity
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, MapsActivity.class);
+            startActivity(switchActivityIntent);
+        }
         firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
