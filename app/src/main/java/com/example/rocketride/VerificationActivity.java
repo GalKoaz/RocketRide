@@ -15,7 +15,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
 import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
@@ -30,7 +34,8 @@ public class VerificationActivity extends AppCompatActivity {
         actionBar.hide();
         Bundle extras = getIntent().getExtras();
         String userEmail = extras.getString("userEmail"),
-               userPassword = extras.getString("userPassword");
+               userPassword = extras.getString("userPassword"),
+               userIdToken = extras.getString("googleUserIdToken");
 
         // LinearLayout objects
         LinearLayout codeLayout = findViewById(R.id.codeLayout),
@@ -52,10 +57,14 @@ public class VerificationActivity extends AppCompatActivity {
 
 
         confirmButton.setOnClickListener(l -> {
+            // if user has signed up with google, then call the associated Firebase function
+            if (userIdToken != null) {
+                firebaseAuthWithGoogle(userIdToken);
+                return;
+            }
             // Register the user to firebase
             createFirebaseUserEmailPassword(userEmail, userPassword);
             System.out.println(userEmail + '\n'  + userPassword);
-
         });
 
         backArrow.setOnClickListener(l -> {
@@ -93,6 +102,35 @@ public class VerificationActivity extends AppCompatActivity {
                     this.finish();
                     Intent switchActivityIntent = new Intent(this, MainActivity.class);
                     startActivity(switchActivityIntent);
+                });
+    }
+
+    protected void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("TAGsigninsuccess", "signInWithCredential:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        Toast.makeText(VerificationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
+                        // Activate the verification activity
+                        this.finish();
+                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                        switchActivityIntent.putExtra("ViewFlag", true);
+                        switchActivityIntent.putExtra("userEmail", "");
+                        switchActivityIntent.putExtra("userPassword", "");
+                        startActivity(switchActivityIntent);
+                        return;
+
+                    }
+                    else {
+                        Toast.makeText(VerificationActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+                        // If sign in fails, display a message to the user.
+                        Log.w("TAGsoigninfail", "signInWithCredential:failure", task.getException());
+                    }
+
                 });
     }
 }

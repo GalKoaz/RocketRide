@@ -252,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("TAGtoken", "firebaseAuthWithGoogle:" + account.getId());
+
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -274,11 +275,13 @@ public class MainActivity extends AppCompatActivity {
                         boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
                         if (isNewUser) {
                             Log.d("TAG", "Is New User!");
+                            user.delete();
 
-                            // Switch to phone verification screen
+                            // Switch to phone verification screen to verify the user
                             this.finish();
                             Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+                            switchActivityIntent.putExtra("googleUserIdToken", idToken);
                             startActivity(switchActivityIntent);
                         } else {
                             Log.d("TAG", "Is Old User!");
