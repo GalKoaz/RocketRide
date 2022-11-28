@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".ProfileActivity">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="38dp"
         app:cardCornerRadius="25dp"
         app:cardElevation="10dp"
@@ -124,6 +124,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
+                    android:id="@+id/RiderImageCapture"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"
@@ -216,7 +217,7 @@
                     app:shapeAppearanceOverlay="@style/Button4">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/IDnumber"
+                        android:id="@+id/IDNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/driving_license_icon"
@@ -255,7 +256,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/driverlicensephoto"
+                    android:id="@+id/DriverImageCapture"
                     android:layout_width="170dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center_horizontal"
