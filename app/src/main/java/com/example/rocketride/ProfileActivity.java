@@ -1,5 +1,7 @@
 package com.example.rocketride;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -11,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,6 +24,10 @@ import android.widget.Toast;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +36,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 
 public class ProfileActivity extends AppCompatActivity {
-
+    private FirebaseAuth firebaseAuth;
     private ImageView RiderImageCapture, DriverImageCapture;
     Uri uri;
     String path;
@@ -40,9 +47,18 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        // get view flag
+        Bundle extras = getIntent().getExtras();
+        String userIdToken = extras.getString("userIdToken", null),
+        userEmailExtras = extras.getString("userEmail", ""),
+        userPasswordExtras = extras.getString("userPassword", "");
+
+
 
         // launcher Driver Upload Image
-        ActivityResultLauncher<Intent> launcher=
+        ActivityResultLauncher<Intent> launcher =
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),(ActivityResult result)->{
                     if(result.getResultCode()==RESULT_OK){
                         Uri uri=result.getData().getData();
@@ -81,12 +97,14 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         // Driver text inputs
-        TextInputEditText NickNameDriver = findViewById(R.id.NickNameDriver),
+        TextInputEditText FirstNameDriver = findViewById(R.id.NickNameDriver),
+                LastNameDriver = findViewById(R.id.LastNameDriver),
                 IDNumber = findViewById(R.id.IDNumber),
                 NumberPlate = findViewById(R.id.NumberPlate);
 
         // Rider text inputs
-        TextInputEditText NickNameRider = findViewById(R.id.NickNameRider);
+        TextInputEditText FirstNameRider = findViewById(R.id.FirstNameRider),
+                          LastNameRider = findViewById(R.id.LastNameRider);
 
         // TextView objects
         TextView Rider = findViewById(R.id.Rider),
@@ -158,5 +176,87 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }));
         });
+
+        ConfirmRiderButton.setOnClickListener(l -> {
+            String firstNameRider = FirstNameRider.getText().toString(),
+                    lastNameRider = LastNameRider.getText().toString();
+            register(userIdToken, userEmailExtras, userPasswordExtras);
+        });
+
+        ConfirmDriverButton.setOnClickListener(l -> {
+            String firstNameDriver = FirstNameDriver.getText().toString(),
+                    lastNameDriver = LastNameDriver.getText().toString(),
+                    idNumber = IDNumber.getText().toString(),
+                    plateNumber = NumberPlate.getText().toString();
+            register(userIdToken, userEmailExtras, userPasswordExtras);
+
+        });
     }
+
+    protected void createFirebaseUserEmailPassword(String userEmail, String userPassword) {
+        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(this, task -> {
+                    Log.d(TAG, "New user " + userEmail + " registration: " + task.isSuccessful());
+
+                    // Check if succeeded creating the user in firebase
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG, "Authentication failed. " + task.getException());
+                        Toast.makeText(ProfileActivity.this, "SignUp failed - try again.",
+                                Toast.LENGTH_SHORT).show();
+                        // Activate the verification activity
+                        this.finish();
+                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                        switchActivityIntent.putExtra("ViewFlag", true);
+                        switchActivityIntent.putExtra("userEmail", userEmail);
+                        switchActivityIntent.putExtra("userPassword", userPassword);
+                        startActivity(switchActivityIntent);
+                        return;
+                    }
+//                  // Activate the verification activity
+                    this.finish();
+                    Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                    startActivity(switchActivityIntent);
+                });
+    }
+
+    protected void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("TAGsigninsuccess", "signInWithCredential:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        Toast.makeText(ProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
+                        // Activate the verification activity
+                        this.finish();
+                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                        switchActivityIntent.putExtra("ViewFlag", true);
+                        switchActivityIntent.putExtra("userEmail", "");
+                        switchActivityIntent.putExtra("userPassword", "");
+                        startActivity(switchActivityIntent);
+                        return;
+
+                    }
+                    else {
+                        Toast.makeText(ProfileActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+                        // If sign in fails, display a message to the user.
+                        Log.w("TAGsoigninfail", "signInWithCredential:failure", task.getException());
+                    }
+
+                });
+    }
+
+    protected void register(String tokenId, String email, String password){
+        // if user has signed up with google, then call the associated Firebase function
+        if (tokenId != null) {
+            firebaseAuthWithGoogle(tokenId);
+            return;
+        }
+        // Register the user to firebase
+        createFirebaseUserEmailPassword(email, password);
+        System.out.println(email + '\n'  + password);
+    }
+
 }

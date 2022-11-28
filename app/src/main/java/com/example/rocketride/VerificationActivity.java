@@ -89,61 +89,6 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
 
-    protected void createFirebaseUserEmailPassword(String userEmail, String userPassword) {
-        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(this, task -> {
-                    Log.d(TAG, "New user " + userEmail + " registration: " + task.isSuccessful());
-
-                    // Check if succeeded creating the user in firebase
-                    if (!task.isSuccessful()) {
-                        Log.d(TAG, "Authentication failed. " + task.getException());
-                        Toast.makeText(VerificationActivity.this, "SignUp failed - try again.",
-                                Toast.LENGTH_SHORT).show();
-                        // Activate the verification activity
-                        this.finish();
-                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
-                        switchActivityIntent.putExtra("ViewFlag", true);
-                        switchActivityIntent.putExtra("userEmail", userEmail);
-                        switchActivityIntent.putExtra("userPassword", userPassword);
-                        startActivity(switchActivityIntent);
-                        return;
-                    }
-//                  // Activate the verification activity
-                    this.finish();
-                    Intent switchActivityIntent = new Intent(this, MainActivity.class);
-                    startActivity(switchActivityIntent);
-                });
-    }
-
-    protected void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d("TAGsigninsuccess", "signInWithCredential:success");
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        Toast.makeText(VerificationActivity.this, "Success", Toast.LENGTH_SHORT).show();
-
-                        // Activate the verification activity
-                        this.finish();
-                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
-                        switchActivityIntent.putExtra("ViewFlag", true);
-                        switchActivityIntent.putExtra("userEmail", "");
-                        switchActivityIntent.putExtra("userPassword", "");
-                        startActivity(switchActivityIntent);
-                        return;
-
-                    }
-                    else {
-                        Toast.makeText(VerificationActivity.this, "Fail", Toast.LENGTH_SHORT).show();
-                        // If sign in fails, display a message to the user.
-                        Log.w("TAGsoigninfail", "signInWithCredential:failure", task.getException());
-                    }
-
-                });
-    }
-
     protected void authPhoneNumber(String phoneNumber){
         // Whenever verification is triggered with the whitelisted number,
 // provided it is not set for auto-retrieval, onCodeSent will be triggered.
@@ -186,10 +131,10 @@ public class VerificationActivity extends AppCompatActivity {
 
         // after getting credential we are
         // calling sign in method.
-        signInWithCredential(credential, userIdToken, userEmail, userPassword);
+        signInWithCredential(credential, userIdToken, userEmail, userPassword, this);
     }
 
-    private void signInWithCredential(PhoneAuthCredential credential, String userIdToken, String userEmail, String userPassword) {
+    private void signInWithCredential(PhoneAuthCredential credential, String userIdToken, String userEmail, String userPassword, VerificationActivity verificationActivity) {
         // inside this method we are checking if
         // the code entered is correct or not.
         firebaseAuth.signInWithCredential(credential)
@@ -199,14 +144,16 @@ public class VerificationActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // if the code is correct and the task is successful
                             // we are sending our user to new activity.
-                            // if user has signed up with google, then call the associated Firebase function
-                            if (userIdToken != null) {
-                                firebaseAuthWithGoogle(userIdToken);
-                                return;
-                            }
-                            // Register the user to firebase
-                            createFirebaseUserEmailPassword(userEmail, userPassword);
-                            System.out.println(userEmail + '\n'  + userPassword);
+
+                            // Switch to profile activity
+                            verificationActivity.finish();
+                            Intent switchActivityIntent = new Intent(verificationActivity, ProfileActivity.class);
+                            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+                            switchActivityIntent.putExtra("userIdToken", userIdToken);
+                            switchActivityIntent.putExtra("userEmail", userEmail);
+                            switchActivityIntent.putExtra("userPassword", userPassword);
+                            startActivity(switchActivityIntent);
+
                             Toast.makeText(VerificationActivity.this, "Success!", Toast.LENGTH_LONG).show();
 
                         } else {

@@ -111,7 +111,7 @@
                     app:shapeAppearanceOverlay="@style/Button4">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/NickNameRider"
+                        android:id="@+id/FirstNameRider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/user_data_icon"
