@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class VerificationActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String verificationID;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,8 @@ public class VerificationActivity extends AppCompatActivity {
             String phoneNumber = userPhone.getText().toString();
             System.out.println(phoneNumber);
             authPhoneNumber(phoneNumber);
+            this.phoneNumber = phoneNumber;
+
             codeLayout.setVisibility(View.VISIBLE);
             phoneLayout.setVisibility(View.GONE);
             PendingPhone.setVisibility(View.GONE);
@@ -163,6 +166,7 @@ public class VerificationActivity extends AppCompatActivity {
                             switchActivityIntent.putExtra("userIdToken", userIdToken);
                             switchActivityIntent.putExtra("userEmail", userEmail);
                             switchActivityIntent.putExtra("userPassword", userPassword);
+                            switchActivityIntent.putExtra("userPhoneNumber", phoneNumber);
                             startActivity(switchActivityIntent);
 
                             Toast.makeText(VerificationActivity.this, "Success!", Toast.LENGTH_LONG).show();

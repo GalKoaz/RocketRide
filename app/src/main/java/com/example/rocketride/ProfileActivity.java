@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,13 +24,20 @@ import android.widget.Toast;
 
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -37,6 +45,7 @@ import kotlin.jvm.internal.Intrinsics;
 
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
     private ImageView RiderImageCapture, DriverImageCapture;
     Uri uri;
     String path;
@@ -48,13 +57,14 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // get view flag
         Bundle extras = getIntent().getExtras();
         String userIdToken = extras.getString("userIdToken", null),
         userEmailExtras = extras.getString("userEmail", ""),
-        userPasswordExtras = extras.getString("userPassword", "");
-
+        userPasswordExtras = extras.getString("userPassword", ""),
+        userPhoneNumberExtras = extras.getString("userPhoneNumber", "");
 
 
         // launcher Driver Upload Image
@@ -180,6 +190,7 @@ public class ProfileActivity extends AppCompatActivity {
         ConfirmRiderButton.setOnClickListener(l -> {
             String firstNameRider = FirstNameRider.getText().toString(),
                     lastNameRider = LastNameRider.getText().toString();
+            storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
             register(userIdToken, userEmailExtras, userPasswordExtras);
         });
 
@@ -188,6 +199,8 @@ public class ProfileActivity extends AppCompatActivity {
                     lastNameDriver = LastNameDriver.getText().toString(),
                     idNumber = IDNumber.getText().toString(),
                     plateNumber = NumberPlate.getText().toString();
+
+            storeDriverDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameDriver, lastNameDriver, idNumber, plateNumber);
             register(userIdToken, userEmailExtras, userPasswordExtras);
 
         });
@@ -259,4 +272,36 @@ public class ProfileActivity extends AppCompatActivity {
         System.out.println(email + '\n'  + password);
     }
 
+    protected void storeRiderDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName){
+        Map<String, Object> riderUserMap = new HashMap<>();
+        riderUserMap.put("email", userEmail);
+        riderUserMap.put("phone_number", userPhone);
+        riderUserMap.put("first_name", firstName);
+        riderUserMap.put("last_name", lastName);
+        riderUserMap.put("type", "rider");
+
+        addUser(riderUserMap);
+    }
+
+    protected void storeDriverDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName, String idNumber, String plateNumber){
+        Map<String, Object> driverUserMap = new HashMap<>();
+        driverUserMap.put("email", userEmail);
+        driverUserMap.put("phone_number", userPhone);
+        driverUserMap.put("first_name", firstName);
+        driverUserMap.put("last_name", lastName);
+        driverUserMap.put("ID", idNumber);
+        driverUserMap.put("plate_number", plateNumber);
+        driverUserMap.put("type", "driver");
+
+        addUser(driverUserMap);
+    }
+
+    protected void addUser(Map<String, Object> userMap){
+        // Add a new document with a generated ID
+        db.collection("users")
+                .add(userMap)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
 }
+
