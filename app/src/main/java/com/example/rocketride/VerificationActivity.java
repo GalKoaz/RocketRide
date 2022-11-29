@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +56,13 @@ public class VerificationActivity extends AppCompatActivity {
         Button sendButton = findViewById(R.id.sendButton),
                 confirmButton = findViewById(R.id.confirmButton);
 
+        // Image View
+        ImageView PendingPhone = findViewById(R.id.PendingPhone),
+                VerifyPhone = findViewById(R.id.VerifyPhone),
+                Shake = findViewById(R.id.Shake),
+                ShakeVerify = findViewById(R.id.ShakeVerify);
+
+
         TextView backArrow = findViewById(R.id.backArrow);
 
         // Verification text inputs
@@ -68,6 +76,8 @@ public class VerificationActivity extends AppCompatActivity {
             authPhoneNumber(phoneNumber);
             codeLayout.setVisibility(View.VISIBLE);
             phoneLayout.setVisibility(View.GONE);
+            PendingPhone.setVisibility(View.GONE);
+            VerifyPhone.setVisibility(View.VISIBLE);
         });
 
 
@@ -75,6 +85,7 @@ public class VerificationActivity extends AppCompatActivity {
            String userCode = codeVerification.getText().toString();
            System.out.println(userCode);
            verifyCode(userCode, userIdToken, userEmail, userPassword);
+
         });
 
         backArrow.setOnClickListener(l -> {
