@@ -289,8 +289,8 @@ public class MainActivity extends AppCompatActivity {
 
                             // Switch to home screen
                             this.finish();
-                            //Intent switchActivityIntent = new Intent(this, HomeScreenActivity.class);
-                            Intent switchActivityIntent = new Intent(this, ProfileActivity.class);
+                            Intent switchActivityIntent = new Intent(this, HomeScreenActivity.class);
+                            //Intent switchActivityIntent = new Intent(this, ProfileActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             startActivity(switchActivityIntent);
                         }
