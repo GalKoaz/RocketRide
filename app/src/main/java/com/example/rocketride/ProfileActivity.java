@@ -33,6 +33,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +52,10 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
     private ImageView RiderImageCapture, DriverImageCapture;
+    private Uri RiderImageUri, DriverImageUri;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageRef;
+
     Uri uri;
     String path;
     TextView captureTXT;
@@ -58,6 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageRef = firebaseStorage.getReference();
 
         // get view flag
         Bundle extras = getIntent().getExtras();
@@ -74,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Uri uri=result.getData().getData();
                         // Use the uri to load the image
                         DriverImageCapture.setImageURI(uri);
+                        DriverImageUri = uri;
                     }else if(result.getResultCode()==ImagePicker.RESULT_ERROR){
                         // Use ImagePicker.Companion.getError(result.getData()) to show an error
                         ImagePicker.Companion.getError(result.getData());
@@ -87,6 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Uri uri=result.getData().getData();
                         // Use the uri to load the image
                         RiderImageCapture.setImageURI(uri);
+                        RiderImageUri = uri;
                     }else if(result.getResultCode()==ImagePicker.RESULT_ERROR){
                         // Use ImagePicker.Companion.getError(result.getData()) to show an error
                         ImagePicker.Companion.getError(result.getData());
@@ -151,7 +164,7 @@ public class ProfileActivity extends AppCompatActivity {
             ImagePicker.Companion.with(this)
                     .crop()
                     .cropOval()
-                    .maxResultSize(170, 80, true)
+                    .maxResultSize(480, 270, true)
                     .provider(ImageProvider.BOTH) //Or bothCameraGallery()
                     .createIntentFromDialog((Function1) (new Function1() {
                         public Object invoke(Object var1) {
@@ -172,7 +185,7 @@ public class ProfileActivity extends AppCompatActivity {
             ImagePicker.Companion.with(this)
                     .crop()
                     .cropOval()
-                    .maxResultSize(100, 100, true)
+                    .maxResultSize(480, 270, true)
                     .provider(ImageProvider.BOTH) //Or bothCameraGallery()
                     .createIntentFromDialog((Function1) (new Function1() {
                         public Object invoke(Object var1) {
@@ -300,8 +313,42 @@ public class ProfileActivity extends AppCompatActivity {
         // Add a new document with a generated ID
         db.collection("users")
                 .add(userMap)
-                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+                .addOnSuccessListener(documentReference -> {
+                    String userID = documentReference.getId();
+                    Log.d(TAG, "DocumentSnapshot added with ID: " + userID);
+
+                    // Upload profile image
+                    StorageReference childRef = storageRef.child("/Images/Profiles/" + userID + "/" + RiderImageUri.getLastPathSegment());
+
+                    UploadTask uploadTask = childRef.putFile(RiderImageUri);
+
+                    // Listen for state changes, errors, and completion of the upload.
+                    uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                    Log.d(TAG, "Upload is " + progress + "% done");
+                                }
+                            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Log.d(TAG, "Upload is paused");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.d(TAG, "-------------- Failure --------------");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // Handle successful uploads on complete
+                                    // ...
+                                    Log.d(TAG, "-------------- Success --------------");
+
+                                }
+                            }).addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+        });
     }
 }
 
