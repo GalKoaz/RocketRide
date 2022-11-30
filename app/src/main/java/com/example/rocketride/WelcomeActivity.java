@@ -1,5 +1,6 @@
 package com.example.rocketride;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -22,6 +23,9 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         // animation
         LeftAnim = AnimationUtils.loadAnimation(WelcomeActivity.this,R.anim.welcome_animation);
