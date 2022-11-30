@@ -289,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="0dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="3dp"
                 android:gravity="center"
                 android:text="OR"
                 android:textAlignment="center"
@@ -297,24 +297,19 @@
                 android:textSize="18sp"
                 android:textStyle="normal" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/googleSignIn"
+                android:layout_width="66dp"
+                android:layout_height="62dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/googleSignIn"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/ic_google" />
-
-
-            </LinearLayout>
-
+                android:layout_marginBottom="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="false"
+                app:lottie_speed="1"
+                app:lottie_rawRes="@raw/googlelogoanim" />
 
         </LinearLayout>
 
