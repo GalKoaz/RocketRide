@@ -83,6 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
                 registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),(ActivityResult result)->{
                     if(result.getResultCode()==RESULT_OK){
                         Uri uri=result.getData().getData();
+                        System.out.println("Driver uri: " + result.getData().getData());
                         // Use the uri to load the image
                         DriverImageCapture.setImageURI(uri);
                         DriverImageUri = uri;
@@ -293,7 +294,7 @@ public class ProfileActivity extends AppCompatActivity {
         riderUserMap.put("last_name", lastName);
         riderUserMap.put("type", "rider");
 
-        addUser(riderUserMap);
+        addUser(riderUserMap, "rider");
     }
 
     protected void storeDriverDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName, String idNumber, String plateNumber){
@@ -306,49 +307,60 @@ public class ProfileActivity extends AppCompatActivity {
         driverUserMap.put("plate_number", plateNumber);
         driverUserMap.put("type", "driver");
 
-        addUser(driverUserMap);
+        addUser(driverUserMap, "driver");
     }
 
-    protected void addUser(Map<String, Object> userMap){
+    protected void addUser(Map<String, Object> userMap, String type){
         // Add a new document with a generated ID
         db.collection("users")
                 .add(userMap)
                 .addOnSuccessListener(documentReference -> {
                     String userID = documentReference.getId();
                     Log.d(TAG, "DocumentSnapshot added with ID: " + userID);
-
-                    // Upload profile image
-                    StorageReference childRef = storageRef.child("/Images/Profiles/" + userID + "/" + RiderImageUri.getLastPathSegment());
-
-                    UploadTask uploadTask = childRef.putFile(RiderImageUri);
-
-                    // Listen for state changes, errors, and completion of the upload.
-                    uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                                    Log.d(TAG, "Upload is " + progress + "% done");
-                                }
-                            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Log.d(TAG, "Upload is paused");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    Log.d(TAG, "-------------- Failure --------------");
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // Handle successful uploads on complete
-                                    // ...
-                                    Log.d(TAG, "-------------- Success --------------");
-
-                                }
-                            }).addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+                    uploadProfileImageByType(type, userID);
         });
+    }
+
+    protected void uploadProfileImageByType(String type, String userID){
+        StorageReference childRef;
+        UploadTask uploadTask;
+
+        // If the current user is a rider then upload his image
+        if (type.equals("rider")) {
+            childRef = storageRef.child("/Images/Profiles/" + userID + "/" + RiderImageUri.getLastPathSegment());
+            uploadTask = childRef.putFile(RiderImageUri);
+        }
+        else { // current user is a driver then upload his image
+            childRef = storageRef.child("/Images/Profiles/" + userID + "/" + DriverImageUri.getLastPathSegment());
+            uploadTask = childRef.putFile(DriverImageUri);
+        }
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Log.d(TAG, "Upload is " + progress + "% done");
+            }
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "Upload is paused");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d(TAG, "-------------- Failure --------------");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Handle successful uploads on complete
+                // ...
+                Log.d(TAG, "-------------- Success --------------");
+
+            }
+        }).addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 }
 
