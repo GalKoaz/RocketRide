@@ -52,8 +52,8 @@ import kotlin.jvm.internal.Intrinsics;
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
-    private ImageView RiderImageCapture, DriverImageCapture;
-    private Uri RiderImageUri, DriverImageUri;
+    private ImageView RiderImageCapture, DriverImageCapture, DriverProfileImageCapture;
+    private Uri RiderImageUri, DriverImageUri, DriverProfileImageUri;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
 
@@ -78,6 +78,21 @@ public class ProfileActivity extends AppCompatActivity {
         userPasswordExtras = extras.getString("userPassword", ""),
         userPhoneNumberExtras = extras.getString("userPhoneNumber", "");
 
+
+        // launcher Driver Profile Upload Image
+        ActivityResultLauncher<Intent> launcher0 =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),(ActivityResult result)->{
+                    if(result.getResultCode()==RESULT_OK){
+                        Uri uri=result.getData().getData();
+                        System.out.println("Driver uri: " + result.getData().getData());
+                        // Use the uri to load the image
+                        DriverProfileImageCapture.setImageURI(uri);
+                        DriverProfileImageUri = uri;
+                    }else if(result.getResultCode()==ImagePicker.RESULT_ERROR){
+                        // Use ImagePicker.Companion.getError(result.getData()) to show an error
+                        ImagePicker.Companion.getError(result.getData());
+                    }
+                });
 
         // launcher Driver Upload Image
         ActivityResultLauncher<Intent> launcher =
@@ -114,11 +129,14 @@ public class ProfileActivity extends AppCompatActivity {
         // ImageView Driver
         DriverImageCapture = findViewById(R.id.DriverImageCapture);
 
+        DriverProfileImageCapture = findViewById(R.id.DriverProfileImageCapture);
+
         // Buttons
         Button uploadImage = findViewById(R.id.uploadImage),
                 ConfirmRiderButton = findViewById(R.id.ConfirmRiderButton),
                 uploadImageDriver = findViewById(R.id.uploadImageDriver),
-                ConfirmDriverButton = findViewById(R.id.ConfirmDriverButton);
+                ConfirmDriverButton = findViewById(R.id.ConfirmDriverButton),
+                DriverProfileUploadImage = findViewById(R.id.DriverProfileUploadImage);
 
 
         // Driver text inputs
@@ -158,6 +176,27 @@ public class ProfileActivity extends AppCompatActivity {
             Rider.setBackground(null);
             RiderLayout.setVisibility(View.GONE);
             DriverLayout.setVisibility(View.VISIBLE);
+        });
+
+        // upload Image Profile Driver Event
+        DriverProfileUploadImage.setOnClickListener(view -> {
+            System.out.println("Enter To the UploadImageDriver");
+            ImagePicker.Companion.with(this)
+                    .crop()
+                    .cropOval()
+                    .maxResultSize(480, 270, true)
+                    .provider(ImageProvider.BOTH) //Or bothCameraGallery()
+                    .createIntentFromDialog((Function1) (new Function1() {
+                        public Object invoke(Object var1) {
+                            this.invoke((Intent) var1);
+                            return Unit.INSTANCE;
+                        }
+
+                        public final void invoke(@NotNull Intent it) {
+                            Intrinsics.checkNotNullParameter(it, "it");
+                            launcher0.launch(it);
+                        }
+                    }));
         });
 
         // upload Image Driver Event

@@ -22,17 +22,6 @@
             app:srcCompat="@drawable/loginpage" />
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -323,6 +312,32 @@
                             android:textSize="13sp"
                             android:textStyle="normal" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/DriverProfileImageCapture"
+                        android:layout_width="85dp"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/switch_tubms_prof" />
+
+                    <Button
+                        android:id="@+id/DriverProfileUploadImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="24dp"
+                        android:drawingCacheQuality="high"
+                        android:elevation="15dp"
+                        android:gravity="center"
+                        android:text="UPLOAD PROFILE IMAGE"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:backgroundTint="#636262"
+                        app:shapeAppearanceOverlay="@style/Button6" />
 
                     <ImageView
                         android:id="@+id/DriverImageCapture"
