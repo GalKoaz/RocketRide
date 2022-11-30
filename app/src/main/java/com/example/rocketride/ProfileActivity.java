@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -317,22 +318,25 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     String userID = documentReference.getId();
                     Log.d(TAG, "DocumentSnapshot added with ID: " + userID);
-                    uploadProfileImageByType(type, userID);
+                    uploadProfileImageByType(type, userID, documentReference);
         });
     }
 
-    protected void uploadProfileImageByType(String type, String userID){
+    protected void uploadProfileImageByType(String type, String userID, DocumentReference documentReference){
         StorageReference childRef;
         UploadTask uploadTask;
+        String profileImageDirLink = "/Images/Profiles/" + userID + "/";
 
         // If the current user is a rider then upload his image
         if (type.equals("rider")) {
-            childRef = storageRef.child("/Images/Profiles/" + userID + "/" + RiderImageUri.getLastPathSegment());
+            childRef = storageRef.child(profileImageDirLink + RiderImageUri.getLastPathSegment());
             uploadTask = childRef.putFile(RiderImageUri);
+            documentReference.update("profile_image_link", profileImageDirLink + RiderImageUri.getLastPathSegment());
         }
         else { // current user is a driver then upload his image
-            childRef = storageRef.child("/Images/Profiles/" + userID + "/" + DriverImageUri.getLastPathSegment());
+            childRef = storageRef.child(profileImageDirLink + DriverImageUri.getLastPathSegment());
             uploadTask = childRef.putFile(DriverImageUri);
+            documentReference.update("profile_image_link",  profileImageDirLink + DriverImageUri.getLastPathSegment());
         }
 
         // Listen for state changes, errors, and completion of the upload.

@@ -34,6 +34,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Objects;
+
 /**
  * ----- TEST ---
  */
@@ -115,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(signUpUserPassword.getText().toString());
             }
         });
-
 
         // On clicking the sign up textView
         signUP.setOnClickListener(signUp -> {
