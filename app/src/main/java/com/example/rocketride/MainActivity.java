@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
                             mainActivity.finish();
-                            Intent switchActivityIntent = new Intent(mainActivity, HomeScreenActivity.class);
+                            Intent switchActivityIntent = new Intent(mainActivity, MapsDriverActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             startActivity(switchActivityIntent);
                             // updateUI(user);
