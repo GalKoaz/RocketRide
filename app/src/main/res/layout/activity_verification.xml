@@ -190,6 +190,18 @@
 
     </androidx.cardview.widget.CardView>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
+        android:layout_width="254dp"
+        android:layout_height="205dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/verfication" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="match_parent"
@@ -201,7 +213,8 @@
         android:layout_height="80dp"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/switch_tubms_prof">
+        android:background="@drawable/switch_tubms_prof"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView2"

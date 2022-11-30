@@ -403,7 +403,8 @@
             android:layout_height="80dp"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="0dp"
-            android:background="@drawable/switch_tubms_prof">
+            android:background="@drawable/switch_tubms_prof"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageView2"
