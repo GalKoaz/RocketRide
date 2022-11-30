@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -99,7 +98,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="20dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -159,7 +158,8 @@
                         android:layout_height="90dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/switch_tubms_prof" />
+                        android:background="@drawable/switch_tubms_prof"
+                        android:src="@drawable/defaultpicture"/>
 
                     <Button
                         android:id="@+id/uploadImage"
@@ -205,7 +205,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="10dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -315,11 +315,12 @@
 
                     <ImageView
                         android:id="@+id/DriverProfileImageCapture"
-                        android:layout_width="85dp"
+                        android:layout_width="90dp"
                         android:layout_height="90dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/switch_tubms_prof" />
+                        android:background="@drawable/switch_tubms_prof"
+                        android:src="@drawable/defaultpicture"/>/>
 
                     <Button
                         android:id="@+id/DriverProfileUploadImage"
@@ -346,7 +347,8 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/switch_tubms_prof"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:src="@drawable/driverslicense"/>
 
                     <Button
                         android:id="@+id/uploadImageDriver"
