@@ -6,11 +6,9 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -53,13 +50,10 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
     private ImageView RiderImageCapture, DriverImageCapture, DriverProfileImageCapture;
-    private Uri RiderImageUri, DriverImageUri, DriverProfileImageUri;
+    private Uri RiderImageUri, DriverProfileImageUri, DriverLicenseImageUri;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
 
-    Uri uri;
-    String path;
-    TextView captureTXT;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -87,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
                         System.out.println("Driver uri: " + result.getData().getData());
                         // Use the uri to load the image
                         DriverProfileImageCapture.setImageURI(uri);
-                        DriverProfileImageUri = uri;
+                        DriverLicenseImageUri = uri;
                     }else if(result.getResultCode()==ImagePicker.RESULT_ERROR){
                         // Use ImagePicker.Companion.getError(result.getData()) to show an error
                         ImagePicker.Companion.getError(result.getData());
@@ -102,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
                         System.out.println("Driver uri: " + result.getData().getData());
                         // Use the uri to load the image
                         DriverImageCapture.setImageURI(uri);
-                        DriverImageUri = uri;
+                        DriverProfileImageUri = uri;
                     }else if(result.getResultCode()==ImagePicker.RESULT_ERROR){
                         // Use ImagePicker.Companion.getError(result.getData()) to show an error
                         ImagePicker.Companion.getError(result.getData());
@@ -242,6 +236,11 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         ConfirmRiderButton.setOnClickListener(l -> {
+            if (RiderImageUri == null){
+                Toast.makeText(ProfileActivity.this, "Upload the required images!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String firstNameRider = FirstNameRider.getText().toString(),
                     lastNameRider = LastNameRider.getText().toString();
             storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
@@ -249,6 +248,11 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         ConfirmDriverButton.setOnClickListener(l -> {
+            if (DriverProfileImageUri == null || DriverLicenseImageUri == null){
+                Toast.makeText(ProfileActivity.this, "Upload the required images!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String firstNameDriver = FirstNameDriver.getText().toString(),
                     lastNameDriver = LastNameDriver.getText().toString(),
                     idNumber = IDNumber.getText().toString(),
@@ -364,20 +368,35 @@ public class ProfileActivity extends AppCompatActivity {
     protected void uploadProfileImageByType(String type, String userID, DocumentReference documentReference){
         StorageReference childRef;
         UploadTask uploadTask;
+        String message;
         String profileImageDirLink = "/Images/Profiles/" + userID + "/";
+        String driverLicenseDirLink = "/Images/DriverLicenses/" + userID + "/";
 
         // If the current user is a rider then upload his image
         if (type.equals("rider")) {
             childRef = storageRef.child(profileImageDirLink + RiderImageUri.getLastPathSegment());
             uploadTask = childRef.putFile(RiderImageUri);
             documentReference.update("profile_image_link", profileImageDirLink + RiderImageUri.getLastPathSegment());
-        }
-        else { // current user is a driver then upload his image
-            childRef = storageRef.child(profileImageDirLink + DriverImageUri.getLastPathSegment());
-            uploadTask = childRef.putFile(DriverImageUri);
-            documentReference.update("profile_image_link",  profileImageDirLink + DriverImageUri.getLastPathSegment());
+            listenUploadProgress(uploadTask);
+            return;
         }
 
+        // current user is a driver then upload his image
+        // Upload driver profile image.
+        childRef = storageRef.child(profileImageDirLink + DriverProfileImageUri.getLastPathSegment());
+        uploadTask = childRef.putFile(DriverProfileImageUri);
+        documentReference.update("profile_image_link",  profileImageDirLink + DriverProfileImageUri.getLastPathSegment());
+        listenUploadProgress(uploadTask);
+
+        // Upload the driver license to the corresponded directory
+        childRef = storageRef.child(driverLicenseDirLink + DriverLicenseImageUri.getLastPathSegment());
+        uploadTask = childRef.putFile(DriverLicenseImageUri);
+        documentReference.update("driver_license_link",  driverLicenseDirLink + DriverLicenseImageUri.getLastPathSegment());
+        listenUploadProgress(uploadTask);
+
+    }
+
+    protected void listenUploadProgress(UploadTask uploadTask){
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override

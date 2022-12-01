@@ -177,6 +177,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (userPassword.length() < 6){ // Check if password length too
+                Toast.makeText(MainActivity.this, "Password length has to be at least 6.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
