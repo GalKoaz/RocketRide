@@ -37,6 +37,8 @@ public class VerificationActivity extends AppCompatActivity {
     private String verificationID;
     private String phoneNumber;
 
+    private LinearLayout codeLayout, phoneLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +52,8 @@ public class VerificationActivity extends AppCompatActivity {
                userIdToken = extras.getString("googleUserIdToken");
 
         // LinearLayout objects
-        LinearLayout codeLayout = findViewById(R.id.codeLayout),
-                phoneLayout = findViewById(R.id.phoneLayout);
+        codeLayout = findViewById(R.id.codeLayout);
+        phoneLayout = findViewById(R.id.phoneLayout);
 
         // Buttons
         Button sendButton = findViewById(R.id.sendButton),
@@ -77,10 +79,7 @@ public class VerificationActivity extends AppCompatActivity {
             authPhoneNumber(phoneNumber);
             this.phoneNumber = phoneNumber;
 
-            codeLayout.setVisibility(View.VISIBLE);
-            phoneLayout.setVisibility(View.GONE);
-            PendingPhone.setVisibility(View.GONE);
-            VerifyPhone.setVisibility(View.VISIBLE);
+            sendButton.setClickable(false);
         });
 
 
@@ -105,7 +104,7 @@ public class VerificationActivity extends AppCompatActivity {
 
     protected void authPhoneNumber(String phoneNumber){
         // Whenever verification is triggered with the whitelisted number,
-// provided it is not set for auto-retrieval, onCodeSent will be triggered.
+        // provided it is not set for auto-retrieval, onCodeSent will be triggered.
         FirebaseAuth auth = FirebaseAuth.getInstance();
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(phoneNumber)
@@ -121,6 +120,11 @@ public class VerificationActivity extends AppCompatActivity {
                         verificationID = verificationId;
                         // The corresponding whitelisted code above should be used to complete sign-in.
                         //VerificationActivity.this.enableUserManuallyInputCode();
+
+                        Button sendButton = findViewById(R.id.sendButton);
+                        sendButton.setClickable(true);
+                        codeLayout.setVisibility(View.VISIBLE);
+                        phoneLayout.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -131,6 +135,12 @@ public class VerificationActivity extends AppCompatActivity {
                     @Override
                     public void onVerificationFailed(FirebaseException e) {
                         Toast.makeText(VerificationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+                        super.onCodeAutoRetrievalTimeOut(s);
+                        System.out.println("Time out!");
                     }
                 })
                 .build();
