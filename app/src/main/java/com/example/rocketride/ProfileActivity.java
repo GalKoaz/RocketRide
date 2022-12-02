@@ -368,7 +368,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void uploadProfileImageByType(String type, String userID, DocumentReference documentReference){
         StorageReference childRef;
         UploadTask uploadTask;
-        String message;
         String profileImageDirLink = "/Images/Profiles/" + userID + "/";
         String driverLicenseDirLink = "/Images/DriverLicenses/" + userID + "/";
 
