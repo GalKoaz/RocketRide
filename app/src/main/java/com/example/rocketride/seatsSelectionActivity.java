@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,13 +27,17 @@ public class seatsSelectionActivity extends AppCompatActivity {
         actionBar.hide();
 
         ImageView carView = findViewById(R.id.imageView4),
-                  driverSeatView = findViewById(R.id.imageViewDriverUnavailable);
+                  driverSeatView = findViewById(R.id.imageViewDriverUnavailable),
+                  nearDriverSeatView = findViewById(R.id.imageView5);
 
         TextView driverSeat = findViewById(R.id.textViewDriver),
                  nearDriverSeat = findViewById(R.id.textViewNearDriver),
                  leftBottomSeat = findViewById(R.id.textViewBottomLeft),
                  centerBottomSeat = findViewById(R.id.textViewBottomCenter),
                  rightBottomSeat = findViewById(R.id.textViewBottomRight);
+
+        Button nextButton = findViewById(R.id.nextButton),
+                goBackButton = findViewById(R.id.goBackButton);
 
         driverSeatView.setVisibility(View.GONE);
 
@@ -43,9 +48,11 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> driverSeatView.setVisibility(View.VISIBLE),Duration_time);
 
+        // Update initial seat status
+        //new Handler().postDelayed(() -> nearDriverSeatView.setVisibility(View.VISIBLE),Duration_time + 500);
 
         driverSeat.setOnClickListener(l -> {
-            Toast.makeText(seatsSelectionActivity.this, "driver seat clicked!", Toast.LENGTH_LONG).show();
+            Toast.makeText(seatsSelectionActivity.this, "can't be selected!", Toast.LENGTH_LONG).show();
         });
 
         nearDriverSeat.setOnClickListener(l -> {
@@ -62,6 +69,15 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         rightBottomSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "right bottom seat clicked!", Toast.LENGTH_LONG).show();
+        });
+
+
+        nextButton.setOnClickListener(l -> {
+            Toast.makeText(seatsSelectionActivity.this, "next button clicked!", Toast.LENGTH_LONG).show();
+        });
+
+        goBackButton.setOnClickListener(l -> {
+            Toast.makeText(seatsSelectionActivity.this, "go back button clicked!", Toast.LENGTH_LONG).show();
         });
     }
 }
