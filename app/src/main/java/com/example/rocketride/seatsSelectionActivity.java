@@ -68,75 +68,23 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         nearDriverSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "near driver seat clicked!", Toast.LENGTH_LONG).show();
-            Boolean currSeatSelected = nearDriverAvailableSeatView.getVisibility() == View.VISIBLE;
-            if (currSeatSelected){
-                nearDriverAvailableSeatView.setVisibility(View.GONE);
-                seatSelected = false;
-                return;
-            }
-
-            // User have already selected an available seat
-            if (seatSelected){
-                Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
-                return;
-            }
-            nearDriverAvailableSeatView.setVisibility(View.VISIBLE);
-            seatSelected = true;
+            availableChecks(nearDriverAvailableSeatView);
         });
 
         leftBottomSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "left bottom seat clicked!", Toast.LENGTH_LONG).show();
-            Boolean currSeatSelected = leftBottomAvailableSeatView.getVisibility() == View.VISIBLE;
-            if (currSeatSelected){
-                leftBottomAvailableSeatView.setVisibility(View.GONE);
-                seatSelected = false;
-                return;
-            }
-
-            // User have already selected an available seat
-            if (seatSelected){
-                Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
-                return;
-            }
-            leftBottomAvailableSeatView.setVisibility(View.VISIBLE);
-            seatSelected = true;
+            availableChecks(leftBottomAvailableSeatView);
         });
 
         centerBottomSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "center bottom seat clicked!", Toast.LENGTH_LONG).show();
-            Boolean currSeatSelected = centerBottomAvailableSeatView.getVisibility() == View.VISIBLE;
-            if (currSeatSelected){
-                centerBottomAvailableSeatView.setVisibility(View.GONE);
-                seatSelected = false;
-                return;
-            }
-
-            // User have already selected an available seat
-            if (seatSelected){
-                Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
-                return;
-            }
-            centerBottomAvailableSeatView.setVisibility(View.VISIBLE);
-            seatSelected = true;
+            availableChecks(centerBottomAvailableSeatView);
         });
 
         rightBottomSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "right bottom seat clicked!", Toast.LENGTH_LONG).show();
 
-            Boolean currSeatSelected = rightBottomAvailableSeatView.getVisibility() == View.VISIBLE;
-            if (currSeatSelected){
-                rightBottomAvailableSeatView.setVisibility(View.GONE);
-                seatSelected = false;
-                return;
-            }
-
-            // User have already selected an available seat
-            if (seatSelected){
-                Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
-                return;
-            }
-            rightBottomAvailableSeatView.setVisibility(View.VISIBLE);
-            seatSelected = true;
+            availableChecks(rightBottomAvailableSeatView);
         });
 
 
@@ -147,5 +95,23 @@ public class seatsSelectionActivity extends AppCompatActivity {
         goBackButton.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "go back button clicked!", Toast.LENGTH_LONG).show();
         });
+    }
+
+
+    protected void availableChecks(ImageView seatImageView){
+        Boolean currSeatSelected = seatImageView.getVisibility() == View.VISIBLE;
+        if (currSeatSelected){
+            seatImageView.setVisibility(View.GONE);
+            seatSelected = false;
+            return;
+        }
+
+        // User have already selected an available seat
+        if (seatSelected){
+            Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        seatImageView.setVisibility(View.VISIBLE);
+        seatSelected = true;
     }
 }

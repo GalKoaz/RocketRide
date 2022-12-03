@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 this.finish();
                 Intent switchActivityIntent2 = new Intent(this, seatsSelectionActivity.class);
                 startActivity(switchActivityIntent2);
+                return;
             }
 
             // Connect the user to firebase
