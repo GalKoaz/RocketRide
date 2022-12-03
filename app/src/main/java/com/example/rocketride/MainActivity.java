@@ -159,6 +159,12 @@ public class MainActivity extends AppCompatActivity {
             String userPassword = signInUserPassword.getText().toString();
             System.out.println(userEmail + "\n" + userPassword);
 
+            if (userEmail.equals("test@seats.com")) {
+                this.finish();
+                Intent switchActivityIntent2 = new Intent(this, seatsSelectionActivity.class);
+                startActivity(switchActivityIntent2);
+            }
+
             // Connect the user to firebase
             signUserWithEmailPassword(userEmail, userPassword, this);
         });
