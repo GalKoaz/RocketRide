@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        this.finish();
-        Intent switchActivityIntent2 = new Intent(this, seatsSelectionActivity.class);
-        startActivity(switchActivityIntent2);
+//        this.finish();
+//        Intent switchActivityIntent2 = new Intent(this, seatsSelectionActivity.class);
+//        startActivity(switchActivityIntent2);
 
         // get view flag
         Bundle extras = getIntent().getExtras();

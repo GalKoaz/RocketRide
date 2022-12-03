@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/empty_car" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/centerBottomAvailableImageView"
         android:layout_width="215dp"
         android:layout_height="387dp"
         android:layout_marginStart="68dp"
@@ -31,7 +31,7 @@
         android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/leftBottomAvailableImageView"
         android:layout_width="215dp"
         android:layout_height="387dp"
         android:layout_marginStart="19.7dp"
@@ -43,7 +43,7 @@
         app:srcCompat="@drawable/back_seat_available" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/rightBottomAvailableImageView"
         android:layout_width="215dp"
         android:layout_height="387dp"
         android:layout_marginStart="116dp"
@@ -55,7 +55,7 @@
         android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/nearDriverAvailableImageView"
         android:layout_width="243dp"
         android:layout_height="461dp"
         android:layout_marginStart="24dp"
@@ -68,7 +68,7 @@
 
 
     <ImageView
-        android:id="@+id/imageViewUnavailable"
+        android:id="@+id/centerBottomUnavailableImageView"
         android:layout_width="215dp"
         android:layout_height="387dp"
         android:layout_marginStart="68dp"
@@ -80,7 +80,7 @@
         android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/imageView2Unavailable"
+        android:id="@+id/leftBottomUnavailableImageView"
         android:layout_width="215dp"
         android:layout_height="387dp"
         android:layout_marginStart="19.7dp"
@@ -92,7 +92,7 @@
         app:srcCompat="@drawable/regular_back_seat_unavailable" />
 
     <ImageView
-        android:id="@+id/imageView3Unavailable"
+        android:id="@+id/rightBottomUnavailableImageView"
         android:layout_width="215dp"
         android:layout_height="387dp"
         android:layout_marginStart="116dp"
@@ -104,7 +104,7 @@
         android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/imageView5Unavailable"
+        android:id="@+id/nearDriverUnavailableImageView"
         android:layout_width="243dp"
         android:layout_height="461dp"
         android:layout_marginStart="24dp"
