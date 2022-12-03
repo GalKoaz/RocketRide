@@ -57,6 +57,7 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         nearDriverSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "near driver seat clicked!", Toast.LENGTH_LONG).show();
+            // Boolean seatSelected =
         });
 
         leftBottomSeat.setOnClickListener(l -> {
