@@ -99,7 +99,7 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
 
     protected void availableChecks(ImageView seatImageView){
-        Boolean currSeatSelected = seatImageView.getVisibility() == View.VISIBLE;
+        boolean currSeatSelected = seatImageView.getVisibility() == View.VISIBLE;
         if (currSeatSelected){
             seatImageView.setVisibility(View.GONE);
             seatSelected = false;
@@ -111,6 +111,8 @@ public class seatsSelectionActivity extends AppCompatActivity {
             Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
             return;
         }
+
+        // User haven't selected any seat
         seatImageView.setVisibility(View.VISIBLE);
         seatSelected = true;
     }
