@@ -39,6 +39,8 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         Button signOutButton = findViewById(R.id.signOutButton);
 
+        System.out.println("-------------- UID: " + firebaseAuth.getUid() + " ----------------");
+
         signOutButton.setOnClickListener(l -> {
             firebaseAuth.signOut();
             mGoogleSignInClient.signOut();

@@ -53,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri RiderImageUri, DriverProfileImageUri, DriverLicenseImageUri;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
+    private String UID;
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -243,8 +244,9 @@ public class ProfileActivity extends AppCompatActivity {
 
             String firstNameRider = FirstNameRider.getText().toString(),
                     lastNameRider = LastNameRider.getText().toString();
-            storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
+
             register(userIdToken, userEmailExtras, userPasswordExtras);
+            storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
         });
 
         ConfirmDriverButton.setOnClickListener(l -> {
@@ -258,9 +260,8 @@ public class ProfileActivity extends AppCompatActivity {
                     idNumber = IDNumber.getText().toString(),
                     plateNumber = NumberPlate.getText().toString();
 
-            storeDriverDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameDriver, lastNameDriver, idNumber, plateNumber);
             register(userIdToken, userEmailExtras, userPasswordExtras);
-
+            storeDriverDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameDriver, lastNameDriver, idNumber, plateNumber);
         });
     }
 
@@ -274,6 +275,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.d(TAG, "Authentication failed. " + task.getException());
                         Toast.makeText(ProfileActivity.this, "SignUp failed - try again.",
                                 Toast.LENGTH_SHORT).show();
+
                         // Activate the verification activity
                         this.finish();
                         Intent switchActivityIntent = new Intent(this, MainActivity.class);
@@ -283,7 +285,11 @@ public class ProfileActivity extends AppCompatActivity {
                         startActivity(switchActivityIntent);
                         return;
                     }
-//                  // Activate the verification activity
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    UID = user.getUid();
+                    System.out.println("UID REGULAR EMAIL: " + UID);
+
+                    // Activate the verification activity
                     this.finish();
                     Intent switchActivityIntent = new Intent(this, MainActivity.class);
                     startActivity(switchActivityIntent);
@@ -298,14 +304,15 @@ public class ProfileActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("TAGsigninsuccess", "signInWithCredential:success");
                         FirebaseUser user = firebaseAuth.getCurrentUser();
+                        UID = user.getUid();
+                        System.out.println("UID GOOGLE: " + UID);
+
                         Toast.makeText(ProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
 
                         // Activate the verification activity
                         this.finish();
                         Intent switchActivityIntent = new Intent(this, MainActivity.class);
-                        switchActivityIntent.putExtra("ViewFlag", true);
-                        switchActivityIntent.putExtra("userEmail", "");
-                        switchActivityIntent.putExtra("userPassword", "");
                         startActivity(switchActivityIntent);
                         return;
 
@@ -314,6 +321,14 @@ public class ProfileActivity extends AppCompatActivity {
                         Toast.makeText(ProfileActivity.this, "Fail", Toast.LENGTH_SHORT).show();
                         // If sign in fails, display a message to the user.
                         Log.w("TAGsoigninfail", "signInWithCredential:failure", task.getException());
+
+                        // Activate the verification activity
+                        this.finish();
+                        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+                        switchActivityIntent.putExtra("ViewFlag", true);
+                        switchActivityIntent.putExtra("userEmail", "");
+                        switchActivityIntent.putExtra("userPassword", "");
+                        startActivity(switchActivityIntent);
                     }
 
                 });
@@ -332,6 +347,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     protected void storeRiderDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName){
         Map<String, Object> riderUserMap = new HashMap<>();
+        riderUserMap.put("UID", UID);
         riderUserMap.put("email", userEmail);
         riderUserMap.put("phone_number", userPhone);
         riderUserMap.put("first_name", firstName);
@@ -343,6 +359,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     protected void storeDriverDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName, String idNumber, String plateNumber){
         Map<String, Object> driverUserMap = new HashMap<>();
+        driverUserMap.put("UID", UID);
         driverUserMap.put("email", userEmail);
         driverUserMap.put("phone_number", userPhone);
         driverUserMap.put("first_name", firstName);
@@ -368,8 +385,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void uploadProfileImageByType(String type, String userID, DocumentReference documentReference){
         StorageReference childRef;
         UploadTask uploadTask;
-        String profileImageDirLink = "/Images/Profiles/" + userID + "/";
-        String driverLicenseDirLink = "/Images/DriverLicenses/" + userID + "/";
+        String profileImageDirLink = "/Images/Profiles/" + UID + "/";
+        String driverLicenseDirLink = "/Images/DriverLicenses/" + UID + "/";
 
         // If the current user is a rider then upload his image
         if (type.equals("rider")) {

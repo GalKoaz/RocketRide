@@ -231,9 +231,10 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            System.out.println("USER ID: " + user.getUid());
 
                             mainActivity.finish();
-                            Intent switchActivityIntent = new Intent(mainActivity, MapsDriverActivity.class);
+                            Intent switchActivityIntent = new Intent(mainActivity, HomeScreenActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             startActivity(switchActivityIntent);
                             // updateUI(user);
