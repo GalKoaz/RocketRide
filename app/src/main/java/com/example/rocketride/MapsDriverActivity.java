@@ -7,10 +7,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -53,6 +56,21 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         db = FirebaseFirestore.getInstance();
+
+        Button create_button = findViewById(R.id.create_drive);
+        Button search_button = findViewById(R.id.search_drive);
+        create_button.setOnClickListener(signUp -> {
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, CreateDriveActivity.class);
+            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+            startActivity(switchActivityIntent);
+        });
+        search_button.setOnClickListener(signUp -> {
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, CreateDriveActivity.class);
+            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+            startActivity(switchActivityIntent);
+        });
     }
 
     /**
@@ -82,7 +100,7 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
 
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");

@@ -91,7 +91,8 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="25dp">
+                android:padding="25dp"
+                android:visibility="visible">
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -163,8 +164,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
                     android:layout_marginTop="15dp"
+                    android:layout_marginEnd="24dp"
                     android:elevation="15dp"
                     android:gravity="center"
                     android:text="SIGN IN"
@@ -265,13 +266,14 @@
                         android:textSize="13sp"
                         android:textStyle="normal" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <Button
                     android:id="@+id/signUpButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
                     android:elevation="15dp"
                     android:gravity="center"
