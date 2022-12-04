@@ -53,7 +53,10 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri RiderImageUri, DriverProfileImageUri, DriverLicenseImageUri;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
-    private String UID;
+    private String UID, userType;
+    private String userIdToken, userEmailExtras, userPasswordExtras, userPhoneNumberExtras;
+    private String firstNameDriver, lastNameDriver, idNumber, plateNumber;
+    private String firstNameRider, lastNameRider;
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -68,9 +71,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         // get view flag
         Bundle extras = getIntent().getExtras();
-        String userIdToken = extras.getString("userIdToken", null),
-        userEmailExtras = extras.getString("userEmail", ""),
-        userPasswordExtras = extras.getString("userPassword", ""),
+        userIdToken = extras.getString("userIdToken", null);
+        userEmailExtras = extras.getString("userEmail", "");
+        userPasswordExtras = extras.getString("userPassword", "");
         userPhoneNumberExtras = extras.getString("userPhoneNumber", "");
 
 
@@ -242,11 +245,14 @@ public class ProfileActivity extends AppCompatActivity {
                 return;
             }
 
-            String firstNameRider = FirstNameRider.getText().toString(),
-                    lastNameRider = LastNameRider.getText().toString();
+            // set global userType variable for storing
+            // his details in firebase
+            userType = "rider";
+
+            firstNameRider = FirstNameRider.getText().toString();
+            lastNameRider = LastNameRider.getText().toString();
 
             register(userIdToken, userEmailExtras, userPasswordExtras);
-            storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
         });
 
         ConfirmDriverButton.setOnClickListener(l -> {
@@ -255,13 +261,16 @@ public class ProfileActivity extends AppCompatActivity {
                 return;
             }
 
-            String firstNameDriver = FirstNameDriver.getText().toString(),
-                    lastNameDriver = LastNameDriver.getText().toString(),
-                    idNumber = IDNumber.getText().toString(),
-                    plateNumber = NumberPlate.getText().toString();
+            // set global userType variable for storing
+            // his details in firebase
+            userType = "rider";
+
+            firstNameDriver = FirstNameDriver.getText().toString();
+            lastNameDriver = LastNameDriver.getText().toString();
+            idNumber = IDNumber.getText().toString();
+            plateNumber = NumberPlate.getText().toString();
 
             register(userIdToken, userEmailExtras, userPasswordExtras);
-            storeDriverDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameDriver, lastNameDriver, idNumber, plateNumber);
         });
     }
 
@@ -289,6 +298,13 @@ public class ProfileActivity extends AppCompatActivity {
                     UID = user.getUid();
                     System.out.println("UID REGULAR EMAIL: " + UID);
 
+                    if (userType.equals("rider")){
+                        storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
+                    }
+                    else{
+                        storeDriverDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameDriver, lastNameDriver, idNumber, plateNumber);
+                    }
+
                     // Activate the verification activity
                     this.finish();
                     Intent switchActivityIntent = new Intent(this, MainActivity.class);
@@ -307,8 +323,14 @@ public class ProfileActivity extends AppCompatActivity {
                         UID = user.getUid();
                         System.out.println("UID GOOGLE: " + UID);
 
-                        Toast.makeText(ProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        if (userType.equals("rider")){
+                            storeRiderDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameRider, lastNameRider);
+                        }
+                        else{
+                            storeDriverDetailsInFirestore(userEmailExtras, userPhoneNumberExtras, firstNameDriver, lastNameDriver, idNumber, plateNumber);
+                        }
 
+                        Toast.makeText(ProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
 
                         // Activate the verification activity
                         this.finish();

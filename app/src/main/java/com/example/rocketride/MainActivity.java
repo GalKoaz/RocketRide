@@ -5,7 +5,6 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(R.style.Theme_RocketRide);
-        setContentView(R.layout.activity_main_try);
+        setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -73,33 +71,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Sign in & sign up buttons
-        Button signInButton = findViewById(R.id.login_button),
-                signUpButton = findViewById(R.id.signup_button);
+        Button signInButton = findViewById(R.id.signInButton),
+                signUpButton = findViewById(R.id.signUpButton);
 
         // Sign up text inputs
-        TextInputEditText signUpUserEmail = findViewById(R.id.su_email_entery),
-                          signUpUserPassword = findViewById(R.id.su_password_entery),
-                          signUpUserConfirmPassword = findViewById(R.id.su_confirm_password_entery);
+        TextInputEditText signUpUserEmail = findViewById(R.id.eMails),
+                signUpUserPassword = findViewById(R.id.passwordss),
+                signUpUserConfirmPassword = findViewById(R.id.passwords01);
 
         // Sign in text inputs
-        TextInputEditText signInUserEmail = findViewById(R.id.email_entery),
-                          signInUserPassword = findViewById(R.id.password_entery);
+        TextInputEditText signInUserEmail = findViewById(R.id.eMail),
+                signInUserPassword = findViewById(R.id.passwords);
 
         // TextView objects
-        Button signUP = findViewById(R.id.sign_up_button),
-                 logIn = findViewById(R.id.sign_in_button),
-                 forgotPassword = findViewById(R.id.reset_password_button);
+        TextView signUP = findViewById(R.id.singUp),
+                logIn = findViewById(R.id.logIn),
+                forgotPassword = findViewById(R.id.forgotpass);
 
         // ImageView objects
-        ImageView googleSignIn = findViewById(R.id.google_SignIn);
+        ImageView googleSignIn = findViewById(R.id.googleSignIn);
 
         // LinearLayout objects
-        ScrollView signUpLayout = findViewById(R.id.sigin_up_view),
-                     logInLayout = findViewById(R.id.sigin_in_view);
+        LinearLayout signUpLayout = findViewById(R.id.singUpLayout),
+                logInLayout = findViewById(R.id.logInLayout);
 
         if(viewFlag){
             signUP.setTextColor(getResources().getColor(R.color.white));
-            logIn.setTextColor(getResources().getColor(R.color.white));
+            logIn.setTextColor(getResources().getColor(R.color.black));
             signUP.setBackground(getResources().getDrawable(R.drawable.switch_trcks, null));
             logIn.setBackground(null);
             signUpLayout.setVisibility(View.VISIBLE);
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         // On clicking the sign up textView
         signUP.setOnClickListener(signUp -> {
             signUP.setTextColor(getResources().getColor(R.color.white));
-            logIn.setTextColor(getResources().getColor(R.color.white));
+            logIn.setTextColor(getResources().getColor(R.color.black));
             signUP.setBackground(getResources().getDrawable(R.drawable.switch_trcks, null));
             logIn.setBackground(null);
             signUpLayout.setVisibility(View.VISIBLE);
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         // On clicking the login textView
         logIn.setOnClickListener(login -> {
-            signUP.setTextColor(getResources().getColor(R.color.white));
+            signUP.setTextColor(getResources().getColor(R.color.black));
             logIn.setTextColor(getResources().getColor(R.color.white));
             logIn.setBackground(getResources().getDrawable(R.drawable.switch_trcks, null));
             signUP.setBackground(null);
@@ -236,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println("USER ID: " + user.getUid());
 
                             mainActivity.finish();
-                            Intent switchActivityIntent = new Intent(mainActivity, MapsDriverActivity.class);
+                            Intent switchActivityIntent = new Intent(mainActivity, HomeScreenActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             startActivity(switchActivityIntent);
                             // updateUI(user);
