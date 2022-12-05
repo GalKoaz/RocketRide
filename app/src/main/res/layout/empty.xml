@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:visibility="visible"
     tools:context=".RideSearchActivity">
+
 
     <View
         android:id="@+id/view"
@@ -14,35 +13,48 @@
         android:layout_height="199dp"
         android:background="#13A7BA"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="303dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="72dp"
-        android:textAlignment="center"
+        android:layout_marginTop="16dp"
         android:background="@drawable/round_border"
         android:text=""
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="303dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="76dp"
         android:background="@drawable/round_border"
-        android:textAlignment="center"
         android:text=""
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.126" />
+        app:layout_constraintStart_toStartOf="@+id/view" />
 
+    <Button
+        android:layout_width="131dp"
+        android:layout_height="53dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:elevation="15dp"
+        android:gravity="center"
+        android:text="SEARCH"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:shapeAppearanceOverlay="@style/Button5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
