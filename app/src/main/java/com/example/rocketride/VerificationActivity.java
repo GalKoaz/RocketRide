@@ -36,6 +36,8 @@ public class VerificationActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String verificationID;
     private String phoneNumber;
+    private PhoneAuthProvider.ForceResendingToken forceResendToken;
+    private String userCode;
 
     private LinearLayout codeLayout, phoneLayout;
 
@@ -91,6 +93,8 @@ public class VerificationActivity extends AppCompatActivity {
         });
 
         backArrow.setOnClickListener(l -> {
+
+
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
@@ -108,7 +112,7 @@ public class VerificationActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(phoneNumber)
-                .setTimeout(120L, TimeUnit.SECONDS)
+                .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -118,6 +122,8 @@ public class VerificationActivity extends AppCompatActivity {
                         // Save the verification id somewhere
                         // ...
                         verificationID = verificationId;
+                        System.out.println("----- USER CODE: " + verificationID + " -----------");
+                        forceResendToken = forceResendingToken;
                         // The corresponding whitelisted code above should be used to complete sign-in.
                         //VerificationActivity.this.enableUserManuallyInputCode();
 
