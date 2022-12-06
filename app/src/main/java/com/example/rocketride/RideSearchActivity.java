@@ -5,6 +5,8 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -23,6 +25,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -30,15 +33,28 @@ import java.util.Locale;
 public class RideSearchActivity extends AppCompatActivity {
 
     private String selectedSourcePlace, selectedDestPlace;
+    private ArrayList<DriverRideModel> closeRides = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_search);
 
+
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        RecyclerView recyclerView = findViewById(R.id.myRecyclerView);
+
+        // set up the closest drivers around
+        setUpCloseRides();
+
+        // Set the adapter
+        DriverRideRecyclerViewAdapter adapter = new DriverRideRecyclerViewAdapter(this, closeRides);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         // Initialize places
         if (!Places.isInitialized()) {
@@ -110,5 +126,13 @@ public class RideSearchActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
 
         });
+    }
+
+    protected void setUpCloseRides(){
+        // TODO: here extract closest rides to current user.
+        //      build all related objects afterwards and push them to
+        ///     the associated array list called - "closeRides".
+        closeRides.add(new DriverRideModel("Gal", "Koaz", "Meron", "King-Meat", "2 min", "10"));
+        closeRides.add(new DriverRideModel("Amir", "Gillette", "Golan", "King-Meat", "10 min", "2.5"));
     }
 }
