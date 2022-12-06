@@ -20,9 +20,9 @@
     <TextView
         android:id="@+id/textView12"
         android:layout_width="303dp"
-        android:layout_height="48dp"
+        android:layout_height="38dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/round_border"
+        android:background="@drawable/round_bg_square"
         android:text=""
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/view"
@@ -33,7 +33,7 @@
         android:id="@+id/autocomplete_fragment2"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="287dp"
-        android:layout_height="44dp"
+        android:layout_height="34dp"
 
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="@+id/view"
@@ -44,9 +44,9 @@
     <TextView
         android:id="@+id/textView13"
         android:layout_width="303dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="76dp"
-        android:background="@drawable/round_border"
+        android:layout_height="38dp"
+        android:layout_marginBottom="96dp"
+        android:background="@drawable/round_bg_square"
         android:text=""
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/view"
@@ -57,19 +57,20 @@
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="287dp"
-        android:layout_height="44dp"
+        android:layout_height="34dp"
 
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="65dp"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
         tools:layout="@layout/google_fragment" />
 
     <Button
+        android:id="@+id/searchButton"
         android:layout_width="131dp"
         android:layout_height="53dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="22dp"
         android:elevation="15dp"
         android:gravity="center"
         android:text="SEARCH"
