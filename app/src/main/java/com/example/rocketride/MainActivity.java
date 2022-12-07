@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println("USER ID: " + user.getUid());
 
                             mainActivity.finish();
-                            Intent switchActivityIntent = new Intent(mainActivity, RideSearchActivity.class);
+                            Intent switchActivityIntent = new Intent(mainActivity, MapsDriverActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             startActivity(switchActivityIntent);
                             // updateUI(user);
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // Switch to home screen
                             this.finish();
-                            Intent switchActivityIntent = new Intent(this, HomeScreenActivity.class);
+                            Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
                             //Intent switchActivityIntent = new Intent(this, ProfileActivity.class);
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             startActivity(switchActivityIntent);

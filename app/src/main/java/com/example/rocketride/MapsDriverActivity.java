@@ -125,7 +125,7 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        int time_to_refresh = 5;
+        int time_to_refresh = 30;
         mLoctionRequest = new LocationRequest();
         mLoctionRequest.setInterval(time_to_refresh*1000);
         mLoctionRequest.setFastestInterval(time_to_refresh*1000);

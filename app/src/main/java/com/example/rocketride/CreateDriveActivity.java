@@ -188,16 +188,34 @@ public class CreateDriveActivity extends FragmentActivity{
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("driver-id", userId);
-        userMap.put("date", this.date);
-        userMap.put("time", this.time);
+
+        String[] date_s = this.date.split("\\.");
+        int year = Integer.parseInt(date_s[2]);
+        int month = Integer.parseInt(date_s[1]);
+        int day = Integer.parseInt(date_s[0]);
+        userMap.put("date-y", year);
+        userMap.put("date-m", month);
+        userMap.put("date-d", day);
+
+        String[] time_s = this.time.split(":");
+        int hour = Integer.parseInt(time_s[0]);
+        int min = Integer.parseInt(time_s[1]);
+        userMap.put("time_h", hour);
+        userMap.put("time_m", min);
+
         userMap.put("alive", true);
         userMap.put("src_name", this.source);
-        userMap.put("src", this.s_point);
+        userMap.put("src_lat", this.s_point.getLatitude());
+        userMap.put("src_lon", this.s_point.getLongitude());
         userMap.put("dst_name", this.dst);
-        userMap.put("dst", this.d_point);
+        userMap.put("dst_lat", this.d_point.getLatitude());
+        userMap.put("dst_lon", this.d_point.getLongitude());
         userMap.put("pickup_name", this.pickup);
-        userMap.put("pickup", this.p_point);
-        userMap.put("price", this.price);
+        userMap.put("pickup_lat", this.p_point.getLatitude());
+        userMap.put("pickup_lon", this.p_point.getLongitude());
+
+        double price_num = Integer.parseInt(this.price);
+        userMap.put("price", price_num);
         userMap.put("details", this.data_drive);
 
         db.collection("drives").document().set(userMap);
