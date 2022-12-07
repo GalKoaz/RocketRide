@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -33,6 +36,7 @@ import java.util.Locale;
 public class RideSearchActivity extends AppCompatActivity {
 
     private String selectedSourcePlace, selectedDestPlace;
+    private LatLng selectedSourcePlacePoint, selectedDestPlacePoint;
     private ArrayList<DriverRideModel> closeRides = new ArrayList<>();
 
     @Override
@@ -40,6 +44,7 @@ public class RideSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_search);
 
+        System.out.println("the lang distance is:" +CalculationByDistance(new LatLng(32.177033, 34.852330),new LatLng(32.178005, 34.923150)));
 
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
@@ -79,6 +84,7 @@ public class RideSearchActivity extends AppCompatActivity {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 selectedSourcePlace = place.getName();
+                selectedSourcePlacePoint = place.getLatLng();
             }
 
             @Override
@@ -104,6 +110,7 @@ public class RideSearchActivity extends AppCompatActivity {
                 Toast.makeText(RideSearchActivity.this, "Place: " + place.getName() + ", " + place.getId(),
                         Toast.LENGTH_SHORT).show();
                 selectedDestPlace = place.getName();
+                selectedDestPlacePoint = place.getLatLng();
             }
 
             @Override
@@ -135,4 +142,30 @@ public class RideSearchActivity extends AppCompatActivity {
         closeRides.add(new DriverRideModel("Gal", "Koaz", "Meron", "King-Meat", "2 min", "10"));
         closeRides.add(new DriverRideModel("Amir", "Gillette", "Golan", "King-Meat", "10 min", "2.5"));
     }
+
+    // function calculate the distance from one point to other in map.
+    public double CalculationByDistance(LatLng StartP, LatLng EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+        return Radius * c;
+    }
+
 }
