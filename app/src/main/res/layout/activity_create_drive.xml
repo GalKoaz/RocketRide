@@ -15,6 +15,13 @@
         android:orientation="vertical"
         android:visibility="visible">
 
+        <Button
+            android:id="@+id/back_from_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="back"
+            android:textColor="@color/white" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -129,6 +136,7 @@
                     android:hint="price">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/create_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -146,8 +154,10 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/create_pickup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/app_name"
                         android:inputType="textMultiLine" />
                 </com.google.android.material.textfield.TextInputLayout>
 

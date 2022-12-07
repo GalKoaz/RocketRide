@@ -9,8 +9,10 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -67,10 +69,12 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
         });
         search_button.setOnClickListener(signUp -> {
             this.finish();
-            Intent switchActivityIntent = new Intent(this, CreateDriveActivity.class);
+            Intent switchActivityIntent = new Intent(this, RideSearchActivity.class);
             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
             startActivity(switchActivityIntent);
         });
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            return;
     }
 
     /**
@@ -89,6 +93,14 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
             return;
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
     }
     protected  synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
@@ -103,7 +115,6 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("id", userId);
         userMap.put("Longitude",  location.getLongitude());

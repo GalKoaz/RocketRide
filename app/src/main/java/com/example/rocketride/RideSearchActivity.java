@@ -67,7 +67,6 @@ public class RideSearchActivity extends AppCompatActivity {
         }
 
         Button searchButton = findViewById(R.id.searchButton);
-
         //mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map_picker);
 
         // Initialize the AutocompleteSupportFragment.
@@ -106,6 +105,7 @@ public class RideSearchActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
                 // TODO: Get info about the selected place.
+
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 Toast.makeText(RideSearchActivity.this, "Place: " + place.getName() + ", " + place.getId(),
                         Toast.LENGTH_SHORT).show();
