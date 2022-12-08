@@ -22,14 +22,23 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.core.FirestoreClient;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
 
 
@@ -38,11 +47,13 @@ public class RideSearchActivity extends AppCompatActivity {
     private String selectedSourcePlace, selectedDestPlace;
     private LatLng selectedSourcePlacePoint, selectedDestPlacePoint;
     private ArrayList<DriverRideModel> closeRides = new ArrayList<>();
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_search);
+        db = FirebaseFirestore.getInstance();
 
         System.out.println("the lang distance is:" +CalculationByDistance(new LatLng(32.177033, 34.852330),new LatLng(32.178005, 34.923150)));
 
@@ -137,10 +148,79 @@ public class RideSearchActivity extends AppCompatActivity {
 
     protected void setUpCloseRides(){
         // TODO: here extract closest rides to current user.
-        //      build all related objects afterwards and push them to
-        ///     the associated array list called - "closeRides".
-        closeRides.add(new DriverRideModel("Gal", "Koaz", "Meron", "King-Meat", "2 min", "10"));
-        closeRides.add(new DriverRideModel("Amir", "Gillette", "Golan", "King-Meat", "10 min", "2.5"));
+        //       build all related objects afterwards and push them to
+        //       the associated array list called - "closeRides".
+        for (int i = 0; i < 10; i++) {
+            closeRides.add(new DriverRideModel("Gal", "Koaz", "Meron", "King-Meat", "2 min", "10"));
+            closeRides.add(new DriverRideModel("Amir", "Gillette", "Golan", "King-Meat", "10 min", "2.5"));
+        }
+
+        ArrayList<DriverRideModel> aliveRides = getAliveRides();
+
+
+    }
+
+    /**
+     * Method sends a firestore query that extracts the current alive rides.
+     * @return
+     */
+    protected ArrayList<DriverRideModel> getAliveRides(){
+        ArrayList<DriverRideModel> result = new ArrayList<>();
+
+        // Create a reference to the rides collection
+        CollectionReference rides = db.collection("drives");
+
+        Query query = rides.whereEqualTo("alive", true);
+
+        // Store query result
+        query.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
+                            result.add(
+                                    new DriverRideModel(
+                                            (String) driverDetails.get("first_name"),
+                                            (String) driverDetails.get("last_name"),
+                                            (String) document.get("src"),
+                                            (String) document.get("dst"),
+                                            (String) document.get("time"),
+                                            "7.5"
+                                    )
+                            );
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+        return result;
+    }
+
+    protected HashMap<String, Object> getDriverDetails(String UID){
+        HashMap<String, Object> userDetails = new HashMap<>();
+
+        // Create a reference to the rides collection
+        CollectionReference rides = db.collection("users");
+
+        Query query = rides.whereEqualTo("UID", UID);
+
+        // Store query result
+        query.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            userDetails.put("first_name", document.get("first_name"));
+                            userDetails.put("last_name", document.get("last_name"));
+                            userDetails.put("profile_image_link", document.get("profile_image_link"));
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+
+        return userDetails;
     }
 
     // function calculate the distance from one point to other in map.
