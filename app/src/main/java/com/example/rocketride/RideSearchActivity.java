@@ -38,6 +38,7 @@ import com.google.firebase.firestore.core.FirestoreClient;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -48,7 +49,8 @@ public class RideSearchActivity extends AppCompatActivity {
     private LatLng selectedSourcePlacePoint, selectedDestPlacePoint;
     private ArrayList<DriverRideModel> closeRides = new ArrayList<>();
     private FirebaseFirestore db;
-
+    private  RecyclerView recyclerView;
+    private DriverRideRecyclerViewAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +63,10 @@ public class RideSearchActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        RecyclerView recyclerView = findViewById(R.id.myRecyclerView);
-
-        // set up the closest drivers around
-        setUpCloseRides();
+        recyclerView = findViewById(R.id.myRecyclerView);
 
         // Set the adapter
-        DriverRideRecyclerViewAdapter adapter = new DriverRideRecyclerViewAdapter(this, closeRides);
+        adapter = new DriverRideRecyclerViewAdapter(this, closeRides);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -137,12 +136,7 @@ public class RideSearchActivity extends AppCompatActivity {
 
         // Drivers search button action listener
         searchButton.setOnClickListener(l -> {
-            Toast.makeText(RideSearchActivity.this, "search button clicked",
-                    Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(RideSearchActivity.this, selectedSourcePlace + ", " + selectedDestPlace,
-                    Toast.LENGTH_SHORT).show();
-
+            setUpCloseRides();
         });
     }
 
@@ -150,14 +144,7 @@ public class RideSearchActivity extends AppCompatActivity {
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-        for (int i = 0; i < 10; i++) {
-            closeRides.add(new DriverRideModel("Gal", "Koaz", "Meron", "King-Meat", "2 min", "10"));
-            closeRides.add(new DriverRideModel("Amir", "Gillette", "Golan", "King-Meat", "10 min", "2.5"));
-        }
-
-        ArrayList<DriverRideModel> aliveRides = getAliveRides();
-
-
+        getAliveRides();
     }
 
     /**
@@ -169,26 +156,47 @@ public class RideSearchActivity extends AppCompatActivity {
 
         // Create a reference to the rides collection
         CollectionReference rides = db.collection("drives");
+        Calendar calendar = Calendar.getInstance();
 
-        Query query = rides.whereEqualTo("alive", true);
-
+        int YEAR = calendar.get(Calendar.YEAR);
+        int MONTH = calendar.get(Calendar.MONTH);
+        int DATE = calendar.get(Calendar.DATE);
+        int HOUR = calendar.get(Calendar.HOUR);
+        int MINUTE = calendar.get(Calendar.MINUTE);
+        Query query = rides.whereEqualTo("alive", true).whereEqualTo("date-d",DATE).whereEqualTo("date-m",MONTH).whereEqualTo("date-y",YEAR);
         // Store query result
         query.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
+                            Long h = (Long)document.get("time_h");
+                            Long m = (Long)document.get("time_m");
+                            h -= HOUR;
+                            m -= MINUTE;
+                            if(m < 0){
+                                h -= 1;
+                                m = 60 + m;
+                            }
+                            String t = h+":"+m;
+
+
                             result.add(
                                     new DriverRideModel(
                                             (String) driverDetails.get("first_name"),
                                             (String) driverDetails.get("last_name"),
-                                            (String) document.get("src"),
-                                            (String) document.get("dst"),
-                                            (String) document.get("time"),
+                                            (String) document.get("src_name"),
+                                            (String) document.get("dst_name"),
+                                            t,
                                             "7.5"
                                     )
                             );
                             Log.d(TAG, document.getId() + " => " + document.getData());
+
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            adapter = new DriverRideRecyclerViewAdapter(this, result);
+                            recyclerView.setAdapter(adapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(this));
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
