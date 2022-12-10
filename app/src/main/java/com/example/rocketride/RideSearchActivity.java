@@ -172,12 +172,14 @@ public class RideSearchActivity extends AppCompatActivity {
                             HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
                             Long h = (Long)document.get("time_h");
                             Long m = (Long)document.get("time_m");
+                            Long d = (Long)document.get("date-d");
                             h -= HOUR;
                             m -= MINUTE;
                             if(m < 0){
                                 h -= 1;
                                 m = 60 + m;
                             }
+                            h += d*24;
                             String t = h+":"+m;
 
 
