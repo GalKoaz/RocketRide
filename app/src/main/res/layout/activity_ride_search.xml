@@ -11,7 +11,7 @@
         android:id="@+id/view"
         android:layout_width="411dp"
         android:layout_height="199dp"
-        android:background="#4D6088"
+        android:background="#134BAA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
         android:layout_width="131dp"
         android:layout_height="53dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="22dp"
+        android:layout_marginBottom="20dp"
         android:elevation="15dp"
         android:gravity="center"
         android:text="SEARCH"
@@ -84,7 +84,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myRecyclerView"
-        android:layout_width="395dp"
+        android:layout_width="409dp"
         android:layout_height="530dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

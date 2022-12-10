@@ -3,8 +3,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    layout_height=""
-    layout_width=""
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,33 +14,52 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="60dp"
+            android:background="@drawable/gradiant_blue_menu_bar">
 
-            <Button
-                android:id="@+id/create_drive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="create a ride"
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="46dp"
+                android:layout_height="37dp"
+                android:layout_marginStart="16dp"
                 map:layout_constraintBottom_toBottomOf="parent"
                 map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toTopOf="parent" />
+                map:layout_constraintTop_toTopOf="parent"
+                map:layout_constraintVertical_bias="0.521"
+                map:srcCompat="@drawable/ic_baseline_menu_24" />
 
-            <Button
-                android:id="@+id/search_drive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="join a ride!"
-                map:layout_constraintBottom_toBottomOf="parent"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MapsDriverActivity" />
+            tools:context=".MapsDriverActivity">
+
+            <Button
+                android:id="@+id/create_drive"
+                android:layout_width="151dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="124dp"
+                android:text="CREATE RIDE"
+                app:layout_constraintBottom_toBottomOf="@+id/button2"
+                app:shapeAppearanceOverlay="@style/Button5"/>
+
+            <Button
+                android:id="@+id/search_drive"
+                android:layout_width="151dp"
+                android:layout_height="46dp"
+                android:layout_marginBottom="72dp"
+                android:text="JOIN RIDE"
+                android:layout_gravity="center|bottom"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:shapeAppearanceOverlay="@style/Button5"/>
+
+        </fragment>
+
 
     </LinearLayout>
 

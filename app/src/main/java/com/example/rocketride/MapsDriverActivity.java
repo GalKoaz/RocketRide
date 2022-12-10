@@ -3,6 +3,8 @@ package com.example.rocketride;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -39,7 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCallback , GoogleApiClient.OnConnectionFailedListener
+public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleApiClient.OnConnectionFailedListener
 ,GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
@@ -57,6 +59,8 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         db = FirebaseFirestore.getInstance();
 
         Button create_button = findViewById(R.id.create_drive);
