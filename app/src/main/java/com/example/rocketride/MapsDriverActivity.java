@@ -60,6 +60,9 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_driver);
 
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -70,8 +73,6 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         actionBar.hide();
 
         db = FirebaseFirestore.getInstance();
-
-        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
         // Buttons
         Button create_button = findViewById(R.id.create_drive);
