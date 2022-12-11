@@ -6,6 +6,8 @@ import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -15,9 +17,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -55,27 +59,44 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_driver);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Remove action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
         db = FirebaseFirestore.getInstance();
 
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+
+        // Buttons
         Button create_button = findViewById(R.id.create_drive);
         Button search_button = findViewById(R.id.search_drive);
+
         create_button.setOnClickListener(signUp -> {
             this.finish();
             Intent switchActivityIntent = new Intent(this, CreateDriveActivity.class);
             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
             startActivity(switchActivityIntent);
         });
+
         search_button.setOnClickListener(signUp -> {
             this.finish();
             Intent switchActivityIntent = new Intent(this, RideSearchActivity.class);
             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
             startActivity(switchActivityIntent);
+        });
+
+        // ImageViews
+        ImageView sideMenuBar = findViewById(R.id.sideMenuBar);
+
+        sideMenuBar.setOnClickListener(l -> {
+            System.out.println("Side bar pressed");
+            drawerLayout.openDrawer(GravityCompat.START);
         });
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             return;

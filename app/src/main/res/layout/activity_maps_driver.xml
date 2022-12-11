@@ -7,67 +7,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/gradiant_blue_menu_bar">
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="46dp"
-                android:layout_height="37dp"
-                android:layout_marginStart="16dp"
-                map:layout_constraintBottom_toBottomOf="parent"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toTopOf="parent"
-                map:layout_constraintVertical_bias="0.521"
-                map:srcCompat="@drawable/ic_baseline_menu_24" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MapsDriverActivity">
-
-        </fragment>
+            android:orientation="vertical">
 
 
-    </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/gradiant_blue_menu_bar">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+                <ImageView
+                    android:id="@+id/sideMenuBar"
+                    android:layout_width="46dp"
+                    android:layout_height="37dp"
+                    android:layout_marginStart="16dp"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toTopOf="parent"
+                    map:layout_constraintVertical_bias="0.521"
+                    map:srcCompat="@drawable/ic_baseline_menu_24" />
 
-        <Button
-            android:id="@+id/create_drive"
-            android:layout_width="151dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center|bottom"
-            android:text="CREATE RIDE"
-            app:layout_constraintBottom_toBottomOf="@+id/button2"
-            app:shapeAppearanceOverlay="@style/Button5" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/search_drive"
-            android:layout_width="151dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center|bottom"
-            android:text="JOIN RIDE"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:shapeAppearanceOverlay="@style/Button5" />
-    </LinearLayout>
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MapsDriverActivity">
 
+            </fragment>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/create_drive"
+                android:layout_width="151dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center|bottom"
+                android:text="CREATE RIDE"
+                app:layout_constraintBottom_toBottomOf="@+id/button2"
+                app:shapeAppearanceOverlay="@style/Button5" />
+
+            <Button
+                android:id="@+id/search_drive"
+                android:layout_width="151dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center|bottom"
+                android:text="JOIN RIDE"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:shapeAppearanceOverlay="@style/Button5" />
+        </LinearLayout>
+        
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    
 </androidx.constraintlayout.widget.ConstraintLayout>
 
