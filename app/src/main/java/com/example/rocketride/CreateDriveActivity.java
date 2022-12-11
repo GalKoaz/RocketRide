@@ -218,6 +218,10 @@ public class CreateDriveActivity extends FragmentActivity{
         userMap.put("price", price_num);
         userMap.put("details", this.data_drive);
 
+        userMap.put("near_driver_seat", "");
+        userMap.put("left_bottom_seat", "");
+        userMap.put("center_bottom_seat", "");
+        userMap.put("right_bottom_seat", "");
         db.collection("drives").document().set(userMap);
         Toast.makeText(CreateDriveActivity.this, "Drive created.",
                 Toast.LENGTH_SHORT).show();

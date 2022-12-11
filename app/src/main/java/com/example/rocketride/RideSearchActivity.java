@@ -151,9 +151,7 @@ public class RideSearchActivity extends AppCompatActivity {
      * Method sends a firestore query that extracts the current alive rides.
      * @return
      */
-    protected ArrayList<DriverRideModel> getAliveRides(){
-        ArrayList<DriverRideModel> result = new ArrayList<>();
-
+    synchronized protected void getAliveRides(){
         // Create a reference to the rides collection
         CollectionReference rides = db.collection("drives");
         Calendar calendar = Calendar.getInstance();
@@ -168,6 +166,7 @@ public class RideSearchActivity extends AppCompatActivity {
         query.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        ArrayList<DriverRideModel> result = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
                             Long h = (Long)document.get("time_h");
@@ -196,15 +195,15 @@ public class RideSearchActivity extends AppCompatActivity {
                             Log.d(TAG, document.getId() + " => " + document.getData());
 
                             Log.d(TAG, document.getId() + " => " + document.getData());
-                            adapter = new DriverRideRecyclerViewAdapter(this, result);
-                            recyclerView.setAdapter(adapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
                         }
+                        adapter = new DriverRideRecyclerViewAdapter(this, result);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
-        return result;
     }
 
     protected HashMap<String, Object> getDriverDetails(String UID){
