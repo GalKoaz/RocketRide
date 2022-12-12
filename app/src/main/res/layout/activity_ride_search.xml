@@ -11,7 +11,7 @@
         android:id="@+id/view"
         android:layout_width="411dp"
         android:layout_height="199dp"
-        android:background="#134BAA"
+        android:background="@drawable/gradiant_blue_menu_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
