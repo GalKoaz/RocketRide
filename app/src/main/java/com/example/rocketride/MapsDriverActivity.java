@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -31,6 +32,9 @@ import com.example.rocketride.MenuActivities.BecomeDriver;
 import com.example.rocketride.MenuActivities.History;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -62,6 +66,11 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
     LocationRequest mLoctionRequest;
     private FirebaseFirestore db;
 
+    // Google sign-in client
+    private GoogleSignInClient mGoogleSignInClient;
+
+    private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +78,17 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
 
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Set the navigation view
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
@@ -142,7 +162,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
     }
-    protected  synchronized void buildGoogleApiClient(){
+    protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         mGoogleApiClient.connect();
     }
@@ -153,6 +173,11 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            System.out.println("current user is null");
+            return;
+        }
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Map<String, Object> userMap = new HashMap<>();
@@ -188,6 +213,12 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onStop() {
         super.onStop();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null){
+            System.out.println("current user is null!");
+            return;
+        }
+
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
         System.out.println(userId);
@@ -239,8 +270,43 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
 
             case R.id.menuLogout:
                 Toast.makeText(this, "menuLogout", Toast.LENGTH_SHORT).show();
+                showLogoutDialog();
                 break;
         }
         return true;
+    }
+
+    protected void showLogoutDialog(){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.layout_logout_dialog);
+
+        // Dialog buttons
+        Button acceptButton = dialog.findViewById(R.id.acceptLogoutButton);
+        Button cancelButton = dialog.findViewById(R.id.cancelLogoutButton);
+
+        // buttons listeners
+        acceptButton.setOnClickListener(l -> {
+            dialog.dismiss();
+
+            signOut();
+
+            // Switch to sign in activity
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, MainActivity.class);
+            switchActivityIntent.putExtra("ViewFlag", false);
+            startActivity(switchActivityIntent);
+        });
+
+        cancelButton.setOnClickListener(l -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    protected void signOut() {
+        // Firebase sign out
+        firebaseAuth.signOut();
+
+        // Google sign out
+        mGoogleSignInClient.signOut();
     }
 }
