@@ -47,7 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class CreateDriveActivity extends FragmentActivity{
+public class CreateDriveActivity extends AppCompatActivity{
 
     Button DateButton, TimeButton, GoBack, Submit;
     TextView DateText, TimeText;
@@ -79,9 +79,9 @@ public class CreateDriveActivity extends FragmentActivity{
         DateButton = findViewById(R.id.date_pick_button);
         TimeButton = findViewById(R.id.time_pick_button);
         DateText = findViewById(R.id.date_text);
-        TimeText = findViewById(R.id.time_text);
-        PriceEntery = findViewById(R.id.create_price);
-        detailsEntery = findViewById(R.id.create_pickup);
+        //TimeText = findViewById(R.id.time_text);
+        //PriceEntery = findViewById(R.id.create_price);
+        //detailsEntery = findViewById(R.id.create_pickup);
 
         DateButton.setOnClickListener(view -> handdle_date_click());
         TimeButton.setOnClickListener(view -> handdle_time_click());
@@ -164,6 +164,9 @@ public class CreateDriveActivity extends FragmentActivity{
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
+        autocompleteFragment.setHint("Choose Source");
+        autocompleteFragment2.setHint("Choose Destination");
+        autocompleteFragment3.setHint("Pick Up Location");
     }
 
     public void submit_drive(){
