@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menuHome"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Home"
+        />
     <item
         android:id="@+id/menuHistory"
         android:icon="@drawable/ic_baseline_history_24"
-        android:title="History"/>
+        android:title="History"
+        />
 
     <item
         android:id="@+id/menuActiveDrives"
         android:icon="@drawable/ic_baseline_drive_eta_24"
-        android:title="Active Drives"/>
+        android:title="Active Drives"
+        />
 
     <item
         android:id="@+id/menuBecomeDriver"
         android:icon="@drawable/driver_join"
-
-        android:title="Become A Driver"/>
+        android:title="Become A Driver"
+        />
 
     <item
         android:id="@+id/menuSearchRide"
