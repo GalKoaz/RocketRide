@@ -1,12 +1,21 @@
 package com.example.rocketride;
 
-import com.google.type.LatLng;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Comparator;
 
 public class DriverRideModel {
-    private String firstName, lastName, source, destination, startTime, rating;
+    private final String firstName;
+    private final String lastName;
+    private final String source;
+    private final String destination;
+    private final String startTime;
+    private final String rating;
     private LatLng srcPoint, dstPoint, pickupPoint;
     private double sortWeight;
-
+    public long start_in_minutes = 0;
+    public double price;
+    public Double rating_numerical;
     public DriverRideModel(String firstName, String lastName, String source, String destination, String startTime, String rating) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -84,7 +93,28 @@ public class DriverRideModel {
         this.pickupPoint = pickupPoint;
     }
 
-    public void setSort_weight(int sort_weight) {
+    public void setSort_weight(double sort_weight) {
         this.sortWeight = sort_weight;
+    }
+}
+
+class sort_by_best_fit implements Comparator<DriverRideModel>{
+    public int compare(DriverRideModel a, DriverRideModel b){
+        return Double.compare(a.getSort_weight(), b.getSort_weight());
+    }
+}
+class sort_by_best_time implements Comparator<DriverRideModel>{
+    public int compare(DriverRideModel a, DriverRideModel b){
+        return Long.compare(a.start_in_minutes, b.start_in_minutes);
+    }
+}
+class sort_by_best_rating implements Comparator<DriverRideModel>{
+    public int compare(DriverRideModel a, DriverRideModel b){
+        return Double.compare(a.rating_numerical, b.rating_numerical);
+    }
+}
+class sort_by_best_price implements Comparator<DriverRideModel>{
+    public int compare(DriverRideModel a, DriverRideModel b){
+        return Double.compare(a.price, b.price);
     }
 }

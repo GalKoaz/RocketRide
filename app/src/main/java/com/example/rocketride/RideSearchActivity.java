@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,12 +47,14 @@ import java.util.Locale;
 
 public class RideSearchActivity extends AppCompatActivity {
 
-    private String selectedSourcePlace, selectedDestPlace;
+    private Button by_price, by_time, by_best, by_stars, GoBack;
+    private String selectedSourcePlace="", selectedDestPlace="";
     private LatLng selectedSourcePlacePoint, selectedDestPlacePoint;
     private ArrayList<DriverRideModel> closeRides = new ArrayList<>();
     private FirebaseFirestore db;
     private  RecyclerView recyclerView;
     private DriverRideRecyclerViewAdapter adapter;
+    private int sort_alg = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +69,39 @@ public class RideSearchActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.myRecyclerView);
 
+        //sort buttons
+        by_best=findViewById(R.id.best_sort);
+        by_price=findViewById(R.id.price_sort);
+        by_stars=findViewById(R.id.stars_sort);
+        by_time=findViewById(R.id.time_sort);
+        GoBack=findViewById(R.id.back_from_search);
         // Set the adapter
         adapter = new DriverRideRecyclerViewAdapter(this, closeRides);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
+        GoBack.setOnClickListener(view -> {
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
+//            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
+            startActivity(switchActivityIntent);
+        });
+        by_best.setOnClickListener(view -> {
+            sort_alg = 0;
+            setUpCloseRides();
+        });
+        by_stars.setOnClickListener(view -> {
+            sort_alg = 1;
+            setUpCloseRides();
+        });
+        by_time.setOnClickListener(view -> {
+            sort_alg = 2;
+            setUpCloseRides();
+        });
+        by_price.setOnClickListener(view -> {
+            sort_alg = 3;
+            setUpCloseRides();
+        });
         // Initialize places
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getString(R.string.api_key), Locale.US);
@@ -84,7 +115,7 @@ public class RideSearchActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment2);
 
         // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -94,6 +125,7 @@ public class RideSearchActivity extends AppCompatActivity {
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 selectedSourcePlace = place.getName();
                 selectedSourcePlacePoint = place.getLatLng();
+                System.out.println(selectedSourcePlacePoint);
             }
 
             @Override
@@ -108,7 +140,7 @@ public class RideSearchActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         // Specify the types of place data to return.
-        autocompleteFragment2.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment2.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -121,6 +153,7 @@ public class RideSearchActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 selectedDestPlace = place.getName();
                 selectedDestPlacePoint = place.getLatLng();
+                System.out.println(selectedDestPlacePoint);
             }
 
             @Override
@@ -144,7 +177,13 @@ public class RideSearchActivity extends AppCompatActivity {
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-        getAliveRides();
+        if(selectedDestPlace.equals("") || selectedSourcePlace.equals("")){
+            Toast.makeText(this, "input is empty.",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else{
+            getAliveRides();
+        }
     }
 
     /**
@@ -161,6 +200,8 @@ public class RideSearchActivity extends AppCompatActivity {
         int DATE = calendar.get(Calendar.DATE);
         int HOUR = calendar.get(Calendar.HOUR);
         int MINUTE = calendar.get(Calendar.MINUTE);
+        int src_radius = 5;
+        int dst_radius = 7;
         Query query = rides.whereEqualTo("alive", true).whereEqualTo("date-d",DATE).whereEqualTo("date-m",MONTH).whereEqualTo("date-y",YEAR);
         // Store query result
         query.get()
@@ -168,34 +209,62 @@ public class RideSearchActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         ArrayList<DriverRideModel> result = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
-                            Long h = (Long)document.get("time_h");
-                            Long m = (Long)document.get("time_m");
-                            Long d = (Long)document.get("date-d");
-                            h -= HOUR;
-                            m -= MINUTE;
-                            if(m < 0){
-                                h -= 1;
-                                m = 60 + m;
+                            LatLng src_p = new LatLng((double) document.get("src_lat"),(double) document.get("src_lon"));
+                            LatLng dst_p = new LatLng((double) document.get("dst_lat"),(double) document.get("dst_lon"));
+                            LatLng pickup_p = new LatLng((double) document.get("pickup_lat"),(double) document.get("pickup_lon"));
+                            if ((CalculationByDistance(src_p,selectedSourcePlacePoint) > src_radius && CalculationByDistance(pickup_p,selectedSourcePlacePoint)>src_radius)
+                                    || CalculationByDistance(dst_p,selectedDestPlacePoint) > dst_radius){
+                                    continue;
                             }
-                            h += d*24;
-                            String t = h+":"+m;
+                            else {
+                                HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
+                                Long h = (Long) document.get("time_h");
+                                Long m = (Long) document.get("time_m");
+                                Long d = (Long) document.get("date-d");
+                                h -= HOUR;
+                                m -= MINUTE;
+                                if (m < 0) {
+                                    h -= 1;
+                                    m = 60 + m;
+                                }
+                                h += (d - DATE) * 24;
+                                String t = h + ":" + m;
 
+                                DriverRideModel DRM = new DriverRideModel(
+                                        (String) driverDetails.get("first_name"),
+                                        (String) driverDetails.get("last_name"),
+                                        (String) document.get("src_name"),
+                                        (String) document.get("dst_name"),
+                                        t,
+                                        "7.5"
+                                );
+                                DRM.start_in_minutes = h * 60 + m;
+                                DRM.price = (double) document.get("price");
+                                DRM.rating_numerical = 7.5;
+                                double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
+                                        + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + m + 1) - DRM.price);
+                                DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
+                                result.add(
+                                        DRM
+                                );
+                                Log.d(TAG, document.getId() + " => " + document.getData());
 
-                            result.add(
-                                    new DriverRideModel(
-                                            (String) driverDetails.get("first_name"),
-                                            (String) driverDetails.get("last_name"),
-                                            (String) document.get("src_name"),
-                                            (String) document.get("dst_name"),
-                                            t,
-                                            "7.5"
-                                    )
-                            );
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            if (sort_alg == 0){
+                                result.sort(new sort_by_best_fit());
+                            }
+                            else if (sort_alg == 1){
+                                result.sort(new sort_by_best_rating());
+                            }
+                            else if (sort_alg == 2){
+                                result.sort(new sort_by_best_time());
+                            }
+                            else{
+                                result.sort(new sort_by_best_price());
+                            }
                         }
                         adapter = new DriverRideRecyclerViewAdapter(this, result);
                         recyclerView.setAdapter(adapter);
@@ -234,27 +303,33 @@ public class RideSearchActivity extends AppCompatActivity {
 
     // function calculate the distance from one point to other in map.
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
-        int Radius = 6371;// radius of earth in Km
-        double lat1 = StartP.latitude;
-        double lat2 = EndP.latitude;
-        double lon1 = StartP.longitude;
-        double lon2 = EndP.longitude;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
-                * Math.sin(dLon / 2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        double valueResult = Radius * c;
-        double km = valueResult / 1;
-        DecimalFormat newFormat = new DecimalFormat("####");
-        int kmInDec = Integer.valueOf(newFormat.format(km));
-        double meter = valueResult % 1000;
-        int meterInDec = Integer.valueOf(newFormat.format(meter));
-        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
-                + " Meter   " + meterInDec);
-        return Radius * c;
+        try {
+            int Radius = 6371;// radius of earth in Km
+            double lat1 = StartP.latitude;
+            double lat2 = EndP.latitude;
+            double lon1 = StartP.longitude;
+            double lon2 = EndP.longitude;
+            double dLat = Math.toRadians(lat2 - lat1);
+            double dLon = Math.toRadians(lon2 - lon1);
+            double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                    + Math.cos(Math.toRadians(lat1))
+                    * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                    * Math.sin(dLon / 2);
+            double c = 2 * Math.asin(Math.sqrt(a));
+            double valueResult = Radius * c;
+            double km = valueResult / 1;
+            DecimalFormat newFormat = new DecimalFormat("####");
+            int kmInDec = Integer.valueOf(newFormat.format(km));
+            double meter = valueResult % 1000;
+            int meterInDec = Integer.valueOf(newFormat.format(meter));
+            Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                    + " Meter   " + meterInDec);
+            return Radius * c;
+        } catch (Exception e) {
+            return 123;
+        }
+
+
     }
 
 }
