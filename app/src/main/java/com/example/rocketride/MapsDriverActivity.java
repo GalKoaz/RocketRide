@@ -11,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -19,10 +20,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.rocketride.MenuActivities.ActiveDrives;
+import com.example.rocketride.MenuActivities.BecomeDriver;
+import com.example.rocketride.MenuActivities.History;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,7 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleApiClient.OnConnectionFailedListener
-,GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener {
+,GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
     private ActivityMapsDriverBinding binding;
@@ -65,6 +71,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
 
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
+        navigationView.setNavigationItemSelectedListener(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -127,6 +134,10 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         String provider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(provider);
 
+        if (location == null){
+            System.out.println("location is null in MapsDriverActivity");
+            return;
+        }
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
@@ -183,5 +194,53 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userId);
         db.collection("driversAvailable").document(userId).update("driving", false);
+    }
+
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuHome:
+                Toast.makeText(this, "menuHome", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menuHistory:
+                Toast.makeText(this, "menuHistory", Toast.LENGTH_SHORT).show();
+
+                // Switch to the history activity
+                this.finish();
+                Intent switchActivityHistoryIntent = new Intent(this, History.class);
+                startActivity(switchActivityHistoryIntent);
+                break;
+            case R.id.menuActiveDrives:
+                Toast.makeText(this, "menuActiveDrives", Toast.LENGTH_SHORT).show();
+
+                // Switch to the active drives activity
+                this.finish();
+                Intent switchActivityActiveDrivesIntent = new Intent(this, ActiveDrives.class);
+                startActivity(switchActivityActiveDrivesIntent);
+                break;
+            case R.id.menuBecomeDriver:
+                Toast.makeText(this, "menuBecomeDriver", Toast.LENGTH_SHORT).show();
+
+                // Switch to the become a driver activity
+                this.finish();
+                Intent switchActivityBecomeDriverIntent = new Intent(this, BecomeDriver.class);
+                startActivity(switchActivityBecomeDriverIntent);
+                break;
+            case R.id.menuSearchRide:
+                Toast.makeText(this, "menuSearchRide", Toast.LENGTH_SHORT).show();
+
+                // Switch to the ride search activity
+                this.finish();
+                Intent switchActivitySearchRideIntent = new Intent(this, RideSearchActivity.class);
+                startActivity(switchActivitySearchRideIntent);
+                break;
+
+            case R.id.menuLogout:
+                Toast.makeText(this, "menuLogout", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
     }
 }
