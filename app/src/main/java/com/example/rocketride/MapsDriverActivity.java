@@ -1,5 +1,7 @@
 package com.example.rocketride;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
@@ -21,6 +23,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -129,6 +132,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
             System.out.println("Side bar pressed");
             drawerLayout.openDrawer(GravityCompat.START);
         });
+
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             return;
     }
@@ -168,16 +172,16 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
     }
     @Override
     public void onLocationChanged(@NonNull Location location) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            System.out.println("current user is null - location change event");
+            return;
+        }
+
         mLastLocation = location;
 
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
-
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            System.out.println("current user is null");
-            return;
-        }
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Map<String, Object> userMap = new HashMap<>();
@@ -225,6 +229,10 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userId);
         db.collection("driversAvailable").document(userId).update("driving", false);
+
+        Log.d(TAG, "onStop fired ..............");
+        signOut();
+        Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
     }
 
 
@@ -288,8 +296,6 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         acceptButton.setOnClickListener(l -> {
             dialog.dismiss();
 
-            signOut();
-
             // Switch to sign in activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
@@ -308,5 +314,13 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
 
         // Google sign out
         mGoogleSignInClient.signOut();
+
+        System.out.println("disconnect: " + mGoogleApiClient);
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+        mMap.clear();
+        System.out.println("disconnect: " + mGoogleApiClient);
     }
 }
