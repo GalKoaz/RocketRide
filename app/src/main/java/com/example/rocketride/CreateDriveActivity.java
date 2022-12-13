@@ -17,11 +17,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.drjacky.imagepicker.ImagePicker;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,8 +52,10 @@ import java.util.Map;
 
 public class CreateDriveActivity extends AppCompatActivity{
 
-    Button DateButton, TimeButton, GoBack, Submit;
+    Button DateButton, TimeButton, Submit;
     TextView DateText, TimeText;
+    ImageView GoBack;
+    NumberPicker seats;
     private FirebaseFirestore db;
     TextInputEditText PriceEntery;
     TextInputEditText detailsEntery;
@@ -79,9 +84,19 @@ public class CreateDriveActivity extends AppCompatActivity{
         DateButton = findViewById(R.id.date_pick_button);
         TimeButton = findViewById(R.id.time_pick_button);
         DateText = findViewById(R.id.date_text);
-        //TimeText = findViewById(R.id.time_text);
+        TimeText = findViewById(R.id.time_text);
+        seats = findViewById(R.id.seats);
         //PriceEntery = findViewById(R.id.create_price);
         //detailsEntery = findViewById(R.id.create_pickup);
+
+        seats.setMinValue(1);
+        seats.setMaxValue(4);
+//        seats.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+//            @Override
+//            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+//
+//            }
+//        });
 
         DateButton.setOnClickListener(view -> handdle_date_click());
         TimeButton.setOnClickListener(view -> handdle_time_click());

@@ -8,32 +8,40 @@
 
     <TextView
         android:id="@+id/textView15"
-        android:layout_width="220dp"
-        android:layout_height="31dp"
-        android:layout_marginBottom="180dp"
-        android:text="Select Seats Available:"
+        android:layout_width="211dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="144dp"
+        android:text="Select Seats Available"
         android:textColor="#000000"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/back_from_create"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="back"
-        android:textColor="@color/white"
+    <NumberPicker
+        android:id="@+id/seats"
+        android:layout_width="48dp"
+        android:layout_height="93dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/drive_submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintHorizontal_bias="0.036"
+        app:layout_constraintStart_toEndOf="@+id/textView15" />
+
+    <ImageView
+        android:id="@+id/back_from_create"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/Button5"/>
+        app:srcCompat="@drawable/quantum_ic_arrow_back_grey600_24" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
@@ -63,7 +71,6 @@
         android:layout_width="126dp"
         android:layout_height="48dp"
         android:layout_marginBottom="568dp"
-        android:background="@color/white"
         android:text="get time"
         android:textColor="#FFFFFF"
         android:visibility="visible"
@@ -71,7 +78,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.814"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
+        app:layout_constraintTop_toBottomOf="@+id/time_text"
         app:shapeAppearanceOverlay="@style/Button5"/>
 
     <Button
@@ -79,7 +86,6 @@
         android:layout_width="126dp"
         android:layout_height="48dp"
         android:layout_marginBottom="568dp"
-        android:background="@color/white"
         android:text="get date"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -170,56 +176,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearanceOverlay="@style/Button5"/>
 
+    <TextView
+        android:id="@+id/textView77"
+        android:layout_width="92dp"
+        android:layout_height="31dp"
+        android:layout_marginBottom="212dp"
+        android:text="Set Price"
+        android:textColor="#000000"
+        android:textSize="21dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <EditText
         android:id="@+id/create_price"
         android:layout_width="63dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="120dp"
         android:drawableRight="@drawable/dollar_sign"
         android:ems="10"
         android:hint="6.5"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/drive_submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.025"
         app:layout_constraintStart_toEndOf="@+id/textView77" />
-
-    <TextView
-        android:id="@+id/textView77"
-        android:layout_width="92dp"
-        android:layout_height="31dp"
-        android:layout_marginBottom="288dp"
-        android:text="Set Price:"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.062"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_pickup" />
 
     <EditText
         android:id="@+id/create_pickup"
-        android:layout_width="279dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="289dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/switch_tubms_prof"
         android:ems="10"
         android:gravity="start|center_vertical"
         android:hint="More Information Write here"
-        android:textAlignment="center"
         android:inputType="textMultiLine"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_price"
-        android:background="@drawable/switch_tubms_prof"
+        app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment3"
         tools:ignore="RtlCompat" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="290dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/roadmap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.684"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
