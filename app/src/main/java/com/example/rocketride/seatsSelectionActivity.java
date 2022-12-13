@@ -23,6 +23,19 @@ public class seatsSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seats_selection);
 
+        Bundle extras = getIntent().getExtras();
+
+        String firstName = "", lastName = "", source = "", dest = "", startTime = "", rating = "";
+        if(extras != null){
+            firstName = extras.getString("first_name", "");
+            lastName = extras.getString("last_name", "");
+            source = extras.getString("source", "");
+            dest = extras.getString("destination", "");
+            startTime = extras.getString("start_time", "");
+            rating = extras.getString("rating", "");
+            System.out.println(firstName + " " + lastName + " " + source + " " + dest + " " + startTime + " " + rating);
+        }
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
@@ -94,6 +107,11 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         goBackButton.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "go back button clicked!", Toast.LENGTH_LONG).show();
+
+            // Intent back to searching a ride
+            this.finish();
+            Intent switchActivityIntent = new Intent(this, RideSearchActivity.class);
+            startActivity(switchActivityIntent);
         });
     }
 

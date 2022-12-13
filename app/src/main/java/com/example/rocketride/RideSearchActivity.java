@@ -43,9 +43,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
-public class RideSearchActivity extends AppCompatActivity {
+public class RideSearchActivity extends AppCompatActivity implements SelectDriverListener {
 
     private Button by_price, by_time, by_best, by_stars, GoBack;
     private String selectedSourcePlace="", selectedDestPlace="";
@@ -76,7 +77,7 @@ public class RideSearchActivity extends AppCompatActivity {
         by_time=findViewById(R.id.time_sort);
         GoBack=findViewById(R.id.back_from_search);
         // Set the adapter
-        adapter = new DriverRideRecyclerViewAdapter(this, closeRides);
+        adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -180,6 +181,12 @@ public class RideSearchActivity extends AppCompatActivity {
         if(selectedDestPlace.equals("") || selectedSourcePlace.equals("")){
             Toast.makeText(this, "input is empty.",
                     Toast.LENGTH_SHORT).show();
+            // TODO: just for testing - remove it when not needed....
+            closeRides.add(new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5"));
+            closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5"));
+            adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
         else{
             getAliveRides();
@@ -266,7 +273,7 @@ public class RideSearchActivity extends AppCompatActivity {
                                 result.sort(new sort_by_best_price());
                             }
                         }
-                        adapter = new DriverRideRecyclerViewAdapter(this, result);
+                        adapter = new DriverRideRecyclerViewAdapter(this, result, this);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(this));
                     } else {
@@ -329,7 +336,22 @@ public class RideSearchActivity extends AppCompatActivity {
             return 123;
         }
 
-
     }
 
+    @Override
+    public void onItemClicked(DriverRideModel driverRideModel) {
+        Toast.makeText(this, driverRideModel.getFirstName() + " " + driverRideModel.getLastName(), Toast.LENGTH_SHORT).show();
+
+        HashMap<String, String> driverDetailsMap = driverRideModel.getHashDriverDetails();
+
+        // Switch to seat selection activity
+        this.finish();
+        Intent switchActivityIntent = new Intent(this, seatsSelectionActivity.class);
+
+        // Iterate the map and putExtra on each
+        for (Map.Entry<String, String> set : driverDetailsMap.entrySet()) {
+            switchActivityIntent.putExtra(set.getKey(), set.getValue());
+        }
+        startActivity(switchActivityIntent);
+    }
 }

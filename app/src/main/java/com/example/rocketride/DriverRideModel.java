@@ -3,6 +3,7 @@ package com.example.rocketride;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class DriverRideModel {
     private final String firstName;
@@ -16,6 +17,8 @@ public class DriverRideModel {
     public long start_in_minutes = 0;
     public double price;
     public Double rating_numerical;
+
+    // Constructor
     public DriverRideModel(String firstName, String lastName, String source, String destination, String startTime, String rating) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,6 +50,17 @@ public class DriverRideModel {
 
     public String getRating() {
         return rating;
+    }
+
+    public HashMap<String, String> getHashDriverDetails(){
+        HashMap<String, String> driverDetails = new HashMap<>();
+        driverDetails.put("first_name", this.firstName);
+        driverDetails.put("last_name", this.lastName);
+        driverDetails.put("source", this.source);
+        driverDetails.put("destination", this.destination);
+        driverDetails.put("start_time", this.startTime);
+        driverDetails.put("rating", this.rating);
+        return driverDetails;
     }
 
     /****** Points getter & setters ******/
