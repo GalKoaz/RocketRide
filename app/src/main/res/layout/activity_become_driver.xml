@@ -39,12 +39,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="298dp"
+            android:layout_height="162dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/cardrivinglandscape" />
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="50dp"
             android:hint="ID Number"
             app:boxStrokeColor="#4E4A4A"
