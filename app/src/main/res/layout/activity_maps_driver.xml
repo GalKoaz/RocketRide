@@ -51,24 +51,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="40dp"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <Button
                 android:id="@+id/create_drive"
-                android:layout_width="151dp"
-                android:layout_height="48dp"
+                android:layout_width="171dp"
+                android:layout_height="58dp"
                 android:layout_gravity="center|bottom"
                 android:text="CREATE RIDE"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/button2"
                 app:shapeAppearanceOverlay="@style/Button5" />
 
             <Button
                 android:id="@+id/search_drive"
-                android:layout_width="151dp"
-                android:layout_height="48dp"
+                android:layout_width="171dp"
+                android:layout_height="58dp"
                 android:layout_gravity="center|bottom"
                 android:text="JOIN RIDE"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:shapeAppearanceOverlay="@style/Button5" />
         </LinearLayout>

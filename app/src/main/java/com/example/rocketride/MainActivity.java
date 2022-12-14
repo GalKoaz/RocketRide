@@ -33,7 +33,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -45,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -52,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.Theme_RocketRide);
         setContentView(R.layout.activity_main);
+
+        // Init auth and database objects
+        db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
-//        this.finish();
-//        Intent switchActivityIntent2 = new Intent(this, seatsSelectionActivity.class);
-//        startActivity(switchActivityIntent2);
 
         // get view flag
         Bundle extras = getIntent().getExtras();
@@ -224,27 +234,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(switchActivityIntent);
         }
         firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            System.out.println("USER ID: " + user.getUid());
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        System.out.println("USER ID: " + user.getUid());
 
-                            mainActivity.finish();
-                            Intent switchActivityIntent = new Intent(mainActivity, MapsDriverActivity.class);
-                            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
-                            startActivity(switchActivityIntent);
-                            // updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            // updateUI(null);
-                        }
+                        // Switch to home screen
+                        moveToHomeActivity(user.getUid());
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -304,15 +306,12 @@ public class MainActivity extends AppCompatActivity {
                             switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
                             switchActivityIntent.putExtra("googleUserIdToken", idToken);
                             startActivity(switchActivityIntent);
-                        } else {
+                        }
+                        else { // current user isn't a new user
                             Log.d("TAG", "Is Old User!");
 
                             // Switch to home screen
-                            this.finish();
-                            Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
-                            //Intent switchActivityIntent = new Intent(this, ProfileActivity.class);
-                            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
-                            startActivity(switchActivityIntent);
+                            moveToHomeActivity(user.getUid());
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
@@ -321,5 +320,37 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 });
+    }
+
+    private void moveToHomeActivity(String UID) {
+        // Get current user document
+        Query userQuery = db.collection("users").whereEqualTo("UID", UID);
+
+        userQuery.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                QuerySnapshot queryDocumentSnapshot = task.getResult();
+                DocumentSnapshot documentReference = queryDocumentSnapshot.getDocuments().get(0);
+
+                // Get the link of current user's profile image and type (driver/rider) for permissions
+                String profileImageLink = documentReference.getString("profile_image_link"),
+                       userType = documentReference.getString("type"),
+                       userFirstName = documentReference.getString("first_name"),
+                       userLastName = documentReference.getString("last_name");
+
+                // Move the user to home activity
+                this.finish();
+                Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
+
+                // Send the profile image and type to the home activity
+                switchActivityIntent.putExtra("profile_image_link", profileImageLink);
+                switchActivityIntent.putExtra("type", userType);
+                switchActivityIntent.putExtra("full_name", userFirstName + " " + userLastName);
+
+                startActivity(switchActivityIntent);
+            }
+            else{
+                Log.d(TAG, "Error occurred in getting user document");
+            }
+        });
     }
 }

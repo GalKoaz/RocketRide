@@ -22,6 +22,7 @@
         android:id="@+id/menuBecomeDriver"
         android:icon="@drawable/driver_join"
         android:title="Become A Driver"
+        android:visible="true"
         />
 
     <item

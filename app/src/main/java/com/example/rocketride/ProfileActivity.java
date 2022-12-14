@@ -53,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri RiderImageUri, DriverProfileImageUri, DriverLicenseImageUri;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
-    private String UID, userType;
+    protected String UID, userType;
     private String userIdToken, userEmailExtras, userPasswordExtras, userPhoneNumberExtras;
     private String firstNameDriver, lastNameDriver, idNumber, plateNumber;
     private String firstNameRider, lastNameRider;

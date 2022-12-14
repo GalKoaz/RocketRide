@@ -15,19 +15,25 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketride.MenuActivities.ActiveDrives;
@@ -49,30 +55,40 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.rocketride.databinding.ActivityMapsDriverBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleApiClient.OnConnectionFailedListener
 ,GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener, NavigationView.OnNavigationItemSelectedListener {
+    private final static String SAVE_STATE_KEY = "save_state";
+    private Bundle extras;
 
     private GoogleMap mMap;
-    private ActivityMapsDriverBinding binding;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLoctionRequest;
+
     private FirebaseFirestore db;
+    private String userType, userProfileImageLink, userFullName;
+    private byte[] profileImageBytesArr;
 
     // Google sign-in client
     private GoogleSignInClient mGoogleSignInClient;
 
     private FirebaseAuth firebaseAuth;
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +97,27 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
 
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
 
-
         firebaseAuth = FirebaseAuth.getInstance();
+        System.out.println("home user: " + firebaseAuth.getCurrentUser());
+
+        // Init firebase storage to download profile image
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageRef = firebaseStorage.getReference();
+
+        userType = ""; userProfileImageLink = ""; userFullName = "";
+
+        // Check just in case that the bundle is null
+        extras = getIntent().getExtras();
+        if (extras != null) {
+            // Get information from MainActivity of the current user
+            userType = extras.getString("type", "");
+            userProfileImageLink = extras.getString("profile_image_link", "");
+            userFullName = extras.getString("full_name", "");
+            System.out.println("maps activity: " + userProfileImageLink + " " + userType);
+        }
+        else{
+            getDataState();
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -95,6 +130,34 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Set user views according to his type (default is rider)
+        if (userType.equals("driver")){
+            // Set visibility of become a driver menu item to true
+            navigationView.getMenu().findItem(R.id.menuBecomeDriver).setVisible(false);
+
+            // Set join ride button visibility to gone
+            findViewById(R.id.search_drive).setVisibility(View.GONE);
+
+            // Set create ride button visibility to visible
+            findViewById(R.id.create_drive).setVisibility(View.VISIBLE);
+        }
+
+        // Set user's full name
+        TextView fullNameTextView = navigationView.getHeaderView(0).findViewById(R.id.fullNameMenuTextView);
+        fullNameTextView.setText(userFullName);
+
+        // Check if the current user image link isn't empty.
+        // If it isn't empty change the profile image in side menu bar
+        RoundedImageView profileImageView = navigationView.getHeaderView(0).findViewById(R.id.profileRoundedView);
+        if (!userProfileImageLink.equals("")) {
+            if (profileImageBytesArr != null) {
+                setImageView(profileImageView, profileImageBytesArr);
+            }
+            else {
+                downloadImageToView(userProfileImageLink, storageRef, profileImageView);
+            }
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -229,12 +292,36 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userId);
         db.collection("driversAvailable").document(userId).update("driving", false);
-
-        Log.d(TAG, "onStop fired ..............");
-        signOut();
-        Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
     }
 
+    protected void saveDataState() {
+        sharedPreferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
+
+        // get an editor for the Shared Preferences object
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String encoded = Base64.encodeToString(profileImageBytesArr, Base64.DEFAULT);
+        System.out.println("picture arrat: " + encoded);
+
+        editor.putString("profile_image", encoded)
+                .putString("type", userType)
+                .putString("full_name", userFullName)
+                .putString("profile_image_link", userProfileImageLink);
+        editor.apply();
+    }
+
+    protected void getDataState(){
+        sharedPreferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
+
+        String encoded = sharedPreferences.getString("profile_image", null);
+
+        // Decode the string back into an array of bytes
+        profileImageBytesArr = Base64.decode(encoded, Base64.DEFAULT);
+
+        userType = sharedPreferences.getString("type", "");
+        userFullName = sharedPreferences.getString("full_name", "");
+        userProfileImageLink = sharedPreferences.getString("profile_image_link", "");
+    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -247,6 +334,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
                 Toast.makeText(this, "menuHistory", Toast.LENGTH_SHORT).show();
 
                 // Switch to the history activity
+                //moveTaskToBack(false);
                 this.finish();
                 Intent switchActivityHistoryIntent = new Intent(this, History.class);
                 startActivity(switchActivityHistoryIntent);
@@ -255,6 +343,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
                 Toast.makeText(this, "menuActiveDrives", Toast.LENGTH_SHORT).show();
 
                 // Switch to the active drives activity
+                //moveTaskToBack(false);
                 this.finish();
                 Intent switchActivityActiveDrivesIntent = new Intent(this, ActiveDrives.class);
                 startActivity(switchActivityActiveDrivesIntent);
@@ -263,6 +352,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
                 Toast.makeText(this, "menuBecomeDriver", Toast.LENGTH_SHORT).show();
 
                 // Switch to the become a driver activity
+                //moveTaskToBack(false);
                 this.finish();
                 Intent switchActivityBecomeDriverIntent = new Intent(this, BecomeDriver.class);
                 startActivity(switchActivityBecomeDriverIntent);
@@ -271,6 +361,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
                 Toast.makeText(this, "menuSearchRide", Toast.LENGTH_SHORT).show();
 
                 // Switch to the ride search activity
+                //moveTaskToBack(false);
                 this.finish();
                 Intent switchActivitySearchRideIntent = new Intent(this, RideSearchActivity.class);
                 startActivity(switchActivitySearchRideIntent);
@@ -284,6 +375,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         return true;
     }
 
+
     protected void showLogoutDialog(){
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.layout_logout_dialog);
@@ -295,6 +387,10 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         // buttons listeners
         acceptButton.setOnClickListener(l -> {
             dialog.dismiss();
+
+            Log.d(TAG, "onStop fired ..............");
+            signOut();
+            Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
 
             // Switch to sign in activity
             this.finish();
@@ -322,5 +418,22 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         }
         mMap.clear();
         System.out.println("disconnect: " + mGoogleApiClient);
+    }
+
+    public void downloadImageToView(String imageURL, StorageReference storageRef, RoundedImageView imageView){
+        storageRef.child(imageURL).getBytes(Long.MAX_VALUE).addOnSuccessListener(imageBytes -> {
+            this.profileImageBytesArr = imageBytes;
+            saveDataState();
+            setImageView(imageView, imageBytes);
+        }).addOnFailureListener(exception -> Log.d(TAG, "error in downloading the image!"));
+    }
+
+    public void setImageView(RoundedImageView imageView, byte[] profileImageBytesArr){
+        // Use the bytes to display the image
+        // Convert the byte array into a Bitmap object
+        Bitmap bitmap = BitmapFactory.decodeByteArray(profileImageBytesArr, 0, profileImageBytesArr.length);
+
+        // Set the Bitmap as the image for the ImageView
+        imageView.setImageBitmap(bitmap);
     }
 }
