@@ -57,6 +57,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
     private  RecyclerView recyclerView;
     private DriverRideRecyclerViewAdapter adapter;
     private int sort_alg = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        // Recycle view
         recyclerView = findViewById(R.id.myRecyclerView);
 
         //sort buttons
@@ -77,6 +79,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         by_stars=findViewById(R.id.stars_sort);
         by_time=findViewById(R.id.time_sort);
         GoBack=findViewById(R.id.back_from_search);
+
         // Set the adapter
         adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
         recyclerView.setAdapter(adapter);
