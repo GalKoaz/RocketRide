@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ActiveDrivesLayout"
         android:layout_width="404dp"
         android:layout_height="84dp"
         android:layout_marginTop="4dp"
@@ -19,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Active Drive"
+            android:text="Active Ride"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/srcHistoryTextView"
+            android:id="@+id/srcActiveDriveTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -47,13 +48,13 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/srcHistoryTextView"
+            app:layout_constraintStart_toEndOf="@+id/srcActiveDriveTextView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.219"
             app:srcCompat="@drawable/arrow_next_right_icon" />
 
         <TextView
-            android:id="@+id/destHistoryTextView"
+            android:id="@+id/destActiveDriveTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
@@ -69,7 +70,7 @@
             app:layout_constraintVertical_bias="0.246" />
 
         <TextView
-            android:id="@+id/historyDateTimeTextView"
+            android:id="@+id/activeDriveDateTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="13.5dp"
@@ -81,10 +82,10 @@
             app:layout_constraintVertical_bias="0.028" />
 
         <ImageView
-            android:id="@+id/imageView10"
+            android:id="@+id/arrow_active_view"
             android:layout_width="15dp"
             android:layout_height="17dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -95,24 +96,23 @@
             android:id="@+id/imageView11"
             android:layout_width="18dp"
             android:layout_height="19dp"
-            android:layout_marginEnd="148dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView10"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.923"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/picupActiveDriveTextView"
+            app:layout_constraintEnd_toStartOf="@+id/picupActiveDriveTextView"
+            app:layout_constraintTop_toTopOf="@+id/picupActiveDriveTextView"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/place_marker_pickup" />
 
         <TextView
-            android:id="@+id/pickupHistoryTextView"
+            android:id="@+id/picupActiveDriveTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="92dp"
+            android:layout_marginEnd="104dp"
             android:text="pickup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.303"
-            app:layout_constraintStart_toEndOf="@+id/imageView11"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.923" />
+            app:layout_constraintVertical_bias="0.8" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
