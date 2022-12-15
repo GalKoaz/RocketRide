@@ -1,10 +1,11 @@
 package com.example.rocketride;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
+import static java.security.AccessController.getContext;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +48,7 @@ import java.util.Map;
 
 
 public class RideSearchActivity extends AppCompatActivity implements SelectDriverListener {
-
+    private static final String TAG = RideSearchActivity.class.getName();
     private Button by_price, by_time, by_best, by_stars, GoBack;
     private String selectedSourcePlace="", selectedDestPlace="";
     private LatLng selectedSourcePlacePoint, selectedDestPlacePoint;
@@ -132,7 +133,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             @Override
             public void onError(@NonNull Status status) {
                 // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
+                Log.d(TAG, "An error occurred: " + status);
             }
         });
 
@@ -182,8 +183,10 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             Toast.makeText(this, "input is empty.",
                     Toast.LENGTH_SHORT).show();
             // TODO: just for testing - remove it when not needed....
-            closeRides.add(new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5"));
-            closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5"));
+            for (int i = 0; i < 100; i++) {
+                closeRides.add(new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5"));
+                closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5"));
+            }
             adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
