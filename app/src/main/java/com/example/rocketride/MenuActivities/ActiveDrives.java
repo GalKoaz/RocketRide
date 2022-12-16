@@ -11,11 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.rocketride.ActiveDrivesActivityViewAdapter;
 import com.example.rocketride.DriverRideModel;
+import com.example.rocketride.HistoryRecyclerViewAdapter;
 import com.example.rocketride.MapsDriverActivity;
 import com.example.rocketride.R;
 import com.example.rocketride.RideModel;
@@ -36,6 +40,9 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
     private RecyclerView recyclerView;
     private String selectedSourcePlace="", selectedDestPlace="", UID;
     private ActiveDrivesActivityViewAdapter adapter;
+    private LottieAnimationView notFoundAnimation;
+    private TextView notFoundTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,12 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
         db = FirebaseFirestore.getInstance();
 
         UID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        // lottie animation
+        notFoundAnimation = findViewById(R.id.activeDrivesNotFoundAnimation);
+
+        // Text view
+        notFoundTextView = findViewById(R.id.activeDrivesNotFoundTextView);
 
         // Remove action bar
         ActionBar actionBar = getSupportActionBar();
@@ -69,26 +82,22 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-        if(ActDrives.isEmpty()){
-            Toast.makeText(this, "input is empty.", Toast.LENGTH_SHORT).show();
-            // TODO: just for testing - remove it when not needed....
-            for (int i = 0; i < 20; i++) {
-                ActDrives.add(new RideModel("Ariel", "Tel-Aviv", "16/12/2022 0:19", "Ariel-University"));
-            }
-            adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        }
-        else{
-            //getAliveRides();
-        }
+        getActDrives();
+//        if(ActDrives.isEmpty()){
+//            Toast.makeText(this, "input is empty.", Toast.LENGTH_SHORT).show();
+//            // TODO: just for testing - remove it when not needed....
+//            for (int i = 0; i < 20; i++) {
+//                ActDrives.add(new RideModel("Ariel", "Tel-Aviv", "16/12/2022 0:19", "Ariel-University"));
+//            }
+//            adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
+//            recyclerView.setAdapter(adapter);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//        }
     }
 
 
-    public ArrayList<RideModel> getActDrives(){
-        ArrayList<RideModel> expiredRides = new ArrayList<>();
-
+    public void getActDrives(){
         CollectionReference collectionReference = db.collection("drives");
         Query query = collectionReference.whereEqualTo("alive", true);
         query.get().addOnCompleteListener(task -> {
@@ -106,21 +115,38 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
                     // If user is located in one of the drive seats then update list accordingly
                     boolean isUserInSeats = Arrays.asList(seatsArr).contains(UID);
                     if (isUserInSeats){
-                        expiredRides.add(new RideModel(
-                                document.getString("source"),
-                                document.getString("destination"),
-                                document.getString("date"),
+                        String dateDay = document.get("date-d")
+                                + "/" + document.get("date-m")
+                                + "/" + document.get("date-y");
+
+                        String startTime = document.get("time_h") + ":" + document.get("time_m");
+
+                        ActDrives.add(new RideModel(
+                                document.getString("src_name"),
+                                document.getString("dst_name"),
+                                dateDay + " " + startTime,
                                 document.getString("pickup_name")
                         ));
                     }
+                    if (ActDrives.isEmpty()){
+                        notFoundAnimation.setVisibility(View.VISIBLE);
+                        notFoundTextView.setVisibility(View.VISIBLE);
+                        return;
+                    }
 
+                    // Apply changes to the recycler view
+                    adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+                    notFoundAnimation.setVisibility(View.GONE);
+                    notFoundTextView.setVisibility(View.GONE);
                     Log.d(TAG, document.getId() + " => " + document.getData());
                 }
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
-        return expiredRides;
     }
 
     @Override

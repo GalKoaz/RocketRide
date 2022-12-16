@@ -10,7 +10,7 @@ public class RideModel {
     private final String date;
     private final String pickup;
     public double price;
-    public Double rating_numerical;
+
 
     // Constructor
     public RideModel(String source, String destination, String date, String pickup) {
@@ -45,5 +45,16 @@ public class RideModel {
         RideDetails.put("date", this.date);
         RideDetails.put("pickup", this.pickup);
         return RideDetails;
+    }
+
+    @Override
+    public String toString() {
+        return "RideModel{" +
+                "source='" + source + '\'' +
+                ", destination='" + destination + '\'' +
+                ", date='" + date + '\'' +
+                ", pickup='" + pickup + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

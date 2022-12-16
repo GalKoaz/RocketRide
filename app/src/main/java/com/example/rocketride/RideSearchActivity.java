@@ -215,7 +215,9 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         int MINUTE = calendar.get(Calendar.MINUTE);
         int src_radius = 5;
         int dst_radius = 7;
+
         Query query = rides.whereEqualTo("alive", true).whereEqualTo("date-d",DATE).whereEqualTo("date-m",MONTH).whereEqualTo("date-y",YEAR);
+
         // Store query result
         query.get()
                 .addOnCompleteListener(task -> {

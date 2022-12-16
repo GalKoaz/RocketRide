@@ -7,7 +7,7 @@
     tools:context=".MenuActivities.ActiveDrives">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieAnimationView2"
+        android:id="@+id/activeDrivesNotFoundAnimation"
         android:layout_width="298dp"
         android:layout_height="162dp"
         android:layout_gravity="center"
@@ -22,7 +22,7 @@
         app:lottie_rawRes="@raw/carshapechangeturqiuse"/>
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/activeDrivesNotFoundTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="356dp"

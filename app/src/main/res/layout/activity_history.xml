@@ -32,6 +32,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/historyNotFoundAnimation"
         android:layout_width="298dp"
         android:layout_height="162dp"
         android:layout_gravity="center"
@@ -46,7 +47,7 @@
         app:lottie_rawRes="@raw/carshapechange" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/historyNotFoundTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="356dp"

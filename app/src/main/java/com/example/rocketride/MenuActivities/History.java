@@ -12,9 +12,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.rocketride.DriverRideModel;
 import com.example.rocketride.DriverRideRecyclerViewAdapter;
 import com.example.rocketride.HistoryRecyclerViewAdapter;
@@ -22,11 +25,14 @@ import com.example.rocketride.MapsDriverActivity;
 import com.example.rocketride.R;
 import com.example.rocketride.RideModel;
 import com.example.rocketride.SelectDriverListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +46,9 @@ public class History extends AppCompatActivity implements SelectDriverListener {
     private RecyclerView recyclerView;
     private HistoryRecyclerViewAdapter adapter;
 
+    private LottieAnimationView notFoundAnimation;
+    private TextView notFoundTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +60,12 @@ public class History extends AppCompatActivity implements SelectDriverListener {
         // Init firebaseAuth reference and global UID
         firebaseAuth = FirebaseAuth.getInstance();
         UID = firebaseAuth.getCurrentUser().getUid();
+
+        // lottie animation
+        notFoundAnimation = findViewById(R.id.historyNotFoundAnimation);
+
+        // Text view
+        notFoundTextView = findViewById(R.id.historyNotFoundTextView);
 
         // Remove action bar
         ActionBar actionBar = getSupportActionBar();
@@ -76,27 +91,24 @@ public class History extends AppCompatActivity implements SelectDriverListener {
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-        if(expiredRides.isEmpty()){
-            Toast.makeText(this, "input is empty.", Toast.LENGTH_SHORT).show();
-            // TODO: just for testing - remove it when not needed....
-            for (int i = 0; i < 20; i++) {
-                expiredRides.add(new RideModel("Ariel", "Tel-Aviv", "16/12/2022 0:19", "Ariel-University"));
-            }
-            adapter = new HistoryRecyclerViewAdapter(this, expiredRides, this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        }
-        else{
-            //getAliveRides();
-        }
+
+        expiredRides = getExpiredRides();
+//        if(expiredRides.isEmpty()){
+//            Toast.makeText(this, "input is empty.", Toast.LENGTH_SHORT).show();
+//            // TODO: just for testing - remove it when not needed....
+//            expiredRides = new ArrayList<>();
+//            for (int i = 0; i < 20; i++) {
+//                expiredRides.add(new RideModel("Ariel", "Tel-Aviv", "16/12/2022 0:19", "Ariel-University"));
+//            }
+//        }
     }
 
-    public ArrayList<RideModel> getExpiredRides(){
+    synchronized public ArrayList<RideModel> getExpiredRides(){
         ArrayList<RideModel> expiredRides = new ArrayList<>();
 
         CollectionReference collectionReference = db.collection("drives");
         Query query = collectionReference.whereEqualTo("alive", false);
+
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -112,20 +124,41 @@ public class History extends AppCompatActivity implements SelectDriverListener {
                     // If user is located in one of the drive seats then update list accordingly
                     boolean isUserInSeats = Arrays.asList(seatsArr).contains(UID);
                     if (isUserInSeats){
+                        String dateDay = document.get("date-d")
+                                + "/" + document.get("date-m")
+                                + "/" + document.get("date-y");
+
+                        String startTime = document.get("time_h") + ":" + document.get("time_m");
+
                         expiredRides.add(new RideModel(
-                                document.getString("source"),
-                                document.getString("destination"),
-                                document.getString("date"),
+                                document.getString("src_name"),
+                                document.getString("dst_name"),
+                                dateDay + " " + startTime,
                                 document.getString("pickup_name")
                                 ));
+                        System.out.println(expiredRides);
                     }
 
                     Log.d(TAG, document.getId() + " => " + document.getData());
                 }
+                if (expiredRides.isEmpty()){
+                    notFoundAnimation.setVisibility(View.VISIBLE);
+                    notFoundTextView.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                // Apply changes to the recycler view
+                adapter = new HistoryRecyclerViewAdapter(this, expiredRides, this);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+                notFoundAnimation.setVisibility(View.GONE);
+                notFoundTextView.setVisibility(View.GONE);
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
+        System.out.println("expired list : " + expiredRides);
         return expiredRides;
     }
 
