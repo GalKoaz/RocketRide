@@ -88,7 +88,6 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         GoBack.setOnClickListener(view -> {
             this.finish();
             Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
-//            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
             startActivity(switchActivityIntent);
         });
         by_best.setOnClickListener(view -> {
@@ -187,8 +186,8 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                     Toast.LENGTH_SHORT).show();
             // TODO: just for testing - remove it when not needed....
             for (int i = 0; i < 100; i++) {
-                closeRides.add(new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5"));
-                closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5"));
+                closeRides.add(new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5", "Ariel-University", 3.33, "16/12/2022"));
+                closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5", "Ariel-University", 3.33, "16/12/2022"));
             }
             adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
             recyclerView.setAdapter(adapter);
@@ -227,23 +226,28 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                             LatLng src_p = new LatLng((double) document.get("src_lat"),(double) document.get("src_lon"));
                             LatLng dst_p = new LatLng((double) document.get("dst_lat"),(double) document.get("dst_lon"));
                             LatLng pickup_p = new LatLng((double) document.get("pickup_lat"),(double) document.get("pickup_lon"));
+
                             if ((CalculationByDistance(src_p,selectedSourcePlacePoint) > src_radius && CalculationByDistance(pickup_p,selectedSourcePlacePoint)>src_radius)
                                     || CalculationByDistance(dst_p,selectedDestPlacePoint) > dst_radius){
                                     continue;
                             }
                             else {
                                 HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
+                                String pickupName = (String) document.get("pickup_name");
+                                double price = (double) document.get("price");
                                 Long h = (Long) document.get("time_h");
-                                Long m = (Long) document.get("time_m");
+                                Long min = (Long) document.get("time_m");
                                 Long d = (Long) document.get("date-d");
+                                Long year = (Long) document.get("date-y");
+                                Long month = (Long) document.get("date-m");
                                 h -= HOUR;
-                                m -= MINUTE;
-                                if (m < 0) {
+                                min -= MINUTE;
+                                if (min < 0) {
                                     h -= 1;
-                                    m = 60 + m;
+                                    min = 60 + min;
                                 }
                                 h += (d - DATE) * 24;
-                                String t = h + ":" + m;
+                                String t = h + ":" + min;
 
                                 DriverRideModel DRM = new DriverRideModel(
                                         (String) driverDetails.get("first_name"),
@@ -251,13 +255,16 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                         (String) document.get("src_name"),
                                         (String) document.get("dst_name"),
                                         t,
-                                        "7.5"
+                                        "7.5",
+                                         pickupName,
+                                         price,
+                                        d + "/" + month + "/" + year
                                 );
-                                DRM.start_in_minutes = h * 60 + m;
+                                DRM.start_in_minutes = h * 60 + min;
                                 DRM.price = (double) document.get("price");
                                 DRM.rating_numerical = 7.5;
                                 double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
-                                        + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + m + 1) - DRM.price);
+                                        + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + min + 1) - DRM.price);
                                 DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
                                 result.add(
                                         DRM
@@ -350,15 +357,19 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
     public void onItemClicked(DriverRideModel driverRideModel) {
         Toast.makeText(this, driverRideModel.getFirstName() + " " + driverRideModel.getLastName(), Toast.LENGTH_SHORT).show();
 
-        HashMap<String, String> driverDetailsMap = driverRideModel.getHashDriverDetails();
+        HashMap<String, Object> driverDetailsMap = driverRideModel.getHashDriverDetails();
 
         // Switch to seat selection activity
         this.finish();
         Intent switchActivityIntent = new Intent(this, seatsSelectionActivity.class);
 
         // Iterate the map and putExtra on each
-        for (Map.Entry<String, String> set : driverDetailsMap.entrySet()) {
-            switchActivityIntent.putExtra(set.getKey(), set.getValue());
+        for (Map.Entry<String, Object> set : driverDetailsMap.entrySet()) {
+            if (set.getKey().equals("price")) {
+                switchActivityIntent.putExtra(set.getKey(), (double) set.getValue());
+                continue;
+            }
+            switchActivityIntent.putExtra(set.getKey(), (String) set.getValue());
         }
         startActivity(switchActivityIntent);
     }

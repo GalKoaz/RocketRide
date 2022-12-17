@@ -17,6 +17,7 @@ import android.widget.Toast;
 public class seatsSelectionActivity extends AppCompatActivity {
     final int Duration_time = 2500;
     private boolean seatSelected = false;
+    private ImageView currSeatSelectedView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,10 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        String firstName = "", lastName = "", source = "", dest = "", startTime = "", rating = "";
+        double price = 0.0;
+        String firstName = "", lastName = "", source = "", dest = "", startTime = "", rating = "",
+               pickupName = "",  date = "";
+
         if(extras != null){
             firstName = extras.getString("first_name", "");
             lastName = extras.getString("last_name", "");
@@ -33,9 +37,15 @@ public class seatsSelectionActivity extends AppCompatActivity {
             dest = extras.getString("destination", "");
             startTime = extras.getString("start_time", "");
             rating = extras.getString("rating", "");
+            pickupName = extras.getString("pickup_name", "");
+            price = extras.getDouble("price", 0.0);
+            date = extras.getString("date", "");
             System.out.println(firstName + " " + lastName + " " + source + " " + dest + " " + startTime + " " + rating);
         }
 
+        setRideDetails(firstName, lastName, source, dest, startTime, rating, pickupName, price, date);
+
+        // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
@@ -60,8 +70,8 @@ public class seatsSelectionActivity extends AppCompatActivity {
                  centerBottomSeat = findViewById(R.id.textViewBottomCenter),
                  rightBottomSeat = findViewById(R.id.textViewBottomRight);
 
-        Button nextButton = findViewById(R.id.nextButton),
-                goBackButton = findViewById(R.id.goBackButton);
+        ImageView backImageView = findViewById(R.id.seatsBackImageView),
+                nextImageView = findViewById(R.id.seatsNextImageView);
 
         driverSeatView.setVisibility(View.GONE);
 
@@ -75,6 +85,9 @@ public class seatsSelectionActivity extends AppCompatActivity {
         // Update initial seat status
         //new Handler().postDelayed(() -> nearDriverSeatView.setVisibility(View.VISIBLE),Duration_time + 500);
 
+
+
+        // Listeners for seats and buttons
         driverSeat.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "can't be selected!", Toast.LENGTH_LONG).show();
         });
@@ -100,12 +113,11 @@ public class seatsSelectionActivity extends AppCompatActivity {
             availableChecks(rightBottomAvailableSeatView);
         });
 
-
-        nextButton.setOnClickListener(l -> {
+        nextImageView.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "next button clicked!", Toast.LENGTH_LONG).show();
         });
 
-        goBackButton.setOnClickListener(l -> {
+        backImageView.setOnClickListener(l -> {
             Toast.makeText(seatsSelectionActivity.this, "go back button clicked!", Toast.LENGTH_LONG).show();
 
             // Intent back to searching a ride
@@ -114,7 +126,6 @@ public class seatsSelectionActivity extends AppCompatActivity {
             startActivity(switchActivityIntent);
         });
     }
-
 
     protected void availableChecks(ImageView seatImageView){
         boolean currSeatSelected = seatImageView.getVisibility() == View.VISIBLE;
@@ -126,12 +137,29 @@ public class seatsSelectionActivity extends AppCompatActivity {
 
         // User have already selected an available seat
         if (seatSelected){
-            Toast.makeText(seatsSelectionActivity.this, "Seat already selected!", Toast.LENGTH_LONG).show();
-            return;
+            currSeatSelectedView.setVisibility(View.GONE);
         }
 
         // User haven't selected any seat
         seatImageView.setVisibility(View.VISIBLE);
         seatSelected = true;
+        currSeatSelectedView = seatImageView;
+    }
+
+    public void setRideDetails(String firstName, String lastName, String source, String dest, String startTime, String rating, String pickupName, double price, String date){
+        TextView fullNameView = findViewById(R.id.driver_name),
+                 sourceView = findViewById(R.id.src),
+                 destinationView = findViewById(R.id.dest),
+                 pickupView = findViewById(R.id.pickup),
+                 priceView = findViewById(R.id.price),
+                 dateView = findViewById(R.id.date_and_time);
+
+        String fullName = firstName + " " + lastName;
+        fullNameView.setText(fullName);
+        sourceView.setText(source);
+        destinationView.setText(dest);
+        dateView.setText(date + " " + startTime);
+        pickupView.setText(pickupName);
+        priceView.setText(String.valueOf(price));
     }
 }

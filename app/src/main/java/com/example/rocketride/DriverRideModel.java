@@ -12,6 +12,8 @@ public class DriverRideModel {
     private final String destination;
     private final String startTime;
     private final String rating;
+    private final String pickupName;
+    private final String date;
     private LatLng srcPoint, dstPoint, pickupPoint;
     private double sortWeight;
     public long start_in_minutes = 0;
@@ -19,13 +21,17 @@ public class DriverRideModel {
     public Double rating_numerical;
 
     // Constructor
-    public DriverRideModel(String firstName, String lastName, String source, String destination, String startTime, String rating) {
+    public DriverRideModel(String firstName, String lastName, String source, String destination,
+                           String startTime, String rating, String pickupName, Double price, String date) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.source = source;
         this.destination = destination;
         this.startTime = startTime;
         this.rating = rating;
+        this.pickupName = pickupName;
+        this.date = date;
+        this.price = price;
     }
 
     public String getFirstName() {
@@ -52,14 +58,17 @@ public class DriverRideModel {
         return rating;
     }
 
-    public HashMap<String, String> getHashDriverDetails(){
-        HashMap<String, String> driverDetails = new HashMap<>();
+    public HashMap<String, Object> getHashDriverDetails(){
+        HashMap<String, Object> driverDetails = new HashMap<>();
         driverDetails.put("first_name", this.firstName);
         driverDetails.put("last_name", this.lastName);
         driverDetails.put("source", this.source);
         driverDetails.put("destination", this.destination);
         driverDetails.put("start_time", this.startTime);
+        driverDetails.put("date", this.date);
         driverDetails.put("rating", this.rating);
+        driverDetails.put("pickup_name", this.pickupName);
+        driverDetails.put("price", this.price);
         return driverDetails;
     }
 
