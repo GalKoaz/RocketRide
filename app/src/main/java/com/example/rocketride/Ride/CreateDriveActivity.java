@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -42,8 +43,8 @@ public class CreateDriveActivity extends AppCompatActivity{
     ImageView GoBack;
     NumberPicker seats;
     private FirebaseFirestore db;
-    TextInputEditText PriceEntery;
-    TextInputEditText detailsEntery;
+    EditText PriceEntery;
+    EditText detailsEntery;
     String date = "";
     String time = "";
     String source;
@@ -54,6 +55,8 @@ public class CreateDriveActivity extends AppCompatActivity{
     GeoPoint p_point;
     String price;
     String data_drive;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         date = "";
@@ -71,17 +74,11 @@ public class CreateDriveActivity extends AppCompatActivity{
         DateText = findViewById(R.id.date_text);
         TimeText = findViewById(R.id.time_text);
         seats = findViewById(R.id.seats);
-        //PriceEntery = findViewById(R.id.create_price);
-        //detailsEntery = findViewById(R.id.create_pickup);
+        PriceEntery = findViewById(R.id.create_price);
+        detailsEntery = findViewById(R.id.create_pickup);
 
         seats.setMinValue(1);
         seats.setMaxValue(4);
-//        seats.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-//            @Override
-//            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-//
-//            }
-//        });
 
         DateButton.setOnClickListener(view -> handdle_date_click());
         TimeButton.setOnClickListener(view -> handdle_time_click());
@@ -90,9 +87,9 @@ public class CreateDriveActivity extends AppCompatActivity{
         });
 
         GoBack.setOnClickListener(view -> {
+            // Move user to home activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, HomeActivity.class);
-//            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
             startActivity(switchActivityIntent);
         });
         // Initialize the AutocompleteSupportFragment.
@@ -196,6 +193,7 @@ public class CreateDriveActivity extends AppCompatActivity{
         int year = Integer.parseInt(date_s[2]);
         int month = Integer.parseInt(date_s[1]);
         int day = Integer.parseInt(date_s[0]);
+
         userMap.put("date-y", year);
         userMap.put("date-m", month);
         userMap.put("date-d", day);
@@ -203,6 +201,7 @@ public class CreateDriveActivity extends AppCompatActivity{
         String[] time_s = this.time.split(":");
         int hour = Integer.parseInt(time_s[0]);
         int min = Integer.parseInt(time_s[1]);
+
         userMap.put("time_h", hour);
         userMap.put("time_m", min);
 
@@ -221,17 +220,34 @@ public class CreateDriveActivity extends AppCompatActivity{
         userMap.put("price", price_num);
         userMap.put("details", this.data_drive);
 
+        // Add car seats
         userMap.put("near_driver_seat", "");
         userMap.put("left_bottom_seat", "");
         userMap.put("center_bottom_seat", "");
         userMap.put("right_bottom_seat", "");
-        db.collection("drives").document().set(userMap);
-        Toast.makeText(CreateDriveActivity.this, "Drive created.",
-                Toast.LENGTH_SHORT).show();
+
+        // Add ride as a document in drives collection
+        addRide(userMap);
+
+        // Move to home activity
         this.finish();
         Intent switchActivityIntent = new Intent(this, HomeActivity.class);
-//            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
         startActivity(switchActivityIntent);
+    }
+
+    public void addRide( Map<String, Object> rideMap){
+        // Add a new document with a generated ID
+        db.collection("drives")
+                .add(rideMap)
+                .addOnSuccessListener(documentReference -> {
+                    String documentID = documentReference.getId();
+                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentID);
+
+                    // Update: add document id as a field in the ride document
+                    documentReference.update("_id", documentID);
+
+                    Toast.makeText(CreateDriveActivity.this, "Drive created!", Toast.LENGTH_SHORT).show();
+                });
     }
 
     public void handdle_date_click(){
@@ -264,6 +280,5 @@ public class CreateDriveActivity extends AppCompatActivity{
         }),HOUR,MINUTE,true);
 
         timePickerDialog.show();
-
     }
 }
