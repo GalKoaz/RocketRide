@@ -14,16 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.rocketride.ActiveDrivesActivityViewAdapter;
-import com.example.rocketride.DriverRideModel;
-import com.example.rocketride.HistoryRecyclerViewAdapter;
-import com.example.rocketride.MapsDriverActivity;
+import com.example.rocketride.Adapters.ActiveDrivesActivityViewAdapter;
+import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.R;
-import com.example.rocketride.RideModel;
-import com.example.rocketride.SelectDriverListener;
+import com.example.rocketride.Models.RideModel;
+import com.example.rocketride.Adapters.SelectDriverListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -71,9 +68,9 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
         // Back arrow button
         ImageView backArrow = findViewById(R.id.leftArrowActiveDrives);
         backArrow.setOnClickListener(l -> {
-            // Switch back to MapsDriverActivity activity
+            // Switch back to HomeActivity activity
             this.finish();
-            Intent switchActivityBecomeDriverIntent = new Intent(this, MapsDriverActivity.class);
+            Intent switchActivityBecomeDriverIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityBecomeDriverIntent);
         });
     }

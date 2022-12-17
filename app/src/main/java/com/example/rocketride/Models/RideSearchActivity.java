@@ -1,32 +1,25 @@
-package com.example.rocketride;
-
-import static java.security.AccessController.getContext;
+package com.example.rocketride.Models;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rocketride.Adapters.DriverRideRecyclerViewAdapter;
+import com.example.rocketride.Adapters.SelectDriverListener;
+import com.example.rocketride.MenuActivities.HomeActivity;
+import com.example.rocketride.R;
+import com.example.rocketride.Ride.seatsSelectionActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -35,8 +28,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.FirestoreClient;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -87,7 +78,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
 
         GoBack.setOnClickListener(view -> {
             this.finish();
-            Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
+            Intent switchActivityIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityIntent);
         });
         by_best.setOnClickListener(view -> {
@@ -185,9 +176,13 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             Toast.makeText(this, "input is empty.",
                     Toast.LENGTH_SHORT).show();
             // TODO: just for testing - remove it when not needed....
+            DriverRideModel amir = new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5", "Ariel-University",
+                    3.33, "16/12/2022", "", "1sKZhZMzIx23HTqyM0hP");
+            amir.setCarSeats("","taken", "taken", "");
+
             for (int i = 0; i < 100; i++) {
-                closeRides.add(new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5", "Ariel-University", 3.33, "16/12/2022"));
-                closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5", "Ariel-University", 3.33, "16/12/2022"));
+                closeRides.add(amir);
+                closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5", "Ariel-University", 3.33, "16/12/2022", "", ""));
             }
             adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
             recyclerView.setAdapter(adapter);
@@ -235,6 +230,9 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                 HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
                                 String pickupName = (String) document.get("pickup_name");
                                 double price = (double) document.get("price");
+                                String driverID = (String) document.get("driver-id");
+                                String rideId = document.getId();
+
                                 Long h = (Long) document.get("time_h");
                                 Long min = (Long) document.get("time_m");
                                 Long d = (Long) document.get("date-d");
@@ -249,6 +247,8 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                 h += (d - DATE) * 24;
                                 String t = h + ":" + min;
 
+                                System.out.println("first name: " + driverDetails.get("first_name"));
+
                                 DriverRideModel DRM = new DriverRideModel(
                                         (String) driverDetails.get("first_name"),
                                         (String) driverDetails.get("last_name"),
@@ -258,8 +258,19 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                         "7.5",
                                          pickupName,
                                          price,
-                                        d + "/" + month + "/" + year
+                                        d + "/" + month + "/" + year,
+                                        driverID,
+                                        rideId
                                 );
+
+                                // Set driver's seats status
+                                DRM.setCarSeats(
+                                        (String) document.get("near_driver_seat"),
+                                        (String) document.get("left_bottom_seat"),
+                                        (String) document.get("center_bottom_seat"),
+                                        (String) document.get("right_bottom_seat")
+                                );
+
                                 DRM.start_in_minutes = h * 60 + min;
                                 DRM.price = (double) document.get("price");
                                 DRM.rating_numerical = 7.5;

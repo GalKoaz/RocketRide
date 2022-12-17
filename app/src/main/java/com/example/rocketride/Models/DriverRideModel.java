@@ -1,4 +1,4 @@
-package com.example.rocketride;
+package com.example.rocketride.Models;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -19,10 +19,14 @@ public class DriverRideModel {
     public long start_in_minutes = 0;
     public double price;
     public Double rating_numerical;
+    private String nearDriverSeat, leftBottomSeat, centerBottomSeat, rightBottomSeat;
+    private final String driverID;
+    private final String rideID;
 
     // Constructor
     public DriverRideModel(String firstName, String lastName, String source, String destination,
-                           String startTime, String rating, String pickupName, Double price, String date) {
+                           String startTime, String rating, String pickupName, Double price, String date,
+                           String driverID, String rideID) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.source = source;
@@ -32,6 +36,8 @@ public class DriverRideModel {
         this.pickupName = pickupName;
         this.date = date;
         this.price = price;
+        this.driverID = driverID;
+        this.rideID = rideID;
     }
 
     public String getFirstName() {
@@ -69,6 +75,12 @@ public class DriverRideModel {
         driverDetails.put("rating", this.rating);
         driverDetails.put("pickup_name", this.pickupName);
         driverDetails.put("price", this.price);
+        driverDetails.put("near_driver_seat", this.nearDriverSeat);
+        driverDetails.put("left_bottom_seat", this.leftBottomSeat);
+        driverDetails.put("center_bottom_seat", this.centerBottomSeat);
+        driverDetails.put("right_bottom_seat", this.rightBottomSeat);
+        driverDetails.put("driver_id", driverID);
+        driverDetails.put("ride_id", rideID);
         return driverDetails;
     }
 
@@ -102,6 +114,13 @@ public class DriverRideModel {
         this.dstPoint = dstPoint;
         this.pickupPoint = pickupPoint;
         this.sortWeight = sortWeight;
+    }
+
+    public void setCarSeats(String nearDriverSeat, String leftBottomSeat, String centerBottomSeat, String rightBottomSeat){
+        this.nearDriverSeat = nearDriverSeat;
+        this.leftBottomSeat = leftBottomSeat;
+        this.centerBottomSeat = centerBottomSeat;
+        this.rightBottomSeat = rightBottomSeat;
     }
 
     public void setSrcPoint(LatLng srcPoint) {

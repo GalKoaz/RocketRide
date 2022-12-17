@@ -41,14 +41,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".RideSearchActivity"
+            android:name=".Models.RideSearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".CreateDriveActivity"
+            android:name=".Ride.CreateDriveActivity"
             android:exported="false"
             android:label="@string/title_activity_create_drive"
             android:theme="@style/Theme.RocketRide.NoActionBar">
@@ -57,7 +57,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".seatsSelectionActivity"
+            android:name=".Ride.seatsSelectionActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -79,16 +79,9 @@
             android:value="AIzaSyC0m_sTDFVwqeHdllwvOcLroV-6Y1Xvuyg" />
 
         <activity
-            android:name=".MapsDriverActivity"
+            android:name=".MenuActivities.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_maps_driver" />
-        <activity
-            android:name=".MapsShowActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false">
@@ -97,37 +90,26 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ProfileActivity"
+            android:name=".Login.ProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".HomeScreenActivity"
+            android:name=".Login.VerificationActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".VerificationActivity"
+            android:name=".Login.ResetPasswordActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".ResetPasswordActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">

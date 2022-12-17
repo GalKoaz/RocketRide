@@ -1,4 +1,4 @@
-package com.example.rocketride;
+package com.example.rocketride.Login;
 
 import static android.content.ContentValues.TAG;
 
@@ -11,6 +11,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.rocketride.MainActivity;
+import com.example.rocketride.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 

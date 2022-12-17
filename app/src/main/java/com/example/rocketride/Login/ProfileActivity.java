@@ -1,4 +1,4 @@
-package com.example.rocketride;
+package com.example.rocketride.Login;
 
 import static android.content.ContentValues.TAG;
 
@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rocketride.MainActivity;
+import com.example.rocketride.R;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
 import com.google.android.gms.tasks.OnFailureListener;

@@ -9,30 +9,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.rocketride.DriverRideModel;
-import com.example.rocketride.DriverRideRecyclerViewAdapter;
-import com.example.rocketride.HistoryRecyclerViewAdapter;
-import com.example.rocketride.MapsDriverActivity;
+import com.example.rocketride.Models.DriverRideModel;
+import com.example.rocketride.Adapters.HistoryRecyclerViewAdapter;
 import com.example.rocketride.R;
-import com.example.rocketride.RideModel;
-import com.example.rocketride.SelectDriverListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import com.example.rocketride.Models.RideModel;
+import com.example.rocketride.Adapters.SelectDriverListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,9 +73,9 @@ public class History extends AppCompatActivity implements SelectDriverListener {
         // Back arrow button
         ImageView backArrow = findViewById(R.id.leftArrowHistory);
         backArrow.setOnClickListener(l -> {
-            // Switch back to MapsDriverActivity activity
+            // Switch back to HomeActivity activity
             this.finish();
-            Intent switchActivityBecomeDriverIntent = new Intent(this, MapsDriverActivity.class);
+            Intent switchActivityBecomeDriverIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityBecomeDriverIntent);
         });
     }

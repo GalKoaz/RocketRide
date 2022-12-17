@@ -17,9 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.rocketride.MainActivity;
-import com.example.rocketride.MapsDriverActivity;
-import com.example.rocketride.ProfileActivity;
 import com.example.rocketride.R;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
@@ -159,7 +156,7 @@ public class BecomeDriver extends AppCompatActivity {
 
                     // Move the user back to home screen
                     this.finish();
-                    Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
+                    Intent switchActivityIntent = new Intent(this, HomeActivity.class);
                     // Send the profile image and type to the home activity
                     switchActivityIntent.putExtra("profile_image_link",  documentSnapshot.getString("profile_image_link"));
                     switchActivityIntent.putExtra("type", "driver");
@@ -177,9 +174,9 @@ public class BecomeDriver extends AppCompatActivity {
         // Back arrow button
         ImageView backArrow = findViewById(R.id.leftArrowBecomeDriver);
         backArrow.setOnClickListener(l -> {
-            // Switch back to MapsDriverActivity activity
+            // Switch back to HomeActivity activity
             this.finish();
-            Intent switchActivityBecomeDriverIntent = new Intent(this, MapsDriverActivity.class);
+            Intent switchActivityBecomeDriverIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityBecomeDriverIntent);
         });
     }

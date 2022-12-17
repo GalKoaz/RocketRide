@@ -1,21 +1,18 @@
-package com.example.rocketride;
+package com.example.rocketride.MenuActivities;
 
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -23,9 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -36,11 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rocketride.MenuActivities.ActiveDrives;
-import com.example.rocketride.MenuActivities.BecomeDriver;
-import com.example.rocketride.MenuActivities.History;
+import com.example.rocketride.Ride.CreateDriveActivity;
+import com.example.rocketride.MainActivity;
+import com.example.rocketride.R;
+import com.example.rocketride.Models.RideSearchActivity;
 import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -53,10 +48,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.rocketride.databinding.ActivityMapsDriverBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -69,7 +60,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleApiClient.OnConnectionFailedListener
+public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback , GoogleApiClient.OnConnectionFailedListener
 ,GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener, NavigationView.OnNavigationItemSelectedListener {
     private final static String SAVE_STATE_KEY = "save_state";
     private Bundle extras;
@@ -222,7 +213,7 @@ public class MapsDriverActivity extends AppCompatActivity implements OnMapReadyC
         Location location = locationManager.getLastKnownLocation(provider);
 
         if (location == null){
-            System.out.println("location is null in MapsDriverActivity");
+            System.out.println("location is null in HomeActivity");
             return;
         }
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());

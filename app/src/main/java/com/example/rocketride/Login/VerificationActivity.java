@@ -1,10 +1,7 @@
-package com.example.rocketride;
-
-import static android.content.ContentValues.TAG;
+package com.example.rocketride.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,16 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.common.api.ApiException;
+import com.example.rocketride.MainActivity;
+import com.example.rocketride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -93,8 +88,6 @@ public class VerificationActivity extends AppCompatActivity {
         });
 
         backArrow.setOnClickListener(l -> {
-
-
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, MainActivity.class);

@@ -1,37 +1,24 @@
-package com.example.rocketride;
+package com.example.rocketride.Ride;
 
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.drjacky.imagepicker.ImagePicker;
+import com.example.rocketride.MenuActivities.HomeActivity;
+import com.example.rocketride.R;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -41,11 +28,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -106,7 +91,7 @@ public class CreateDriveActivity extends AppCompatActivity{
 
         GoBack.setOnClickListener(view -> {
             this.finish();
-            Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
+            Intent switchActivityIntent = new Intent(this, HomeActivity.class);
 //            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
             startActivity(switchActivityIntent);
         });
@@ -244,7 +229,7 @@ public class CreateDriveActivity extends AppCompatActivity{
         Toast.makeText(CreateDriveActivity.this, "Drive created.",
                 Toast.LENGTH_SHORT).show();
         this.finish();
-        Intent switchActivityIntent = new Intent(this, MapsDriverActivity.class);
+        Intent switchActivityIntent = new Intent(this, HomeActivity.class);
 //            switchActivityIntent.putExtra("message", "From: " + MainActivity.class.getSimpleName());
         startActivity(switchActivityIntent);
     }

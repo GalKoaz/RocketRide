@@ -1,4 +1,4 @@
-package com.example.rocketride;
+package com.example.rocketride.Models;
 
 import com.google.android.gms.maps.model.LatLng;
 
