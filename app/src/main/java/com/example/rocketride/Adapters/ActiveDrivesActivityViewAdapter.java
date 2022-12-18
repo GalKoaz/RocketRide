@@ -43,9 +43,7 @@ public class ActiveDrivesActivityViewAdapter extends RecyclerView.Adapter<Active
         holder.destination.setText(currDriverRide.getDestination());
         holder.date.setText(currDriverRide.getDate());
         holder.pickup.setText(currDriverRide.getPickup());
-//        holder.arrow.setOnClickListener(l -> {
-//            listener.onItemClicked(ActDrive.get(position));
-//        });
+        holder.arrow.setOnClickListener(l -> System.out.println("arrow clicked!"));
     }
 
     @Override
