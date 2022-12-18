@@ -176,6 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
             Rider.setBackground(null);
             RiderLayout.setVisibility(View.GONE);
             DriverLayout.setVisibility(View.VISIBLE);
+
         });
 
         // upload Image Profile Driver Event
@@ -265,7 +266,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             // set global userType variable for storing
             // his details in firebase
-            userType = "rider";
+            userType = "driver";
 
             firstNameDriver = FirstNameDriver.getText().toString();
             lastNameDriver = LastNameDriver.getText().toString();

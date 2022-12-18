@@ -95,9 +95,9 @@
                         android:drawablePadding="12dp"
                         android:ems="10"
                         android:inputType="text|number"
+                        android:maxLength="13"
                         android:textColor="@color/black"
                         android:textSize="13sp"
-                        android:maxLength="13"
                         android:textStyle="normal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,8 +162,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
                     android:elevation="15dp"
                     android:gravity="center"

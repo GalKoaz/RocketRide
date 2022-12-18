@@ -108,7 +108,7 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
                             document.getString("center_bottom_seat"),
                             document.getString("right_bottom_seat")
                     };
-
+                    System.out.println(Arrays.toString(seatsArr));
                     // If user is located in one of the drive seats then update list accordingly
                     boolean isUserInSeats = Arrays.asList(seatsArr).contains(UID);
                     if (isUserInSeats){
@@ -124,22 +124,23 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
                                 dateDay + " " + startTime,
                                 document.getString("pickup_name")
                         ));
+                        Log.d(TAG, document.getId() + " => " + document.getData());
                     }
-                    if (ActDrives.isEmpty()){
-                        notFoundAnimation.setVisibility(View.VISIBLE);
-                        notFoundTextView.setVisibility(View.VISIBLE);
-                        return;
-                    }
-
-                    // Apply changes to the recycler view
-                    adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
-                    recyclerView.setAdapter(adapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                    recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-                    notFoundAnimation.setVisibility(View.GONE);
-                    notFoundTextView.setVisibility(View.GONE);
-                    Log.d(TAG, document.getId() + " => " + document.getData());
                 }
+                if (ActDrives.isEmpty()){
+                    notFoundAnimation.setVisibility(View.VISIBLE);
+                    notFoundTextView.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                // Apply changes to the recycler view
+                adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+                notFoundAnimation.setVisibility(View.GONE);
+                notFoundTextView.setVisibility(View.GONE);
+
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
