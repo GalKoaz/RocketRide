@@ -24,8 +24,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
+
+        // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
         // TextView objects
         TextView backToSign = findViewById(R.id.backSigning);
 

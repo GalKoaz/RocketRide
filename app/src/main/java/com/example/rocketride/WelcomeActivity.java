@@ -23,6 +23,7 @@ public class WelcomeActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);
 
+        // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.Models.RideSearchActivity;
 import com.example.rocketride.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -260,10 +261,9 @@ public class seatsSelectionActivity extends AppCompatActivity {
                     System.out.println("seat status: " + currSeatSelectionName + " " + seatStatus);
                     if (seatStatus.equals("")){
                         System.out.println("seat is available - can complete process");
-                        // Switch to the home activity
-                        this.finish();
-                        Intent switchActivitySearchRideIntent = new Intent(this, HomeActivity.class);
-                        startActivity(switchActivitySearchRideIntent);
+
+                        // TODO: CATCHING FOR NOW THE SEAT WITHOUT PAYMENT FOR TESTING PURPOSES
+                        setUserSeat(currSeatSelectionName, document.getId(), FirebaseAuth.getInstance().getUid());
                     }
                     else{
                         currAvailableSeatSelectedView.setVisibility(View.GONE);
@@ -275,5 +275,22 @@ public class seatsSelectionActivity extends AppCompatActivity {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
+    }
+
+    public void setUserSeat(String seatName, String documentID, String UID){
+        db.collection("drives").document(documentID).update(seatName, UID)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        Toast.makeText(seatsSelectionActivity.this, "Success!", Toast.LENGTH_LONG).show();
+
+
+                        // Switch to the home activity
+                        this.finish();
+                        Intent switchActivitySearchRideIntent = new Intent(this, HomeActivity.class);
+                        startActivity(switchActivitySearchRideIntent);
+                    }else{
+                        Log.d(TAG, "Error getting or setting documents: ", task.getException());
+                    }
+                });
     }
 }
