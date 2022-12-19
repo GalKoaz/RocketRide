@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
     // Google sign-in client
     private GoogleSignInClient mGoogleSignInClient;
 
+    // Firebase authentication reference
     private FirebaseAuth firebaseAuth;
+
+    // Firebase firestore database reference
     private FirebaseFirestore db;
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout signUpLayout = findViewById(R.id.singUpLayout),
                 logInLayout = findViewById(R.id.logInLayout);
 
+        // If view flag is on then sign up layout is presented
         if(viewFlag){
             signUP.setTextColor(getResources().getColor(R.color.white));
             logIn.setTextColor(getResources().getColor(R.color.black));
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             signUpUserConfirmPassword.setText(userPasswordExtras);
         }
 
+        // Password text field on change events.
         signUpUserPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -174,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Connect the user to firebase
-            signUserWithEmailPassword(userEmail, userPassword, this);
+            signUserWithEmailPassword(userEmail, userPassword);
         });
 
         // Sign up user after clicking the SIGN UP button
@@ -212,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-
         /**
          * Sign in via providers
          */
@@ -222,8 +226,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    protected void signUserWithEmailPassword(String userEmail, String userPassword, MainActivity mainActivity) {
+    /**
+     * Signing in the user with the given email and password,
+     * if authentication succeeded user is moved to the home activity.
+     * @param userEmail current user's email address.
+     * @param userPassword current user's password.
+     */
+    private void signUserWithEmailPassword(String userEmail, String userPassword) {
         firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -242,8 +251,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-
-    protected void signUserWithGoogle(){
+    /**
+     * A part of configuration for google authentication.
+     */
+    private void signUserWithGoogle(){
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -275,7 +286,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void firebaseAuthWithGoogle(String idToken) {
+    /**
+     * Method signs up the current user for google authentication.
+     * Then deletes the gmail authentication for signing up the user after completing
+     * the signing process and move the user to the phone verification activity.
+     * @param idToken google's token id.
+     */
+    private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
@@ -313,6 +330,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Method gets current user's id and send his details to the home activity.
+     * @param UID current user's id
+     */
     private void moveToHomeActivity(String UID) {
         // Get current user document
         Query userQuery = db.collection("users").whereEqualTo("UID", UID);

@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -78,6 +79,9 @@ public class ProfileActivity extends AppCompatActivity {
         userPasswordExtras = extras.getString("userPassword", "");
         userPhoneNumberExtras = extras.getString("userPhoneNumber", "");
 
+        // Hide action bar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         // launcher Driver Profile Upload Image
         ActivityResultLauncher<Intent> launcher0 =
