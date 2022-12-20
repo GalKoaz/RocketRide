@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * ----- TEST ---
@@ -117,20 +125,77 @@ public class MainActivity extends AppCompatActivity {
             signUpUserPassword.setText(userPasswordExtras);
             signUpUserConfirmPassword.setText(userPasswordExtras);
         }
-
+        ProgressBar strongpassword = findViewById(R.id.progressBar);
         // Password text field on change events.
+        Drawable progressDrawable2 = strongpassword.getProgressDrawable().mutate();
+        progressDrawable2.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+        strongpassword.setProgressDrawable(progressDrawable2);
+        strongpassword.setProgress(0);
         signUpUserPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                TextView ENL = findViewById(R.id.PTS);
+                ENL.setVisibility(View.GONE);
+                String str = Objects.requireNonNull(signUpUserPassword.getText()).toString();
+                int strong = printStrongNess(str);
+                if (strong == 3){
+                    Drawable progressDrawable = strongpassword.getProgressDrawable().mutate();
+                    progressDrawable.setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+                    strongpassword.setProgressDrawable(progressDrawable);
+                    strongpassword.setProgress(100);
+                }
+                else if (strong == 2){
+                    Drawable progressDrawable = strongpassword.getProgressDrawable().mutate();
+                    progressDrawable.setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN);
+                    strongpassword.setProgressDrawable(progressDrawable);
+                    strongpassword.setProgress(66);
+                }
+                else {
+                    Drawable progressDrawable = strongpassword.getProgressDrawable().mutate();
+                    progressDrawable.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+                    strongpassword.setProgressDrawable(progressDrawable);
+                    strongpassword.setProgress(33);
+                }
+            }
+        });
+        signUpUserEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
             @Override
             public void afterTextChanged(Editable s) {
-                // TODO: 26/11/2022 add a gui green red yellow
-                System.out.println(signUpUserPassword.getText().toString());
+                TextView ENL = findViewById(R.id.ENL);
+                ENL.setVisibility(View.GONE);
+            }
+        });
+        signUpUserConfirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                TextView ENL = findViewById(R.id.PNM_text);
+                ENL.setVisibility(View.GONE);
             }
         });
 
@@ -167,17 +232,9 @@ public class MainActivity extends AppCompatActivity {
         // Sign in user after clicking the SIGN IN button
         signInButton.setOnClickListener(l -> {
             System.out.println("SIGN IN button pressed");
-            String userEmail = signInUserEmail.getText().toString();
-            String userPassword = signInUserPassword.getText().toString();
+            String userEmail = Objects.requireNonNull(signInUserEmail.getText()).toString();
+            String userPassword = Objects.requireNonNull(signInUserPassword.getText()).toString();
             System.out.println(userEmail + "\n" + userPassword);
-
-            if (userEmail.equals("test@seats.com")) {
-                this.finish();
-                Intent switchActivityIntent2 = new Intent(this, seatsSelectionActivity.class);
-                startActivity(switchActivityIntent2);
-                return;
-            }
-
             // Connect the user to firebase
             signUserWithEmailPassword(userEmail, userPassword);
         });
@@ -187,26 +244,35 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("SIGN UP button pressed");
 
             // User's typed information
-            String userEmail = signUpUserEmail.getText().toString();
-            String userPassword = signUpUserPassword.getText().toString();
-            String confirmUserPassword = signUpUserConfirmPassword.getText().toString();
+            String userEmail = Objects.requireNonNull(signUpUserEmail.getText()).toString();
+            String userPassword = Objects.requireNonNull(signUpUserPassword.getText()).toString();
+            String confirmUserPassword = Objects.requireNonNull(signUpUserConfirmPassword.getText()).toString();
+            boolean close = false;
             if(!userPassword.equals(confirmUserPassword)){
-                Toast.makeText(MainActivity.this, "Passwords not matching.",
-                        Toast.LENGTH_SHORT).show();
-                return;
+                // TextView objects
+                TextView PNM = findViewById(R.id.PNM_text);
+                PNM.setVisibility(View.VISIBLE);
+                close = true;
             }
             if(!userEmail.contains("@")){
-                Toast.makeText(MainActivity.this, "Mail address is not legal.",
-                        Toast.LENGTH_SHORT).show();
-                return;
+                TextView ENL = findViewById(R.id.ENL);
+                ENL.setVisibility(View.VISIBLE);
+                close = true;
             }
 
             if (userPassword.length() < 6){ // Check if password length too
-                Toast.makeText(MainActivity.this, "Password length has to be at least 6.",
-                        Toast.LENGTH_SHORT).show();
+                TextView ENL = findViewById(R.id.PTS);
+                ENL.setVisibility(View.VISIBLE);
+                close = true;
+
+            }
+            if(close){
+                Drawable progressDrawable = strongpassword.getProgressDrawable().mutate();
+                progressDrawable.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+                strongpassword.setProgressDrawable(progressDrawable);
+                strongpassword.setProgress(0);
                 return;
             }
-
             // Activate the verification activity
             this.finish();
             Intent switchActivityIntent = new Intent(this, VerificationActivity.class);
@@ -226,6 +292,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public static int printStrongNess(String input)
+    {
+        // Checking lower alphabet in string
+        int n = input.length();
+        boolean hasLower = false, hasUpper = false,
+                hasDigit = false, specialChar = false;
+        Set<Character> set = new HashSet<Character>(
+                Arrays.asList('!', '@', '#', '$', '%', '^', '&',
+                        '*', '(', ')', '-', '+'));
+        for (char i : input.toCharArray())
+        {
+            if (Character.isLowerCase(i))
+                hasLower = true;
+            if (Character.isUpperCase(i))
+                hasUpper = true;
+            if (Character.isDigit(i))
+                hasDigit = true;
+            if (set.contains(i))
+                specialChar = true;
+            if (!Character.isDigit(i) && !Character.isLetter(i) && !Character.isSpace(i)) {
+                specialChar = true;
+            }
+        }
+
+        // Strength of password
+        if (hasDigit && hasLower && hasUpper && specialChar
+                && (n >= 8))
+            return 3;
+        else if ((hasLower || hasUpper || specialChar)
+                && (n >= 6))
+            return 2;
+        else
+            return 1;
+    }
+
     /**
      * Signing in the user with the given email and password,
      * if authentication succeeded user is moved to the home activity.
@@ -233,6 +334,9 @@ public class MainActivity extends AppCompatActivity {
      * @param userPassword current user's password.
      */
     private void signUserWithEmailPassword(String userEmail, String userPassword) {
+        if(userEmail.equals("") || userPassword.equals("")){
+            return;
+        }
         firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
