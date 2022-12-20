@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -40,6 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class RideSearchActivity extends AppCompatActivity implements SelectDriverListener {
@@ -148,6 +153,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             }
         });
 
+
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment2 = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -183,6 +189,24 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         // Drivers search button action listener
         searchButton.setOnClickListener(l -> {
             setUpCloseRides();
+        });
+
+        // Directional arrows image view
+        ImageView directArrowsImageView = findViewById(R.id.directionalArrowRideSearch);
+        directArrowsImageView.setOnClickListener(view -> {
+            // Set directional arrows animation
+            ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", 0f, 180f);
+            animator.setRepeatMode(ValueAnimator.REVERSE); // set the animation to reverse direction each time it repeats
+            animator.start(); // start the animation
+
+            // replace fields text
+            String src = selectedSourcePlace, dest = selectedDestPlace;
+            autocompleteFragment.setText(dest);
+            autocompleteFragment2.setText(src);
+
+            // Swap dest and src
+            selectedSourcePlace = dest;
+            selectedDestPlace = src;
         });
     }
 

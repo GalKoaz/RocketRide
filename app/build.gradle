@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation "com.google.android.gms:play-services-location:21.0.1"
     implementation 'com.google.android.gms:play-services-places:17.0.0'
-    implementation 'com.google.android.libraries.places:places:2.7.0'
+    implementation 'com.google.android.libraries.places:places:3.0.0'
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.1.0')
 
@@ -85,5 +85,8 @@ dependencies {
 
     // glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    // Object animation
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
 }
 
