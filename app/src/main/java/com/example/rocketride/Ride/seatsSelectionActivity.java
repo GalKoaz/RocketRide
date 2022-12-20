@@ -227,7 +227,7 @@ public class seatsSelectionActivity extends AppCompatActivity {
         setSeatView(nearDriverSeat, nearDriverAvailableSeatView, nearDriverUnavailableSeatView);
         setSeatView(leftBottomSeat, leftBottomAvailableSeatView, leftBottomUnavailableSeatView);
         setSeatView(centerBottomSeat, centerBottomAvailableSeatView, centerBottomUnavailableSeatView);
-        setSeatView(rightBottomSeat, centerBottomAvailableSeatView, centerBottomUnavailableSeatView);
+        setSeatView(rightBottomSeat, rightBottomAvailableSeatView, rightBottomUnavailableSeatView);
     }
 
     public void setSeatView(String carSeat, ImageView carAvailableSeatView, ImageView carUnavailableSeatView){
