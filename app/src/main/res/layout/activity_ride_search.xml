@@ -9,7 +9,7 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="407dp"
+        android:layout_width="0dp"
         android:layout_height="188dp"
         android:background="@drawable/switch_tubms_prof"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,6 +70,7 @@
         android:layout_width="193dp"
         android:layout_height="54dp"
         android:layout_gravity="center"
+        android:layout_marginStart="22dp"
         android:layout_marginBottom="32dp"
         android:elevation="15dp"
         android:gravity="center"
@@ -79,7 +80,7 @@
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintHorizontal_bias="0.535"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:shapeAppearanceOverlay="@style/Button5" />
 
@@ -87,25 +88,28 @@
         android:id="@+id/imageView18"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginTop="100dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.766"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.627"
+        app:layout_constraintStart_toEndOf="@+id/searchButton"
+        app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
+        app:layout_constraintVertical_bias="0.225"
         app:srcCompat="@drawable/filter" />
 
     <Spinner
         android:id="@+id/spinner1"
-        android:layout_width="67dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="@drawable/round_border"
+        android:background="@drawable/bg_sort_spinner_down"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.953"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@+id/searchButton"
+        app:layout_constraintHorizontal_bias="0.404"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.139" />
+        app:layout_constraintVertical_bias="0.768" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="409dp"
@@ -135,12 +139,12 @@
         android:layout_width="34dp"
         android:layout_height="33dp"
         android:background="@drawable/ic_baseline_arrow_back_ios_24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.021"
+        app:layout_constraintVertical_bias="0.096"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <ImageView

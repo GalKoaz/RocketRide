@@ -149,23 +149,18 @@ public class seatsSelectionActivity extends AppCompatActivity {
         });
 
         nearDriverSeat.setOnClickListener(l -> {
-            Toast.makeText(seatsSelectionActivity.this, "near driver seat clicked!", Toast.LENGTH_LONG).show();
             availableChecks(nearDriverAvailableSeatView, nearDriverUnavailableSeatView, "near_driver_seat");
         });
 
         leftBottomSeat.setOnClickListener(l -> {
-            Toast.makeText(seatsSelectionActivity.this, "left bottom seat clicked!", Toast.LENGTH_LONG).show();
             availableChecks(leftBottomAvailableSeatView, leftBottomUnavailableSeatView, "left_bottom_seat");
         });
 
         centerBottomSeat.setOnClickListener(l -> {
-            Toast.makeText(seatsSelectionActivity.this, "center bottom seat clicked!", Toast.LENGTH_LONG).show();
             availableChecks(centerBottomAvailableSeatView, centerBottomUnavailableSeatView, "center_bottom_seat");
         });
 
         rightBottomSeat.setOnClickListener(l -> {
-            Toast.makeText(seatsSelectionActivity.this, "right bottom seat clicked!", Toast.LENGTH_LONG).show();
-
             availableChecks(rightBottomAvailableSeatView, rightBottomUnavailableSeatView,"right_bottom_seat");
         });
 
@@ -175,8 +170,6 @@ public class seatsSelectionActivity extends AppCompatActivity {
         });
 
         backImageView.setOnClickListener(l -> {
-            Toast.makeText(seatsSelectionActivity.this, "go back button clicked!", Toast.LENGTH_LONG).show();
-
             // Intent back to searching a ride
             this.finish();
             Intent switchActivityIntent = new Intent(this, RideSearchActivity.class);
