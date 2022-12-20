@@ -44,7 +44,7 @@ import java.util.Map;
 
 public class RideSearchActivity extends AppCompatActivity implements SelectDriverListener {
     private static final String TAG = RideSearchActivity.class.getName();
-    private Button by_price, by_time, by_best, by_stars, GoBack;
+    private Button GoBack;
     private String selectedSourcePlace="", selectedDestPlace="";
     private LatLng selectedSourcePlacePoint, selectedDestPlacePoint;
     private ArrayList<DriverRideModel> closeRides = new ArrayList<>();
@@ -58,9 +58,6 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_search);
         db = FirebaseFirestore.getInstance();
-
-        System.out.println("the lang distance is:" +CalculationByDistance(new LatLng(32.177033, 34.852330),new LatLng(32.178005, 34.923150)));
-
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -76,12 +73,6 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         dropdown.setAdapter(adapter1);
         // Recycle view
         recyclerView = findViewById(R.id.myRecyclerView);
-
-        //sort buttons
-        by_best=findViewById(R.id.best_sort);
-        by_price=findViewById(R.id.price_sort);
-        by_stars=findViewById(R.id.stars_sort);
-        by_time=findViewById(R.id.time_sort);
         GoBack=findViewById(R.id.back_from_search);
 
         // Set the adapter
@@ -93,22 +84,6 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             this.finish();
             Intent switchActivityIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityIntent);
-        });
-        by_best.setOnClickListener(view -> {
-            sort_alg = 0;
-            setUpCloseRides();
-        });
-        by_stars.setOnClickListener(view -> {
-            sort_alg = 1;
-            setUpCloseRides();
-        });
-        by_time.setOnClickListener(view -> {
-            sort_alg = 2;
-            setUpCloseRides();
-        });
-        by_price.setOnClickListener(view -> {
-            sort_alg = 3;
-            setUpCloseRides();
         });
         // Initialize places
         if (!Places.isInitialized()) {
@@ -129,6 +104,23 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 System.out.println(dropdown.getAdapter().getItem(i));
+                String choose = (String) dropdown.getAdapter().getItem(i);
+                if(choose.equals("Time")){
+                    sort_alg = 2;
+                    setUpCloseRides();
+                }
+                else if(choose.equals("Best")){
+                    sort_alg = 0;
+                    setUpCloseRides();
+                }
+                else if(choose.equals("Price")){
+                    sort_alg = 3;
+                    setUpCloseRides();
+                }
+                else if(choose.equals("Rating")){
+                    sort_alg = 1;
+                    setUpCloseRides();
+                }
             }
 
             @Override
@@ -198,21 +190,8 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-        if(selectedDestPlace.equals("") || selectedSourcePlace.equals("")){
-            Toast.makeText(this, "input is empty.",
-                    Toast.LENGTH_SHORT).show();
-            // TODO: just for testing - remove it when not needed....
-            DriverRideModel amir = new DriverRideModel("Amir", "Gill", "Ariel", "Tel-Aviv", "14:05", "3.5/5", "Ariel-University",
-                    3.33, "16/12/2022", "", "1sKZhZMzIx23HTqyM0hP");
-            amir.setCarSeats("","taken", "taken", "");
-
-            for (int i = 0; i < 100; i++) {
-                closeRides.add(amir);
-                closeRides.add(new DriverRideModel("Gal", "KO", "Ariel", "Kfar-Saba", "16:18", "4.9/5", "Ariel-University", 3.33, "16/12/2022", "", ""));
-            }
-            adapter = new DriverRideRecyclerViewAdapter(this, closeRides, this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if(selectedDestPlace.equals("") || selectedSourcePlace.equals("")) {
+            return;
         }
         else{
             getAliveRides();

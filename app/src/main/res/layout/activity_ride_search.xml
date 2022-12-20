@@ -9,8 +9,8 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="411dp"
-        android:layout_height="199dp"
+        android:layout_width="407dp"
+        android:layout_height="188dp"
         android:background="@drawable/switch_tubms_prof"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -67,10 +67,10 @@
 
     <Button
         android:id="@+id/searchButton"
-        android:layout_width="131dp"
-        android:layout_height="53dp"
+        android:layout_width="193dp"
+        android:layout_height="54dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="32dp"
         android:elevation="15dp"
         android:gravity="center"
         android:text="SEARCH"
@@ -79,79 +79,20 @@
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="0.307"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:shapeAppearanceOverlay="@style/Button5" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myRecyclerView"
-        android:layout_width="409dp"
-        android:layout_height="530dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/imageView18"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/price_sort"
-        android:layout_width="49dp"
-        android:layout_height="48dp"
-        android:text="p"
-        app:layout_constraintBottom_toTopOf="@+id/best_sort"
-        app:layout_constraintEnd_toStartOf="@+id/time_sort"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.766"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/time_sort"
-        android:layout_width="49dp"
-        android:layout_height="48dp"
-        android:text="t"
-        app:layout_constraintBottom_toTopOf="@+id/stars_sort"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/stars_sort"
-        android:layout_width="49dp"
-        android:layout_height="48dp"
-        android:text="s"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.198" />
-
-    <Button
-        android:id="@+id/best_sort"
-        android:layout_width="49dp"
-        android:layout_height="48dp"
-        android:text="b"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/stars_sort"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.198" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sort"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.025"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.125" />
+        app:srcCompat="@drawable/filter" />
 
     <Spinner
         android:id="@+id/spinner1"
@@ -164,7 +105,18 @@
         app:layout_constraintHorizontal_bias="0.953"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.139" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myRecyclerView"
+        android:layout_width="409dp"
+        android:layout_height="530dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/back_from_search"
@@ -179,14 +131,4 @@
         app:layout_constraintVertical_bias="0.013"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <ImageView
-        android:id="@+id/imageView18"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="124dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.761"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/filter" />
 </androidx.constraintlayout.widget.ConstraintLayout>
