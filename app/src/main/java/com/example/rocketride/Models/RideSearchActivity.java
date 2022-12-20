@@ -229,7 +229,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
 
                             if ((CalculationByDistance(src_p,selectedSourcePlacePoint) > src_radius && CalculationByDistance(pickup_p,selectedSourcePlacePoint)>src_radius)
                                     || CalculationByDistance(dst_p,selectedDestPlacePoint) > dst_radius){
-                                    continue;
+                                continue;
                             }
                             else {
                                 HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
@@ -261,8 +261,8 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                         (String) document.get("dst_name"),
                                         t,
                                         "7.5",
-                                         pickupName,
-                                         price,
+                                        pickupName,
+                                        price,
                                         d + "/" + month + "/" + year,
                                         driverID,
                                         rideId

@@ -22,6 +22,7 @@ public class DriverRideModel {
     private String nearDriverSeat, leftBottomSeat, centerBottomSeat, rightBottomSeat;
     private final String driverID;
     private final String rideID;
+    private String profileImageURL;
 
     // Constructor
     public DriverRideModel(String firstName, String lastName, String source, String destination,
@@ -38,6 +39,7 @@ public class DriverRideModel {
         this.price = price;
         this.driverID = driverID;
         this.rideID = rideID;
+        this.profileImageURL = "";
     }
 
     public String getFirstName() {
@@ -63,6 +65,12 @@ public class DriverRideModel {
     public String getRating() {
         return rating;
     }
+
+
+    /* User's profile image get & set */
+    public String getProfileImageURL() {return profileImageURL;}
+
+    public void setProfileImageURL(String profileImageURL) {this.profileImageURL = profileImageURL;}
 
     public HashMap<String, Object> getHashDriverDetails(){
         HashMap<String, Object> driverDetails = new HashMap<>();

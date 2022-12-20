@@ -12,8 +12,12 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 
@@ -49,6 +53,22 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         holder.cardView.setOnClickListener(l -> {
             listener.onItemClicked(closeRides.get(position));
         });
+
+        // Upload image to the rounded image view
+        String profileImageURL = currDriverRide.getProfileImageURL();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        if (profileImageURL == null){
+            return;
+        }
+
+        // Profile image url shouldn't be empty
+        if (!profileImageURL.equals("")) {
+            StorageReference imageRef = storage.getReference().child(currDriverRide.getProfileImageURL());
+            Glide.with(holder.itemView.getContext())
+                    .load(imageRef)
+                    .into(holder.profileImage);
+        }
     }
 
     @Override
@@ -58,7 +78,7 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraintLayoutDriverSearch;
-        ImageView profileImage;
+        RoundedImageView profileImage;
         TextView firstName, lastName, source, destination, startTime, rating;
         CardView cardView;
 
@@ -72,6 +92,7 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
             startTime = itemView.findViewById(R.id.startTimeDriverSearch);
             rating = itemView.findViewById(R.id.ratingDriverSearch);
             cardView = itemView.findViewById(R.id.driverRow);
+            profileImage = itemView.findViewById(R.id.profileRoundedRecyclerView);
         }
     }
 }

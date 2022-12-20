@@ -381,7 +381,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             Log.d(TAG, "onStop fired ..............");
             signOut();
-            Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
+            // Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
 
             // Switch to sign in activity
             this.finish();

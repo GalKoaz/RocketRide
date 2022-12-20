@@ -26,18 +26,28 @@
             android:layout_width="match_parent"
             android:layout_height="165dp"
             android:background="@drawable/gradient_purple">
-
-            <ImageView
-                android:id="@+id/imageView"
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/profileRoundedRecyclerView"
                 android:layout_width="76dp"
                 android:layout_height="74dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/defaultpicture"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.052"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.252"
-                app:srcCompat="@drawable/defaultpicture" />
+                app:riv_oval="true" />
+
+            <View
+                android:id="@+id/centerProfileView"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                app:layout_constraintBottom_toBottomOf="@+id/profileRoundedRecyclerView"
+                app:layout_constraintEnd_toEndOf="@+id/profileRoundedRecyclerView"
+                app:layout_constraintStart_toStartOf="@+id/profileRoundedRecyclerView"
+                app:layout_constraintTop_toTopOf="@+id/profileRoundedRecyclerView" />
 
             <TextView
                 android:id="@+id/firstNameDriverSearch"
