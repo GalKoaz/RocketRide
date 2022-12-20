@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
             return 1;
     }
 
+
     /**
      * Signing in the user with the given email and password,
      * if authentication succeeded user is moved to the home activity.
