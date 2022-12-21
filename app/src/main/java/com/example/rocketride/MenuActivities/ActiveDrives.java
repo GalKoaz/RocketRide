@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -148,6 +149,7 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     public void getActDrives(Query activeDrivesQuery, boolean isMyCreatedDrive){
         // Clear array list in order to start from a clear perspective
         ActDrives.clear();
@@ -194,6 +196,11 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
                     }
                 }
                 if (ActDrives.isEmpty()){
+                    // Apply changes to the recycler view
+                    adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
                     notFoundAnimation.setVisibility(View.VISIBLE);
                     notFoundTextView.setVisibility(View.VISIBLE);
                     return;
