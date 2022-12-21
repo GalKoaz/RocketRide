@@ -1,6 +1,8 @@
 package com.example.rocketride.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +27,21 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
     private Context context;
     private ArrayList<DriverRideModel> closeRides;
     private SelectDriverListener listener;
+    private Drawable[] drawables;
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public DriverRideRecyclerViewAdapter(Context context, ArrayList<DriverRideModel> closeRides, SelectDriverListener listener) {
         this.context = context;
         this.closeRides = closeRides;
         this.listener = listener;
+
+        this.drawables = new Drawable[6];
+        drawables[0] = context.getResources().getDrawable(R.drawable.gradient_blue);
+        drawables[1] = context.getResources().getDrawable(R.drawable.gradient_blue_purple);
+        drawables[2] = context.getResources().getDrawable(R.drawable.gradient_orange);
+        drawables[3] = context.getResources().getDrawable(R.drawable.gradient_pink);
+        drawables[4] = context.getResources().getDrawable(R.drawable.gradient_turquoise);
+        drawables[5] = context.getResources().getDrawable(R.drawable.gradient_turquoise_purple);
     }
 
     @NonNull
@@ -53,6 +65,10 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         holder.cardView.setOnClickListener(l -> {
             listener.onItemClicked(closeRides.get(position));
         });
+
+
+
+        holder.constraintLayoutDriverSearch.setBackground(drawables[position % 6]);
 
         // Upload image to the rounded image view
         String profileImageURL = currDriverRide.getProfileImageURL();

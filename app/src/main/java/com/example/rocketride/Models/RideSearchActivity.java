@@ -63,6 +63,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_search);
         db = FirebaseFirestore.getInstance();
+
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
