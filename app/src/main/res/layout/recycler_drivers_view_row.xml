@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayoutDriverRow"
     android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -12,9 +13,9 @@
         android:layout_height="wrap_content"
         android:elevation="100dp"
         android:layout_margin="10dp"
-        android:outlineAmbientShadowColor="@color/com_facebook_blue"
-        android:outlineSpotShadowColor="@color/com_facebook_blue"
-        app:cardCornerRadius="15dp"
+        app:cardElevation="8dp"
+        app:cardMaxElevation="8dp"
+        app:cardCornerRadius="4dp"
         app:cardPreventCornerOverlap="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,8 +26,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayoutDriverSearch"
             android:layout_width="match_parent"
-            android:layout_height="165dp"
+            android:layout_height="match_parent"
             android:background="@drawable/gradient_purple">
+
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/profileRoundedRecyclerView"
                 android:layout_width="76dp"

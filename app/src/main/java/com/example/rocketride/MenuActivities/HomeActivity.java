@@ -337,6 +337,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //moveTaskToBack(false);
                 this.finish();
                 Intent switchActivityActiveDrivesIntent = new Intent(this, ActiveDrives.class);
+                switchActivityActiveDrivesIntent.putExtra("type", userType);
                 startActivity(switchActivityActiveDrivesIntent);
                 break;
             case R.id.menuBecomeDriver:

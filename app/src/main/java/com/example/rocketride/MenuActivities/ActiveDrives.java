@@ -21,6 +21,8 @@ import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.R;
 import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.Adapters.SelectDriverListener;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,12 +41,26 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
     private ActiveDrivesActivityViewAdapter adapter;
     private LottieAnimationView notFoundAnimation;
     private TextView notFoundTextView;
-
+    private String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_drives);
+
+        // Get user type
+        Bundle extras = getIntent().getExtras();
+        userType = "";
+        if (extras != null){
+            userType = extras.getString("type");
+        }
+
+        // Driver's tab layout
+        TabLayout tabLayout = findViewById(R.id.driverActiveDrivesTab);
+        if(userType.equals("driver")){
+            tabLayout.setVisibility(View.VISIBLE);
+        }
+
         db = FirebaseFirestore.getInstance();
 
         UID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -73,13 +89,51 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
             Intent switchActivityBecomeDriverIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityBecomeDriverIntent);
         });
+
+        // Driver's tab
+        TabItem myDrivesTab = tabLayout.findViewById(R.id.myDrivesTabItem),
+                myCreatedDrivesTab = tabLayout.findViewById(R.id.myCreatedDrivesTabItem);
+
+        CollectionReference collectionReference = db.collection("drives");
+
+
+        final int MY_DRIVES = 0,
+                  MY_CREATED_DRIVES = 1;
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            final Query query = collectionReference.whereEqualTo("alive", true);
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    // My drives tab listener
+                    case MY_DRIVES:
+                        System.out.println("my drives tab");
+                        getActDrives(query, false);
+                        break;
+                    // My created drives tab listener
+                    case MY_CREATED_DRIVES:
+                        System.out.println("my created drives tab");
+                        getActDrives(query, true);
+                        break;
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
     }
 
     protected void setupUserActDrives(){
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-        getActDrives();
+        CollectionReference collectionReference = db.collection("drives");
+        Query query = collectionReference.whereEqualTo("alive", true);
+        getActDrives(query, false);
+
 //        if(ActDrives.isEmpty()){
 //            Toast.makeText(this, "input is empty.", Toast.LENGTH_SHORT).show();
 //            // TODO: just for testing - remove it when not needed....
@@ -94,12 +148,24 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
     }
 
 
-    public void getActDrives(){
-        CollectionReference collectionReference = db.collection("drives");
-        Query query = collectionReference.whereEqualTo("alive", true);
-        query.get().addOnCompleteListener(task -> {
+    public void getActDrives(Query activeDrivesQuery, boolean isMyCreatedDrive){
+        // Clear array list in order to start from a clear perspective
+        ActDrives.clear();
+
+        activeDrivesQuery.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    String driverID = document.getString("driver-id");
+
+                    // If we want only the user active rides
+                    if (isMyCreatedDrive && !driverID.equals(UID)){
+                        continue;
+                    }
+
+                    // If we want only the driver created drives
+                    if (!isMyCreatedDrive && driverID.equals(UID)){
+                        continue;
+                    }
 
                     // Init seats array
                     String[] seatsArr = {

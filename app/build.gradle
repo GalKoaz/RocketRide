@@ -4,7 +4,6 @@ plugins {
 
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
-
 }
 
 android {
@@ -40,6 +39,8 @@ android {
 }
 
 dependencies {
+    api 'tk.zielony:carbon:0.16.0.1'
+
     //import facebook sdk
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
