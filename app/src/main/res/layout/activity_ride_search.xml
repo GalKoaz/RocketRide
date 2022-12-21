@@ -11,7 +11,7 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="188dp"
-        android:background="@drawable/switch_tubms_prof"
+        android:background="@drawable/border_gradient_circle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,6 @@
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="287dp"
         android:layout_height="34dp"
-
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintHorizontal_bias="0.564"
@@ -150,7 +149,7 @@
     <ImageView
         android:layout_width="20dp"
         android:layout_height="14dp"
-        android:background="@color/white"
+        android:background="@drawable/gradient_icon_blue"
         android:layout_marginEnd="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/autocomplete_fragment2"
         app:layout_constraintEnd_toEndOf="@+id/autocomplete_fragment2"
@@ -163,6 +162,7 @@
         android:layout_width="20dp"
         android:layout_height="14dp"
         android:layout_marginEnd="6dp"
+        android:background="@color/tansparentColor"
         app:layout_constraintBottom_toBottomOf="@+id/autocomplete_fragment2"
         app:layout_constraintEnd_toEndOf="@+id/autocomplete_fragment2"
         app:layout_constraintHorizontal_bias="0.958"
