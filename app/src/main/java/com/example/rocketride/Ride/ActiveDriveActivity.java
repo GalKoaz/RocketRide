@@ -22,16 +22,23 @@ import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.Models.RideSearchActivity;
 import com.example.rocketride.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.HashMap;
+import java.util.Objects;
+
+import carbon.widget.Button;
 
 public class ActiveDriveActivity extends AppCompatActivity {
     final int Duration_time = 2500;
     private boolean seatSelected = false;
     private ImageView currAvailableSeatSelectedView;
     private ImageView currUnavailableSeatSelectedView;
-    private String currSeatSelectionName;
+    private String currSeatSelectionName, currUnavailableSeatSelectedName;
 
     private int tabPosition;
     final int MY_DRIVES = 0, MY_CREATED_DRIVES = 1;
@@ -55,6 +62,9 @@ public class ActiveDriveActivity extends AppCompatActivity {
             centerBottomUnavailableSeatView,
             rightBottomUnavailableSeatView;
 
+    // Management buttons
+    Button cancelRideButton, kickButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +73,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         currSeatSelectionName = "";
+        currUnavailableSeatSelectedName = "";
         driverID = "";
         rideID = "";
         userType = "";
@@ -74,6 +85,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
             tabPosition = extras.getInt("tab_pos");
             rideModel = (RideModel) extras.getSerializable("ride_model");
         }
+
 
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
@@ -168,6 +180,24 @@ public class ActiveDriveActivity extends AppCompatActivity {
             switchActivityIntent.putExtra("type", userType);
             startActivity(switchActivityIntent);
         });
+
+
+        // Management buttons init
+        cancelRideButton = findViewById(R.id.cancelRideButton);
+        kickButton = findViewById(R.id.kickButton);
+
+        cancelRideButton.setOnClickListener(l -> {
+            if (userType.equals("driver")) {
+                cancelRide(rideID);
+            }
+            else{ // User is a rider
+                cancelRiderRide(rideID);
+            }
+        });
+
+        kickButton.setOnClickListener(l -> {
+            kickUserFromRide(rideID, currUnavailableSeatSelectedName);
+        });
     }
 
     protected void availableChecks(ImageView seatAvailableImageView, ImageView seatUnavailableImageView,  String seatName){
@@ -186,6 +216,9 @@ public class ActiveDriveActivity extends AppCompatActivity {
         if (currSeatUnavailableSelected){
             //TODO: if user is driver then make a cancellation button appear
             // else, do nothing.
+            kickButton.setVisibility(View.VISIBLE);
+            currUnavailableSeatSelectedName = seatName;
+            currUnavailableSeatSelectedView = seatUnavailableImageView;
             return;
         }
 
@@ -282,7 +315,6 @@ public class ActiveDriveActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Toast.makeText(ActiveDriveActivity.this, "Success!", Toast.LENGTH_LONG).show();
 
-
                         // Switch to the home activity
                         this.finish();
                         Intent switchActivitySearchRideIntent = new Intent(this, HomeActivity.class);
@@ -292,4 +324,107 @@ public class ActiveDriveActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     * Method cancels the given ride.
+     * @param rideID ride's document id.
+     */
+    public void cancelRide(String rideID){
+        HashMap<String, Object> setMap = new HashMap<>();
+        setMap.put("alive", false);
+        setMap.put("cancel", true);
+        db.collection("drives").document(rideID)
+                .update(setMap).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        // Intent back to home activity
+                        this.finish();
+                        Intent switchActivityIntent = new Intent(this, HomeActivity.class);
+                        switchActivityIntent.putExtra("type", userType);
+                        startActivity(switchActivityIntent);
+                    }else{
+                        Log.d(TAG, "Error getting or setting documents: ", task.getException());
+                    }
+                });
+    }
+
+    public void cancelRiderRide(String rideID){
+        Query query = db.collection("drives").whereEqualTo("_id", rideID);
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String UID = FirebaseAuth.getInstance().getUid();
+
+                    String seats[] = new String[]{
+                            document.getString("near_driver_seat"),
+                            document.getString("left_bottom_seat"),
+                            document.getString("center_bottom_seat"),
+                            document.getString("right_bottom_seat")
+                    };
+
+                    String[] seatsNames= new String[]{
+                            "near_driver_seat",
+                            "left_bottom_seat",
+                            "center_bottom_seat",
+                            "right_bottom_seat"
+                    };
+
+                    // Iterate the seats and if user is there then remove him from seat.
+                    for (int i = 0; i < seats.length; i++) {
+                        String currSeatName = seatsNames[i];
+                        String currSeatUserID = seats[i];
+
+                        // Null check on string in the document
+                        if (currSeatUserID == null){
+                            continue;
+                        }
+
+                        // User is located in the current seat
+                        if (currSeatUserID.equals(UID)) {
+                            clearSeat(currSeatName, rideID);
+                        }
+                    }
+
+                }
+                // Go back to the active drives
+                this.finish();
+                Intent switchActivityIntent = new Intent(this, ActiveDrives.class);
+                switchActivityIntent.putExtra("type", userType);
+                startActivity(switchActivityIntent);
+            }
+            else {
+                Log.d(TAG, "Error getting documents: ", task.getException());
+            }
+        });
+    }
+
+    public void clearSeat(String userSeatName, String rideID){
+        db.collection("drives").document(rideID)
+                .update(userSeatName, "").addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        Log.d(TAG, "success with: " + userSeatName + " " + rideID);
+
+                    }else{
+                        Log.d(TAG, "Error getting or setting documents: ", task.getException());
+                    }
+                });
+
+    }
+
+
+    public void kickUserFromRide(String rideID, String userSeat){
+        db.collection("drives").document(rideID)
+                .update(userSeat, "").addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        System.out.println("currUnvavile: " + currUnavailableSeatSelectedView);
+
+                        currUnavailableSeatSelectedView.setVisibility(View.GONE);
+                        kickButton.setVisibility(View.GONE);
+                        Toast.makeText(ActiveDriveActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                    }else{
+                        Log.d(TAG, "Error getting or setting documents: ", task.getException());
+                    }
+                });
+    }
+
 }
