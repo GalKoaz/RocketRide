@@ -20,9 +20,9 @@ import java.util.ArrayList;
 public class ActiveDrivesActivityViewAdapter extends RecyclerView.Adapter<ActiveDrivesActivityViewAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<RideModel> ActDrive;
-    private SelectDriverListener listener;
+    private ActiveDriveListener listener;
 
-    public ActiveDrivesActivityViewAdapter(Context context, ArrayList<RideModel> ActDrive, SelectDriverListener listener) {
+    public ActiveDrivesActivityViewAdapter(Context context, ArrayList<RideModel> ActDrive, ActiveDriveListener listener) {
         this.context = context;
         this.ActDrive = ActDrive;
         this.listener = listener;
@@ -43,7 +43,10 @@ public class ActiveDrivesActivityViewAdapter extends RecyclerView.Adapter<Active
         holder.destination.setText(currDriverRide.getDestination());
         holder.date.setText(currDriverRide.getDate());
         holder.pickup.setText(currDriverRide.getPickup());
-        holder.arrow.setOnClickListener(l -> System.out.println("arrow clicked!"));
+        holder.arrow.setOnClickListener(l -> {
+                System.out.println("arrow clicked!");
+                listener.onItemClicked(currDriverRide);
+        });
     }
 
     @Override

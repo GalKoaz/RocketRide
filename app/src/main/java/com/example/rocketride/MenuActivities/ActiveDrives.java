@@ -17,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.rocketride.Adapters.ActiveDriveListener;
 import com.example.rocketride.Adapters.ActiveDrivesActivityViewAdapter;
 import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.R;
 import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.Adapters.SelectDriverListener;
+import com.example.rocketride.Ride.ActiveDriveActivity;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ActiveDrives extends AppCompatActivity implements SelectDriverListener {
+public class ActiveDrives extends AppCompatActivity implements ActiveDriveListener {
     private ArrayList<RideModel> ActDrives = new ArrayList<>();
     private FirebaseFirestore db;
     private RecyclerView recyclerView;
@@ -186,12 +188,16 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
 
                         String startTime = document.get("time_h") + ":" + document.get("time_m");
 
-                        ActDrives.add(new RideModel(
+                        RideModel rideModel= new RideModel(
                                 document.getString("src_name"),
                                 document.getString("dst_name"),
                                 dateDay + " " + startTime,
                                 document.getString("pickup_name")
-                        ));
+                        );
+                        // Set car seats
+                        rideModel.setCarSeats(seatsArr[0], seatsArr[1], seatsArr[2], seatsArr[3]);
+                        ActDrives.add(rideModel);
+
                         Log.d(TAG, document.getId() + " => " + document.getData());
                     }
                 }
@@ -221,7 +227,16 @@ public class ActiveDrives extends AppCompatActivity implements SelectDriverListe
     }
 
     @Override
-    public void onItemClicked(DriverRideModel driverRideModel) {
+    public void onItemClicked(RideModel rideModel) {
+        // TODO: move all active driver details with put_extra()
 
+        // Switch back to active driver activity
+        this.finish();
+        Intent switchActivityBecomeDriverIntent = new Intent(this, ActiveDriveActivity.class);
+
+        switchActivityBecomeDriverIntent.putExtra("type", userType);
+        switchActivityBecomeDriverIntent.putExtra("ride_model", rideModel);
+
+        startActivity(switchActivityBecomeDriverIntent);
     }
 }
