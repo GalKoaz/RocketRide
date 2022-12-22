@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rocketride.MenuActivities.ActiveDrives;
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.Models.RideSearchActivity;
@@ -31,6 +32,9 @@ public class ActiveDriveActivity extends AppCompatActivity {
     private ImageView currAvailableSeatSelectedView;
     private ImageView currUnavailableSeatSelectedView;
     private String currSeatSelectionName;
+
+    private int tabPosition;
+    final int MY_DRIVES = 0, MY_CREATED_DRIVES = 1;
 
     private String driverID, rideID, userType;
 
@@ -64,11 +68,10 @@ public class ActiveDriveActivity extends AppCompatActivity {
         userType = "";
 
         Bundle extras = getIntent().getExtras();
-
         RideModel rideModel = null;
-
         if(extras != null){
             userType = extras.getString("type");
+            tabPosition = extras.getInt("tab_pos");
             rideModel = (RideModel) extras.getSerializable("ride_model");
         }
 
@@ -79,7 +82,9 @@ public class ActiveDriveActivity extends AppCompatActivity {
         // TODO: for now i have decided to put empty string in first name and last name
         // Set the view to represent the driver's ride details
         if (rideModel == null) return;
-        setRideDetails("", "", rideModel.getSource(), rideModel.getDestination(), "", "", rideModel.getPickup(), 0.0, rideModel.getDate());
+        driverID = rideModel.getDriverID();
+        rideID = rideModel.getRideID();
+        setRideDetails("", "", rideModel.getSource(), rideModel.getDestination(), "", "", rideModel.getPickup(), rideModel.getPrice(), rideModel.getDate());
 
         carView = findViewById(R.id.imageView4);
 
@@ -159,7 +164,8 @@ public class ActiveDriveActivity extends AppCompatActivity {
         backImageView.setOnClickListener(l -> {
             // Intent back to searching a ride
             this.finish();
-            Intent switchActivityIntent = new Intent(this, RideSearchActivity.class);
+            Intent switchActivityIntent = new Intent(this, ActiveDrives.class);
+            switchActivityIntent.putExtra("type", userType);
             startActivity(switchActivityIntent);
         });
     }
@@ -167,6 +173,11 @@ public class ActiveDriveActivity extends AppCompatActivity {
     protected void availableChecks(ImageView seatAvailableImageView, ImageView seatUnavailableImageView,  String seatName){
         //TODO: IF CURRENT USER IS RIDER RETURN - CAN'T SELECT ANYTHING FOR NOW
         if (userType.equals("rider")) {
+            return;
+        }
+        System.out.println("tab position is: " + tabPosition);
+        // current user is driver but selected other drivers' rides
+        if (tabPosition == MY_DRIVES){
             return;
         }
 
@@ -234,9 +245,10 @@ public class ActiveDriveActivity extends AppCompatActivity {
         // User tries to complete seat selection process without a seat selected
         if (currSeatSelectionName.equals("")) {
             Toast.makeText(ActiveDriveActivity.this, "You haven't selected a seat!", Toast.LENGTH_LONG).show();
+            System.out.println("seat selection.........");
             return;
         }
-
+        System.out.println("seat selection2.........");
         // TODO: ADD THIS FIELD TO ANY OF DRIVES DOCUMENTS
         // Check if the current seat status is available and didn't caught by other user.
         Query query = db.collection("drives").whereEqualTo("_id", rideID);

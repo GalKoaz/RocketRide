@@ -12,14 +12,17 @@ public class RideModel implements Serializable {
     private final String pickup;
     public double price;
     private String nearDriverSeat, leftBottomSeat, centerBottomSeat, rightBottomSeat;
+    private final String driverID, rideID;
 
 
     // Constructor
-    public RideModel(String source, String destination, String date, String pickup) {
+    public RideModel(String source, String destination, String date, String pickup, String driverID, String rideID) {
         this.source = source;
         this.destination = destination;
         this.date = date;
         this.pickup = pickup;
+        this.driverID = driverID;
+        this.rideID = rideID;
     }
 
     // getters
@@ -38,6 +41,12 @@ public class RideModel implements Serializable {
     public String getPickup() {
         return pickup;
     }
+
+    public double getPrice() {return price;}
+
+    public String getDriverID() {return driverID;}
+
+    public String getRideID() {return rideID;}
 
     // hashmap
     public HashMap<String, String> getHashRideDetails(){

@@ -45,6 +45,7 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
     private LottieAnimationView notFoundAnimation;
     private TextView notFoundTextView;
     private String userType;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
         }
 
         // Driver's tab layout
-        TabLayout tabLayout = findViewById(R.id.driverActiveDrivesTab);
+        tabLayout = findViewById(R.id.driverActiveDrivesTab);
         if(userType.equals("driver")){
             tabLayout.setVisibility(View.VISIBLE);
         }
@@ -92,10 +93,6 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
             Intent switchActivityBecomeDriverIntent = new Intent(this, HomeActivity.class);
             startActivity(switchActivityBecomeDriverIntent);
         });
-
-        // Driver's tab
-        TabItem myDrivesTab = tabLayout.findViewById(R.id.myDrivesTabItem),
-                myCreatedDrivesTab = tabLayout.findViewById(R.id.myCreatedDrivesTabItem);
 
         CollectionReference collectionReference = db.collection("drives");
 
@@ -192,7 +189,9 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
                                 document.getString("src_name"),
                                 document.getString("dst_name"),
                                 dateDay + " " + startTime,
-                                document.getString("pickup_name")
+                                document.getString("pickup_name"),
+                                document.getString("driver-id"),
+                                document.getString("_id")
                         );
                         // Set car seats
                         rideModel.setCarSeats(seatsArr[0], seatsArr[1], seatsArr[2], seatsArr[3]);
@@ -236,6 +235,7 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
 
         switchActivityBecomeDriverIntent.putExtra("type", userType);
         switchActivityBecomeDriverIntent.putExtra("ride_model", rideModel);
+        switchActivityBecomeDriverIntent.putExtra("tab_pos", tabLayout.getSelectedTabPosition());
 
         startActivity(switchActivityBecomeDriverIntent);
     }

@@ -127,7 +127,9 @@ public class History extends AppCompatActivity implements SelectDriverListener {
                                 document.getString("src_name"),
                                 document.getString("dst_name"),
                                 dateDay + " " + startTime,
-                                document.getString("pickup_name")
+                                document.getString("pickup_name"),
+                                document.getString("driver-id"),
+                                document.getString("_id")
                                 ));
                         System.out.println(expiredRides);
                     }
