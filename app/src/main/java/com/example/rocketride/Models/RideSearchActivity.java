@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
     private  RecyclerView recyclerView;
     private DriverRideRecyclerViewAdapter adapter;
     private int sort_alg = 0;
+    private ArrayList<DriverRideModel> result = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,26 +112,30 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 System.out.println(dropdown.getAdapter().getItem(i));
                 String choose = (String) dropdown.getAdapter().getItem(i);
-                if(choose.equals("Time")){
-                    sort_alg = 2;
-                    setUpCloseRides();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    switch (choose) {
+                        case "Time":
+                            result.sort(new sort_by_best_time());
+                            break;
+                        case "Best":
+                            result.sort(new sort_by_best_fit());
+                            break;
+                        case "Price":
+                            result.sort(new sort_by_best_price());
+                            break;
+                        case "Rating":
+                            result.sort(new sort_by_best_rating());
+                            break;
+                    }
                 }
-                else if(choose.equals("Best")){
-                    sort_alg = 0;
-                    setUpCloseRides();
-                }
-                else if(choose.equals("Price")){
-                    sort_alg = 3;
-                    setUpCloseRides();
-                }
-                else if(choose.equals("Rating")){
-                    sort_alg = 1;
-                    setUpCloseRides();
-                }
+                adapter.notifyDataSetChanged();
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(RideSearchActivity.this));
             }
 
             @Override
@@ -218,6 +224,8 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
+
+        System.out.println("result in setUpCloseRides " + result.size());
         if(selectedDestPlace.equals("") || selectedSourcePlace.equals("")) {
             return;
         }
@@ -249,7 +257,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         query.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        ArrayList<DriverRideModel> result = new ArrayList<>();
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             LatLng src_p = new LatLng((double) document.get("src_lat"),(double) document.get("src_lon"));
                             LatLng dst_p = new LatLng((double) document.get("dst_lat"),(double) document.get("dst_lon"));
@@ -348,55 +356,11 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                 });
                             }
                         }
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                            if (sort_alg == 0){
-//                                result.sort(new sort_by_best_fit());
-//                            }
-//                            else if (sort_alg == 1){
-//                                result.sort(new sort_by_best_rating());
-//                            }
-//                            else if (sort_alg == 2){
-//                                result.sort(new sort_by_best_time());
-//                            }
-//                            else{
-//                                result.sort(new sort_by_best_price());
-//                            }
-//                        }
-//                        adapter = new DriverRideRecyclerViewAdapter(this, result, this);
-//                        recyclerView.setAdapter(adapter);
-//                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
     }
-
-//    protected HashMap<String, Object> getDriverDetails(String UID){
-//        HashMap<String, Object> userDetails = new HashMap<>();
-//
-//        // Create a reference to the rides collection
-//        CollectionReference rides = db.collection("users");
-//
-//        Query query = rides.whereEqualTo("UID", UID);
-//        System.out.println("enter getDriverDetails");
-//        // Store query result
-//        query.get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            System.out.println("Success getDriverDetails");
-//                            userDetails.put("first_name", document.get("first_name"));
-//                            userDetails.put("last_name", document.get("last_name"));
-//                            userDetails.put("profile_image_link", document.get("profile_image_link"));
-//                            Log.d(TAG, document.getId() + " => " + document.getData());
-//                        }
-//                    } else {
-//                        Log.d(TAG, "Error getting documents: ", task.getException());
-//                    }
-//                });
-//        System.out.println("end getDrierDetails");
-//        return userDetails;
-//    }
 
     private Task<Map<String, Object>> getDriverDetails(String driverId) {
         // Create a reference to the drivers collection
