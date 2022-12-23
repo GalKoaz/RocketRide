@@ -28,14 +28,17 @@ import com.example.rocketride.R;
 import com.example.rocketride.Ride.seatsSelectionActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -257,111 +260,174 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                 continue;
                             }
                             else {
-                                HashMap<String, Object> driverDetails = getDriverDetails((String) document.get("driver-id"));
-                                String pickupName = (String) document.get("pickup_name");
-                                double price = (double) document.get("price");
-                                String driverID = (String) document.get("driver-id");
-                                String rideId = document.getId();
+                                System.out.println("before driver-id");
+                                System.out.println((String) document.get("driver-id"));
+                                Task<Map<String, Object>> driverDetailsTask = getDriverDetails((String) document.get("driver-id"));
+                                driverDetailsTask.addOnCompleteListener(taskDriverDetails -> {
+                                    if (taskDriverDetails.isSuccessful()) {
+                                        HashMap<String, Object> driverDetails = (HashMap<String, Object>) taskDriverDetails.getResult();
+                                        System.out.println("before driver-id");
+                                        String pickupName = (String) document.get("pickup_name");
+                                        double price = (double) document.get("price");
+                                        String driverID = (String) document.get("driver-id");
+                                        String rideId = document.getId();
 
-                                Long h = (Long) document.get("time_h");
-                                Long min = (Long) document.get("time_m");
-                                Long d = (Long) document.get("date-d");
-                                Long year = (Long) document.get("date-y");
-                                Long month = (Long) document.get("date-m");
-                                h -= HOUR;
-                                min -= MINUTE;
-                                if (min < 0) {
-                                    h -= 1;
-                                    min = 60 + min;
-                                }
-                                h += (d - DATE) * 24;
-                                String t = h + ":" + min;
+                                        Long h = (Long) document.get("time_h");
+                                        Long min = (Long) document.get("time_m");
+                                        Long d = (Long) document.get("date-d");
+                                        Long year = (Long) document.get("date-y");
+                                        Long month = (Long) document.get("date-m");
+                                        h -= HOUR;
+                                        min -= MINUTE;
+                                        if (min < 0) {
+                                            h -= 1;
+                                            min = 60 + min;
+                                        }
+                                        h += (d - DATE) * 24;
+                                        String t = h + ":" + min;
 
-                                System.out.println("first name: " + driverDetails.get("first_name"));
+                                        System.out.println("first name: " + driverDetails.get("first_name"));
 
-                                DriverRideModel DRM = new DriverRideModel(
-                                        (String) driverDetails.get("first_name"),
-                                        (String) driverDetails.get("last_name"),
-                                        (String) document.get("src_name"),
-                                        (String) document.get("dst_name"),
-                                        t,
-                                        "7.5",
-                                        pickupName,
-                                        price,
-                                        d + "/" + month + "/" + year,
-                                        driverID,
-                                        rideId
-                                );
+                                        DriverRideModel DRM = new DriverRideModel(
+                                                (String) driverDetails.get("first_name"),
+                                                (String) driverDetails.get("last_name"),
+                                                (String) document.get("src_name"),
+                                                (String) document.get("dst_name"),
+                                                t,
+                                                "7.5",
+                                                pickupName,
+                                                price,
+                                                d + "/" + month + "/" + year,
+                                                driverID,
+                                                rideId
+                                        );
 
-                                // Set driver's seats status
-                                DRM.setCarSeats(
-                                        (String) document.get("near_driver_seat"),
-                                        (String) document.get("left_bottom_seat"),
-                                        (String) document.get("center_bottom_seat"),
-                                        (String) document.get("right_bottom_seat")
-                                );
+                                        // Set driver's seats status
+                                        DRM.setCarSeats(
+                                                (String) document.get("near_driver_seat"),
+                                                (String) document.get("left_bottom_seat"),
+                                                (String) document.get("center_bottom_seat"),
+                                                (String) document.get("right_bottom_seat")
+                                        );
 
-                                DRM.start_in_minutes = h * 60 + min;
-                                DRM.price = (double) document.get("price");
-                                DRM.rating_numerical = 7.5;
-                                double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
-                                        + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + min + 1) - DRM.price);
-                                DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
-                                result.add(
-                                        DRM
-                                );
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                        // Set profile image link
+                                        DRM.setProfileImageURL((String) driverDetails.get("profile_image_link"));
 
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                        DRM.start_in_minutes = h * 60 + min;
+                                        DRM.price = (double) document.get("price");
+                                        DRM.rating_numerical = 7.5;
+                                        double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
+                                                + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + min + 1) - DRM.price);
+                                        DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
+                                        result.add(
+                                                DRM
+                                        );
+                                        System.out.println("result size: " + result.size());
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            if (sort_alg == 0){
+                                                result.sort(new sort_by_best_fit());
+                                            }
+                                            else if (sort_alg == 1){
+                                                result.sort(new sort_by_best_rating());
+                                            }
+                                            else if (sort_alg == 2){
+                                                result.sort(new sort_by_best_time());
+                                            }
+                                            else{
+                                                result.sort(new sort_by_best_price());
+                                            }
+                                        }
+                                        adapter = new DriverRideRecyclerViewAdapter(this, result, this);
+                                        recyclerView.setAdapter(adapter);
+                                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                                    } else {
+                                        Log.e(TAG, "Error getting driver details: ", task.getException());
+                                    }
+                                });
                             }
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            if (sort_alg == 0){
-                                result.sort(new sort_by_best_fit());
-                            }
-                            else if (sort_alg == 1){
-                                result.sort(new sort_by_best_rating());
-                            }
-                            else if (sort_alg == 2){
-                                result.sort(new sort_by_best_time());
-                            }
-                            else{
-                                result.sort(new sort_by_best_price());
-                            }
-                        }
-                        adapter = new DriverRideRecyclerViewAdapter(this, result, this);
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            if (sort_alg == 0){
+//                                result.sort(new sort_by_best_fit());
+//                            }
+//                            else if (sort_alg == 1){
+//                                result.sort(new sort_by_best_rating());
+//                            }
+//                            else if (sort_alg == 2){
+//                                result.sort(new sort_by_best_time());
+//                            }
+//                            else{
+//                                result.sort(new sort_by_best_price());
+//                            }
+//                        }
+//                        adapter = new DriverRideRecyclerViewAdapter(this, result, this);
+//                        recyclerView.setAdapter(adapter);
+//                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
     }
 
-    protected HashMap<String, Object> getDriverDetails(String UID){
-        HashMap<String, Object> userDetails = new HashMap<>();
+//    protected HashMap<String, Object> getDriverDetails(String UID){
+//        HashMap<String, Object> userDetails = new HashMap<>();
+//
+//        // Create a reference to the rides collection
+//        CollectionReference rides = db.collection("users");
+//
+//        Query query = rides.whereEqualTo("UID", UID);
+//        System.out.println("enter getDriverDetails");
+//        // Store query result
+//        query.get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            System.out.println("Success getDriverDetails");
+//                            userDetails.put("first_name", document.get("first_name"));
+//                            userDetails.put("last_name", document.get("last_name"));
+//                            userDetails.put("profile_image_link", document.get("profile_image_link"));
+//                            Log.d(TAG, document.getId() + " => " + document.getData());
+//                        }
+//                    } else {
+//                        Log.d(TAG, "Error getting documents: ", task.getException());
+//                    }
+//                });
+//        System.out.println("end getDrierDetails");
+//        return userDetails;
+//    }
 
-        // Create a reference to the rides collection
-        CollectionReference rides = db.collection("users");
+    private Task<Map<String, Object>> getDriverDetails(String driverId) {
+        // Create a reference to the drivers collection
+        CollectionReference users = db.collection("users");
 
-        Query query = rides.whereEqualTo("UID", UID);
+        // Create a query to retrieve the driver with the specified ID
+        Query query = users.whereEqualTo("UID", driverId);
 
-        // Store query result
-        query.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            userDetails.put("first_name", document.get("first_name"));
-                            userDetails.put("last_name", document.get("last_name"));
-                            userDetails.put("profile_image_link", document.get("profile_image_link"));
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                        }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
+        // Return the task for the query
+        return query.get().continueWith(task -> {
+            if (task.isSuccessful()) {
+                // If the query is successful, get the first result (since we are searching by ID, there should only be one result)
+                QuerySnapshot querySnapshot = task.getResult();
+                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
 
-        return userDetails;
+                // Create a map to store the driver details
+                Map<String, Object> driverDetails = new HashMap<>();
+
+                // Add the driver details to the map
+                driverDetails.put("first_name", document.get("first_name"));
+                driverDetails.put("last_name", document.get("last_name"));
+                driverDetails.put("profile_image_link", document.get("profile_image_link"));
+                Log.e(TAG, "success driver details");
+                // Return the map
+                return driverDetails;
+            } else {
+                // If the query fails, log the error and return an empty map
+                Log.e(TAG, "Error getting documents: ", task.getException());
+                return new HashMap<>();
+            }
+        });
     }
 
     // function calculate the distance from one point to other in map.

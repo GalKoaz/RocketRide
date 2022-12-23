@@ -77,10 +77,4 @@ public class MessageActivity extends FirebaseMessagingService {
 //        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-// to the manifest
-//<service android:name=".MyFirebaseMessagingService">
-//    <intent-filter>
-//        <action android:name="com.google.firebase.MESSAGING_EVENT" />
-//    </intent-filter>
-//</service>
 }

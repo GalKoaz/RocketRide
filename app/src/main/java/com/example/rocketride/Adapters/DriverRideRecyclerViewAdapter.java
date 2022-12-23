@@ -1,8 +1,13 @@
 package com.example.rocketride.Adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +40,8 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         this.closeRides = closeRides;
         this.listener = listener;
 
+
+        System.out.println("close rides size: " + closeRides.size());
         this.drawables = new Drawable[6];
         drawables[0] = context.getResources().getDrawable(R.drawable.gradient_blue);
         drawables[1] = context.getResources().getDrawable(R.drawable.gradient_blue_purple);
@@ -73,6 +80,8 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         // Upload image to the rounded image view
         String profileImageURL = currDriverRide.getProfileImageURL();
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        System.out.println("image is:  " + profileImageURL);
 
         if (profileImageURL == null){
             return;
@@ -80,10 +89,14 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
 
         // Profile image url shouldn't be empty
         if (!profileImageURL.equals("")) {
-            StorageReference imageRef = storage.getReference().child(currDriverRide.getProfileImageURL());
-            Glide.with(holder.itemView.getContext())
-                    .load(imageRef)
-                    .into(holder.profileImage);
+            storageRef.child(profileImageURL).getBytes(Long.MAX_VALUE).addOnSuccessListener(imageBytes -> {
+                // Use the bytes to display the image
+                // Convert the byte array into a Bitmap object
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+                // Set the Bitmap as the image for the ImageView
+                holder.profileImage.setImageBitmap(bitmap);
+            }).addOnFailureListener(exception -> Log.d(TAG, "error in downloading the image!"));
         }
     }
 
@@ -111,4 +124,6 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
             profileImage = itemView.findViewById(R.id.profileRoundedRecyclerView);
         }
     }
+
+
 }
