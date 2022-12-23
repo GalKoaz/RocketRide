@@ -42,7 +42,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.destination.setText(currRide.getDestination());
         holder.dayTime.setText(currRide.getDate());
         holder.pickup.setText(currRide.getPickup());
-        if (position % 2 == 0){
+
+        // Check if current ride isn't canceled
+        if (!currRide.getCanceled()){
             holder.checkMark.setVisibility(View.VISIBLE);
             holder.cancelMark.setVisibility(View.GONE);
         }

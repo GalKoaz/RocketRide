@@ -19,15 +19,14 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.rocketride.Adapters.ActiveDriveListener;
 import com.example.rocketride.Adapters.ActiveDrivesActivityViewAdapter;
-import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.R;
 import com.example.rocketride.Models.RideModel;
-import com.example.rocketride.Adapters.SelectDriverListener;
 import com.example.rocketride.Ride.ActiveDriveActivity;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -158,16 +157,6 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String driverID = document.getString("driver-id");
 
-                    // If we want only the user active rides
-                    if (isMyCreatedDrive && !driverID.equals(UID)){
-                        continue;
-                    }
-
-                    // If we want only the driver created drives
-                    if (!isMyCreatedDrive && driverID.equals(UID)){
-                        continue;
-                    }
-
                     // Init seats array
                     String[] seatsArr = {
                             document.getString("near_driver_seat"),
@@ -178,29 +167,17 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
                     System.out.println(Arrays.toString(seatsArr));
                     // If user is located in one of the drive seats then update list accordingly
                     boolean isUserInSeats = Arrays.asList(seatsArr).contains(UID);
-                    if (isUserInSeats){
-                        String dateDay = document.get("date-d")
-                                + "/" + document.get("date-m")
-                                + "/" + document.get("date-y");
-
-                        String startTime = document.get("time_h") + ":" + document.get("time_m");
-
-                        RideModel rideModel= new RideModel(
-                                document.getString("src_name"),
-                                document.getString("dst_name"),
-                                dateDay + " " + startTime,
-                                document.getString("pickup_name"),
-                                document.getString("driver-id"),
-                                document.getString("_id")
-                        );
+                    if ((isUserInSeats && !isMyCreatedDrive) || (driverID.equals(UID) && isMyCreatedDrive)){
+                        RideModel rideModel = setRideByDocument(document);
                         // Set car seats
                         rideModel.setCarSeats(seatsArr[0], seatsArr[1], seatsArr[2], seatsArr[3]);
                         ActDrives.add(rideModel);
-
-                        Log.d(TAG, document.getId() + " => " + document.getData());
                     }
+                    System.out.println("current document... " + ActDrives.size());
+                    Log.d(TAG, document.getId() + " => " + document.getData());
                 }
                 if (ActDrives.isEmpty()){
+                    System.out.println("active drives is empty!");
                     // Apply changes to the recycler view
                     adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
                     recyclerView.setAdapter(adapter);
@@ -223,6 +200,23 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
+    }
+
+    public RideModel setRideByDocument(DocumentSnapshot document){
+        String dateDay = document.get("date-d")
+                + "/" + document.get("date-m")
+                + "/" + document.get("date-y");
+
+        String startTime = document.get("time_h") + ":" + document.get("time_m");
+
+        return new RideModel(
+                document.getString("src_name"),
+                document.getString("dst_name"),
+                dateDay + " " + startTime,
+                document.getString("pickup_name"),
+                document.getString("driver-id"),
+                document.getString("_id"),
+                Boolean.TRUE.equals(document.getBoolean("canceled")));
     }
 
     @Override

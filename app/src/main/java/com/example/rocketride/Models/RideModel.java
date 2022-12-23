@@ -3,8 +3,6 @@ package com.example.rocketride.Models;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import kotlinx.android.parcel.Parcelize;
-
 public class RideModel implements Serializable {
     private final String source;
     private final String destination;
@@ -13,16 +11,18 @@ public class RideModel implements Serializable {
     public double price;
     private String nearDriverSeat, leftBottomSeat, centerBottomSeat, rightBottomSeat;
     private final String driverID, rideID;
+    private final boolean canceled;
 
 
     // Constructor
-    public RideModel(String source, String destination, String date, String pickup, String driverID, String rideID) {
+    public RideModel(String source, String destination, String date, String pickup, String driverID, String rideID, boolean canceled) {
         this.source = source;
         this.destination = destination;
         this.date = date;
         this.pickup = pickup;
         this.driverID = driverID;
         this.rideID = rideID;
+        this.canceled = canceled;
     }
 
     // getters
@@ -47,6 +47,8 @@ public class RideModel implements Serializable {
     public String getDriverID() {return driverID;}
 
     public String getRideID() {return rideID;}
+
+    public Boolean getCanceled() {return canceled;}
 
     // hashmap
     public HashMap<String, String> getHashRideDetails(){

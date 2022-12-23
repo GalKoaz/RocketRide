@@ -206,6 +206,7 @@ public class CreateDriveActivity extends AppCompatActivity{
         userMap.put("time_m", min);
 
         userMap.put("alive", true);
+        userMap.put("canceled", false);
         userMap.put("src_name", this.source);
         userMap.put("src_lat", this.s_point.getLatitude());
         userMap.put("src_lon", this.s_point.getLongitude());

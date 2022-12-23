@@ -38,7 +38,7 @@ public class MessageActivity extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             // Handle notification message.
-            handleNotificationMessage(remoteMessage);
+           // handleNotificationMessage(remoteMessage);
         }
     }
 
@@ -46,35 +46,35 @@ public class MessageActivity extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         String message = data.get("message");
         String title = data.get("title");
-
-        // Create the notification.
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
-
-        // Show the notification.
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
-
-    private void handleNotificationMessage(RemoteMessage remoteMessage) {
-        String message = Objects.requireNonNull(remoteMessage.getNotification()).getBody();
-        String title = remoteMessage.getNotification().getTitle();
-
-        // Create the notification.
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
-
-        // Show the notification.
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+//
+//        // Create the notification.
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+//                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                .setContentTitle(title)
+//                .setContentText(message)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setAutoCancel(true);
+//
+//        // Show the notification.
+//        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//        notificationManager.notify(NOTIFICATION_ID, builder.build());
+//    }
+//
+//    private void handleNotificationMessage(RemoteMessage remoteMessage) {
+//        String message = Objects.requireNonNull(remoteMessage.getNotification()).getBody();
+//        String title = remoteMessage.getNotification().getTitle();
+//
+//        // Create the notification.
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+//                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                .setContentTitle(title)
+//                .setContentText(message)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setAutoCancel(true);
+//
+//        // Show the notification.
+//        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
 // to the manifest

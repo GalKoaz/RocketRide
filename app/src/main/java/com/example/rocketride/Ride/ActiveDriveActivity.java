@@ -332,7 +332,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
     public void cancelRide(String rideID){
         HashMap<String, Object> setMap = new HashMap<>();
         setMap.put("alive", false);
-        setMap.put("cancel", true);
+        setMap.put("canceled", true);
         db.collection("drives").document(rideID)
                 .update(setMap).addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
