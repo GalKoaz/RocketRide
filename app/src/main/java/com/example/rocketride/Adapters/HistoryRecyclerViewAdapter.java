@@ -46,11 +46,15 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         // Check if current ride isn't canceled
         if (!currRide.getCanceled()){
             holder.checkMark.setVisibility(View.VISIBLE);
+            holder.completedTextView.setVisibility(View.VISIBLE);
             holder.cancelMark.setVisibility(View.GONE);
+            holder.canceledTextView.setVisibility(View.GONE);
         }
         else{
             holder.checkMark.setVisibility(View.GONE);
+            holder.completedTextView.setVisibility(View.GONE);
             holder.cancelMark.setVisibility(View.VISIBLE);
+            holder.canceledTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -62,6 +66,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView source, destination, dayTime, pickup;
         ImageView checkMark, cancelMark;
+        TextView canceledTextView, completedTextView;
         // ConstraintLayout rowConstraintLayout;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -72,6 +77,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             pickup = itemView.findViewById(R.id.pickupHistoryTextView);
             checkMark = itemView.findViewById(R.id.historyCheckMark);
             cancelMark = itemView.findViewById(R.id.historyCancelMark);
+            canceledTextView = itemView.findViewById(R.id.canceledTextView);
+            completedTextView = itemView.findViewById(R.id.completedTextView);
             // rowConstraintLayout = itemView.findViewById(R.id.driverRow);
         }
     }
