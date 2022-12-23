@@ -62,6 +62,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
     private DriverRideRecyclerViewAdapter adapter;
     private int sort_alg = 0;
     private ArrayList<DriverRideModel> result = new ArrayList<>();
+    private HashMap<String, byte[]> profileImages = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +74,14 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        //get the spinner from the xml.
+        // get the spinner from the xml.
         Spinner dropdown = findViewById(R.id.spinner1);
-        //create a list of items for the spinner.
+        // create a list of items for the spinner.
         String[] items = new String[]{"Sort By","Best", "Price", "Time","Rating"};
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        //There are multiple variations of this, but this is the basic variant.
+        // create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        // There are multiple variations of this, but this is the basic variant.
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        //set the spinners adapter to the previously created one.
+        // set the spinners adapter to the previously created one.
         dropdown.setAdapter(adapter1);
         // Recycle view
         recyclerView = findViewById(R.id.myRecyclerView);
@@ -198,6 +199,8 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
 
         // Drivers search button action listener
         searchButton.setOnClickListener(l -> {
+            // clear rides array for a new search
+            result.clear();
             setUpCloseRides();
         });
 
@@ -224,7 +227,6 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
         //       the associated array list called - "closeRides".
-
         System.out.println("result in setUpCloseRides " + result.size());
         if(selectedDestPlace.equals("") || selectedSourcePlace.equals("")) {
             return;

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
     private ArrayList<DriverRideModel> closeRides;
     private SelectDriverListener listener;
     private Drawable[] drawables;
+    private LruCache<String, Bitmap> memoryCache;
+
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public DriverRideRecyclerViewAdapter(Context context, ArrayList<DriverRideModel> closeRides, SelectDriverListener listener) {
@@ -49,6 +52,16 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         drawables[3] = context.getResources().getDrawable(R.drawable.gradient_pink);
         drawables[4] = context.getResources().getDrawable(R.drawable.gradient_turquoise);
         drawables[5] = context.getResources().getDrawable(R.drawable.gradient_turquoise_purple);
+
+        // Init memory cache map
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 8;
+        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                return bitmap.getByteCount() / 1024;
+            }
+        };
     }
 
     @NonNull
@@ -77,26 +90,25 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
 
         holder.constraintLayoutDriverSearch.setBackground(drawables[position % 6]);
 
-        // Upload image to the rounded image view
+        // Check if image is in cache
         String profileImageURL = currDriverRide.getProfileImageURL();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        System.out.println("image is:  " + profileImageURL);
+        Bitmap bitmap = memoryCache.get(profileImageURL);
+        if (bitmap != null) {
+            // Image is in cache, set it to the ImageView
+            holder.profileImage.setImageBitmap(bitmap);
+        } else {
+            // Image is not in cache, download it and add it to the cache
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(profileImageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                holder.profileImage.setImageBitmap(image);
 
-        if (profileImageURL == null){
-            return;
-        }
-
-        // Profile image url shouldn't be empty
-        if (!profileImageURL.equals("")) {
-            storageRef.child(profileImageURL).getBytes(Long.MAX_VALUE).addOnSuccessListener(imageBytes -> {
-                // Use the bytes to display the image
-                // Convert the byte array into a Bitmap object
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-                // Set the Bitmap as the image for the ImageView
-                holder.profileImage.setImageBitmap(bitmap);
-            }).addOnFailureListener(exception -> Log.d(TAG, "error in downloading the image!"));
+                // Add image to cache
+                memoryCache.put(profileImageURL, image);
+            }).addOnFailureListener(exception -> {
+                Log.i(TAG, "Could not download image.");
+            });
         }
     }
 
