@@ -303,6 +303,7 @@
         android:layout_marginTop="32dp"
         android:text="Tel Aviv"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/pickup"
         app:layout_constraintEnd_toEndOf="@+id/date_and_time"
         app:layout_constraintHorizontal_bias="0.311"
         app:layout_constraintStart_toEndOf="@+id/textView21"
@@ -358,14 +359,16 @@
 
     <TextView
         android:id="@+id/pickup"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="153dp"
+        android:layout_height="24dp"
         android:text="Herzliya Seven stars mall"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/price"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.355"
-        app:layout_constraintStart_toEndOf="@+id/textView22" />
+        app:layout_constraintHorizontal_bias="0.345"
+        app:layout_constraintStart_toEndOf="@+id/textView22"
+        app:layout_constraintTop_toBottomOf="@+id/driver_name"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
