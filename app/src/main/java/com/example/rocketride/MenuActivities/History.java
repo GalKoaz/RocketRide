@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.rocketride.Adapters.HistoryRideListener;
@@ -185,13 +186,14 @@ public class History extends AppCompatActivity implements HistoryRideListener {
 
             double userRate = ratingBar.getRating();
             System.out.println("user rating is: " + userRate);
+            if (userRate == 0.0){
+                Toast.makeText(this, "Can't rate driver with 0!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             firebaseHandler.getRateModel(driverID, task -> {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        System.out.println(document.getString("driver-id") + " "
-                                 + document.get("avg") + " " +
-                                document.get("voters_num"));
 
                         RateModel rateModel = new RateModel(
                                 document.getString("driver-id"),

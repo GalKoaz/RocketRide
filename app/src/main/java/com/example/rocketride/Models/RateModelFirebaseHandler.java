@@ -5,9 +5,17 @@ import static android.content.ContentValues.TAG;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class RateModelFirebaseHandler {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -42,5 +50,25 @@ public class RateModelFirebaseHandler {
         db.collection(COLLECTION_NAME).whereEqualTo("driver-id", driverID)
                 .get()
                 .addOnCompleteListener(listener);
+    }
+
+    public Task<Optional<RateModel>> getRateModelTask(String driverId) {
+        // Return the task for the query
+        return db.collection(COLLECTION_NAME).whereEqualTo("driver-id", driverId).get().continueWith(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    return Optional.of(new RateModel(
+                            document.getString("driver-id"),
+                            (double) document.get("avg"),
+                            Math.toIntExact(document.getLong("voters_num"))
+                    ));
+                }
+                // If the document is not found, return an empty Optional object
+            } else {
+                // If the query fails, log the error and return an empty Optional object
+                Log.e(TAG, "Error getting documents: ", task.getException());
+            }
+            return Optional.empty();
+        });
     }
 }

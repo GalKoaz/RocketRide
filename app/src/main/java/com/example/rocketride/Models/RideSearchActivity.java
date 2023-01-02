@@ -63,6 +63,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
     private int sort_alg = 0;
     private ArrayList<DriverRideModel> result = new ArrayList<>();
     private HashMap<String, byte[]> profileImages = new HashMap<>();
+    private RateModelFirebaseHandler rateModelFirebaseHandler = new RateModelFirebaseHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,83 +276,96 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                 Task<Map<String, Object>> driverDetailsTask = getDriverDetails((String) document.get("driver-id"));
                                 driverDetailsTask.addOnCompleteListener(taskDriverDetails -> {
                                     if (taskDriverDetails.isSuccessful()) {
-                                        HashMap<String, Object> driverDetails = (HashMap<String, Object>) taskDriverDetails.getResult();
-                                        System.out.println("before driver-id");
-                                        String pickupName = (String) document.get("pickup_name");
-                                        double price = (double) document.get("price");
-                                        String driverID = (String) document.get("driver-id");
-                                        String rideId = document.getId();
+                                        rateModelFirebaseHandler.getRateModelTask(document.getString("driver-id")).addOnCompleteListener(getRateTask -> {
+                                            if (getRateTask.isSuccessful()){
+                                                if (getRateTask.getResult().isPresent()){
+                                                    RateModel rateModel = getRateTask.getResult().get();
+                                                    HashMap<String, Object> driverDetails = (HashMap<String, Object>) taskDriverDetails.getResult();
+                                                    System.out.println("before driver-id");
+                                                    String pickupName = (String) document.get("pickup_name");
+                                                    double price = (double) document.get("price");
+                                                    String driverID = (String) document.get("driver-id");
+                                                    String rideId = document.getId();
 
-                                        Long h = (Long) document.get("time_h");
-                                        Long min = (Long) document.get("time_m");
-                                        Long d = (Long) document.get("date-d");
-                                        Long year = (Long) document.get("date-y");
-                                        Long month = (Long) document.get("date-m");
-                                        h -= HOUR;
-                                        min -= MINUTE;
-                                        if (min < 0) {
-                                            h -= 1;
-                                            min = 60 + min;
-                                        }
-                                        h += (d - DATE) * 24;
-                                        String t = h + ":" + min;
+                                                    Long h = (Long) document.get("time_h");
+                                                    Long min = (Long) document.get("time_m");
+                                                    Long d = (Long) document.get("date-d");
+                                                    Long year = (Long) document.get("date-y");
+                                                    Long month = (Long) document.get("date-m");
+                                                    h -= HOUR;
+                                                    min -= MINUTE;
+                                                    if (min < 0) {
+                                                        h -= 1;
+                                                        min = 60 + min;
+                                                    }
+                                                    h += (d - DATE) * 24;
+                                                    String t = h + ":" + min;
 
-                                        System.out.println("first name: " + driverDetails.get("first_name"));
+                                                    System.out.println("first name: " + driverDetails.get("first_name"));
 
-                                        DriverRideModel DRM = new DriverRideModel(
-                                                (String) driverDetails.get("first_name"),
-                                                (String) driverDetails.get("last_name"),
-                                                (String) document.get("src_name"),
-                                                (String) document.get("dst_name"),
-                                                t,
-                                                "7.5",
-                                                pickupName,
-                                                price,
-                                                d + "/" + month + "/" + year,
-                                                driverID,
-                                                rideId
-                                        );
+                                                    DriverRideModel DRM = new DriverRideModel(
+                                                            (String) driverDetails.get("first_name"),
+                                                            (String) driverDetails.get("last_name"),
+                                                            (String) document.get("src_name"),
+                                                            (String) document.get("dst_name"),
+                                                            t,
+                                                            String.valueOf(rateModel.getAvg()),
+                                                            pickupName,
+                                                            price,
+                                                            d + "/" + month + "/" + year,
+                                                            driverID,
+                                                            rideId
+                                                    );
 
-                                        // Set driver's seats status
-                                        DRM.setCarSeats(
-                                                (String) document.get("near_driver_seat"),
-                                                (String) document.get("left_bottom_seat"),
-                                                (String) document.get("center_bottom_seat"),
-                                                (String) document.get("right_bottom_seat")
-                                        );
+                                                    // Set driver's seats status
+                                                    DRM.setCarSeats(
+                                                            (String) document.get("near_driver_seat"),
+                                                            (String) document.get("left_bottom_seat"),
+                                                            (String) document.get("center_bottom_seat"),
+                                                            (String) document.get("right_bottom_seat")
+                                                    );
 
-                                        // Set profile image link
-                                        DRM.setProfileImageURL((String) driverDetails.get("profile_image_link"));
+                                                    // Set profile image link
+                                                    DRM.setProfileImageURL((String) driverDetails.get("profile_image_link"));
 
-                                        DRM.start_in_minutes = h * 60 + min;
-                                        DRM.price = (double) document.get("price");
-                                        DRM.rating_numerical = 7.5;
-                                        double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
-                                                + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + min + 1) - DRM.price);
-                                        DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
-                                        result.add(
-                                                DRM
-                                        );
-                                        System.out.println("result size: " + result.size());
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                                    DRM.start_in_minutes = h * 60 + min;
+                                                    DRM.price = (double) document.get("price");
+                                                    DRM.rating_numerical = rateModel.getAvg();
+                                                    double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
+                                                            + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + min + 1) - DRM.price);
+                                                    DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
+                                                    result.add(
+                                                            DRM
+                                                    );
+                                                    System.out.println("result size: " + result.size());
+                                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                            if (sort_alg == 0){
-                                                result.sort(new sort_by_best_fit());
-                                            }
-                                            else if (sort_alg == 1){
-                                                result.sort(new sort_by_best_rating());
-                                            }
-                                            else if (sort_alg == 2){
-                                                result.sort(new sort_by_best_time());
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                                        if (sort_alg == 0){
+                                                            result.sort(new sort_by_best_fit());
+                                                        }
+                                                        else if (sort_alg == 1){
+                                                            result.sort(new sort_by_best_rating());
+                                                        }
+                                                        else if (sort_alg == 2){
+                                                            result.sort(new sort_by_best_time());
+                                                        }
+                                                        else{
+                                                            result.sort(new sort_by_best_price());
+                                                        }
+                                                    }
+                                                    adapter = new DriverRideRecyclerViewAdapter(this, result, this);
+                                                    recyclerView.setAdapter(adapter);
+                                                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+                                                }
                                             }
                                             else{
-                                                result.sort(new sort_by_best_price());
+                                                Log.e(TAG, "Error getting driver's rating: ", task.getException());
+
                                             }
-                                        }
-                                        adapter = new DriverRideRecyclerViewAdapter(this, result, this);
-                                        recyclerView.setAdapter(adapter);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+                                        });
                                     } else {
                                         Log.e(TAG, "Error getting driver details: ", task.getException());
                                     }
@@ -395,6 +409,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             }
         });
     }
+
 
     // function calculate the distance from one point to other in map.
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {

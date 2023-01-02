@@ -80,7 +80,16 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         holder.source.setText(currDriverRide.getSource());
         holder.destination.setText(currDriverRide.getDestination());
         holder.startTime.setText(currDriverRide.getStartTime());
-        holder.rating.setText(currDriverRide.getRating());
+
+        // Check driver's rating
+        double driverRate = Double.parseDouble(currDriverRide.getRating());
+        if (driverRate == 0.0){
+            holder.rating.setVisibility(View.GONE);
+        }
+        else { // driver has rating
+            holder.rating.setText(String.valueOf(((int)(driverRate*100)/100.0)));
+            holder.rating.setVisibility(View.VISIBLE);
+        }
 
         holder.cardView.setOnClickListener(l -> {
             listener.onItemClicked(closeRides.get(position));
