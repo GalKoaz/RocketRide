@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/rateDialogImageView"
+        android:layout_width="413dp"
+        android:layout_height="210dp"
+        android:background="#D325E1CF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_oval="true"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Please rate the driver"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:textColor="#0DA596"
+        app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+        app:layout_constraintEnd_toEndOf="@+id/rateDialogImageView"
+        app:layout_constraintStart_toStartOf="@+id/rateDialogImageView"
+        app:layout_constraintTop_toTopOf="@+id/rateDialogImageView"
+        />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_weight="1"
+        android:contentDescription="driver rating"
+        android:progressTint="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/submitRateButton"
+        app:layout_constraintEnd_toEndOf="@+id/rateDialogImageView"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/rateDialogImageView" />
+
+    <Button
+        android:id="@+id/submitRateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="SUBMIT"
+        app:backgroundTint="#40C5B8"
+        app:layout_constraintBottom_toBottomOf="@+id/rateDialogImageView"
+        app:layout_constraintEnd_toEndOf="@+id/rateDialogImageView"
+        app:layout_constraintStart_toStartOf="@+id/rateDialogImageView"
+        app:shapeAppearanceOverlay="@style/Button5" />
+
+    <ImageView
+        android:id="@+id/closeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="72dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rateDialogImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.958"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.14"
+        app:srcCompat="@drawable/places_ic_clear" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

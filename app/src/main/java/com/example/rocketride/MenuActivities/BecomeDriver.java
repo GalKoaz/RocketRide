@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.rocketride.Models.RateModel;
+import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
@@ -139,6 +141,11 @@ public class BecomeDriver extends AppCompatActivity {
             Query userQuery = db.collection("users").whereEqualTo("UID", currUID);
             userQuery.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
+                    // Add initial rate for the driver
+                    RateModelFirebaseHandler rateModelFirebaseHandler = new RateModelFirebaseHandler();
+                    rateModelFirebaseHandler.updateRateModel(new RateModel(currUID, 0.0, 0));
+
+
                     QuerySnapshot queryDocumentSnapshot = task.getResult();
                     DocumentSnapshot documentSnapshot = queryDocumentSnapshot.getDocuments().get(0);
                     DocumentReference documentReference = documentSnapshot.getReference();

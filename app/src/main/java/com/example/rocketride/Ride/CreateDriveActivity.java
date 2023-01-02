@@ -256,7 +256,7 @@ public class CreateDriveActivity extends AppCompatActivity{
         Calendar calendar = Calendar.getInstance();
 
         int YEAR = calendar.get(calendar.YEAR);
-        int MONTH = calendar.get(calendar.MONTH);
+        int MONTH = calendar.get(calendar.MONTH) + 1;
         int DATE = calendar.get(calendar.DATE);
 
 

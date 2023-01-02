@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketride.MainActivity;
+import com.example.rocketride.Models.RateModel;
+import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
@@ -60,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String userIdToken, userEmailExtras, userPasswordExtras, userPhoneNumberExtras;
     private String firstNameDriver, lastNameDriver, idNumber, plateNumber;
     private String firstNameRider, lastNameRider;
-
+    private RateModelFirebaseHandler rateModelFirebaseHandler = new RateModelFirebaseHandler();
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -405,6 +407,10 @@ public class ProfileActivity extends AppCompatActivity {
         db.collection("users")
                 .add(userMap)
                 .addOnSuccessListener(documentReference -> {
+                    if (type.equals("driver")){
+                        // Add initial rate for the driver
+                        rateModelFirebaseHandler.updateRateModel(new RateModel(UID, 0.0, 0));
+                    }
                     String userID = documentReference.getId();
                     Log.d(TAG, "DocumentSnapshot added with ID: " + userID);
                     uploadProfileImageByType(type, userID, documentReference);

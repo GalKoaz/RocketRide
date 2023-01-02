@@ -11,7 +11,6 @@ public class RateModel {
         this.driverID = driverID;
         this.avg = avg;
         this.voters_num = voters_num;
-
     }
 
     public int getVoters_num() {
@@ -34,16 +33,16 @@ public class RateModel {
         return driverID;
     }
 
-    void addVote(double newVote) {
+    public void addVote(double newVote) {
         avg = (avg * voters_num + newVote) / (voters_num + 1);
         voters_num++;
     }
 
-    public HashMap<String, String> getHashRateDetails(){
-        HashMap<String, String> RateDetails = new HashMap<>();
+    public HashMap<String, Object> getHashRateDetails(){
+        HashMap<String, Object> RateDetails = new HashMap<>();
         RateDetails.put("driver-id", this.driverID);
-        RateDetails.put("avg", String.valueOf(this.avg));
-        RateDetails.put("voters_num", String.valueOf(this.voters_num));
+        RateDetails.put("avg", this.avg);
+        RateDetails.put("voters_num", this.voters_num);
         return RateDetails;
     }
 

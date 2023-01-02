@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rocketride.Models.RideModel;
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<RideModel> pastRides;
-    private SelectDriverListener listener;
+    private HistoryRideListener listener;
 
-    public HistoryRecyclerViewAdapter(Context context, ArrayList<RideModel> pastRides, SelectDriverListener listener) {
+    public HistoryRecyclerViewAdapter(Context context, ArrayList<RideModel> pastRides, HistoryRideListener listener) {
         this.context = context;
         this.pastRides = pastRides;
         this.listener = listener;
@@ -42,6 +43,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.destination.setText(currRide.getDestination());
         holder.dayTime.setText(currRide.getDate());
         holder.pickup.setText(currRide.getPickup());
+
+        holder.historyConstraintLayout.setOnClickListener(l -> {
+            if (currRide.getCanceled()) return;
+            System.out.println("history pressed");
+            listener.onItemClicked(pastRides.get(position));
+        });
 
         // Check if current ride isn't canceled
         if (!currRide.getCanceled()){
@@ -67,7 +74,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         TextView source, destination, dayTime, pickup;
         ImageView checkMark, cancelMark;
         TextView canceledTextView, completedTextView;
-        // ConstraintLayout rowConstraintLayout;
+        ConstraintLayout historyConstraintLayout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,7 +86,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             cancelMark = itemView.findViewById(R.id.historyCancelMark);
             canceledTextView = itemView.findViewById(R.id.canceledTextView);
             completedTextView = itemView.findViewById(R.id.completedTextView);
-            // rowConstraintLayout = itemView.findViewById(R.id.driverRow);
+            historyConstraintLayout = itemView.findViewById(R.id.constraintLayoutHistory);
         }
     }
 }

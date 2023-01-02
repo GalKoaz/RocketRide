@@ -246,7 +246,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         Calendar calendar = Calendar.getInstance();
 
         int YEAR = calendar.get(Calendar.YEAR);
-        int MONTH = calendar.get(Calendar.MONTH);
+        int MONTH = calendar.get(Calendar.MONTH) + 1;
         int DATE = calendar.get(Calendar.DATE);
         int HOUR = calendar.get(Calendar.HOUR);
         int MINUTE = calendar.get(Calendar.MINUTE);

@@ -8,16 +8,23 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.rocketride.Adapters.HistoryRideListener;
+import com.example.rocketride.MainActivity;
 import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.Adapters.HistoryRecyclerViewAdapter;
+import com.example.rocketride.Models.RateModel;
+import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
 import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.Adapters.SelectDriverListener;
@@ -30,7 +37,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class History extends AppCompatActivity implements SelectDriverListener {
+public class History extends AppCompatActivity implements HistoryRideListener {
     private ArrayList<RideModel> expiredRides = new ArrayList<>();
     private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
@@ -41,6 +48,7 @@ public class History extends AppCompatActivity implements SelectDriverListener {
 
     private LottieAnimationView notFoundAnimation;
     private TextView notFoundTextView;
+    RateModelFirebaseHandler firebaseHandler = new RateModelFirebaseHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,8 +166,60 @@ public class History extends AppCompatActivity implements SelectDriverListener {
         return expiredRides;
     }
 
-    @Override
-    public void onItemClicked(DriverRideModel driverRideModel) {
+    protected void showRateDialog(String driverID){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.layout_history_rate_dialog);
 
+        // Dialog buttons
+        Button submitButton = dialog.findViewById(R.id.submitRateButton);
+
+        // Dialog Imageview
+        ImageView closeView = dialog.findViewById(R.id.closeImageView);
+
+        // Dialog rating bar
+        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+
+        // buttons listeners
+        submitButton.setOnClickListener(l -> {
+            dialog.dismiss();
+
+            double userRate = ratingBar.getRating();
+            System.out.println("user rating is: " + userRate);
+
+            firebaseHandler.getRateModel(driverID, task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        System.out.println(document.getString("driver-id") + " "
+                                 + document.get("avg") + " " +
+                                document.get("voters_num"));
+
+                        RateModel rateModel = new RateModel(
+                                document.getString("driver-id"),
+                                (double) document.get("avg"),
+                                Math.toIntExact(document.getLong("voters_num"))
+                        );
+
+                        // Add current user's vote into average
+                        rateModel.addVote(userRate);
+
+                        // Update the RateModel object to the RateModelFirebaseHandler
+                        firebaseHandler.updateRateModel(rateModel);
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            });
+        });
+
+        closeView.setOnClickListener(l -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    @Override
+    public void onItemClicked(RideModel rideModel) {
+        System.out.println(rideModel);
+        System.out.println(rideModel.getDriverID());
+        showRateDialog(rideModel.getDriverID());
     }
 }

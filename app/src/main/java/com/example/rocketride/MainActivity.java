@@ -280,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
             switchActivityIntent.putExtra("userEmail", userEmail);
             switchActivityIntent.putExtra("userPassword", userPassword);
             startActivity(switchActivityIntent);
-
         });
 
         /**
