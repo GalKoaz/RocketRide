@@ -72,6 +72,7 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         return new DriverRideRecyclerViewAdapter.MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DriverRideRecyclerViewAdapter.MyViewHolder holder, int position) {
         DriverRideModel currDriverRide = closeRides.get(position);
@@ -84,11 +85,10 @@ public class DriverRideRecyclerViewAdapter extends RecyclerView.Adapter<DriverRi
         // Check driver's rating
         double driverRate = Double.parseDouble(currDriverRide.getRating());
         if (driverRate == 0.0){
-            holder.rating.setVisibility(View.GONE);
+            holder.rating.setText("None");
         }
         else { // driver has rating
             holder.rating.setText(String.valueOf(((int)(driverRate*100)/100.0)));
-            holder.rating.setVisibility(View.VISIBLE);
         }
 
         holder.cardView.setOnClickListener(l -> {
