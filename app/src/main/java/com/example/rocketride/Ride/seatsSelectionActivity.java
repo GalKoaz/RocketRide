@@ -2,12 +2,22 @@ package com.example.rocketride.Ride;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketride.MenuActivities.HomeActivity;
+import com.example.rocketride.Models.RemindBroadcast;
 import com.example.rocketride.Models.RideSearchActivity;
 import com.example.rocketride.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +43,9 @@ public class seatsSelectionActivity extends AppCompatActivity {
     private String currSeatSelectionName;
 
     private String driverID, rideID;
-
+    private String s,d;
     private FirebaseFirestore db;
-
+    private int start_time = 1;
     // Seats Image views
     ImageView carView,
             // View images of the available seats
@@ -60,7 +71,9 @@ public class seatsSelectionActivity extends AppCompatActivity {
         currSeatSelectionName = "";
         driverID = "";
         rideID = "";
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            createNotifyChannel();
+        }
         Bundle extras = getIntent().getExtras();
 
         double price = 0.0;
@@ -93,10 +106,13 @@ public class seatsSelectionActivity extends AppCompatActivity {
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
+        s = source;
+        d = dest;
         // Set the view to represent the driver's ride details
         setRideDetails(firstName, lastName, source, dest, startTime, rating, pickupName, price, date);
-
+        String s = ":";
+        int hours = Integer.parseInt(startTime.split(s)[0]);
+        start_time = Integer.parseInt(startTime.split(s)[1]) + 60*hours;
       carView = findViewById(R.id.imageView4);
 
       // View images of the available seats
@@ -235,7 +251,13 @@ public class seatsSelectionActivity extends AppCompatActivity {
         if (carSeat.equals("")) carAvailableSeatView.setVisibility(View.GONE);
         else carUnavailableSeatView.setVisibility(View.VISIBLE);
     }
-
+    public static PendingIntent createPendingIntentGetBroadCast(Context context, int id, Intent intent, int flag) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE | flag);
+        } else {
+            return PendingIntent.getBroadcast(context, id, intent, flag);
+        }
+    }
     public void completeSeatSelection(){
         // User tries to complete seat selection process without a seat selected
         if (currSeatSelectionName.equals("")) {
@@ -252,9 +274,24 @@ public class seatsSelectionActivity extends AppCompatActivity {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String seatStatus = document.getString(currSeatSelectionName);
                     System.out.println("seat status: " + currSeatSelectionName + " " + seatStatus);
+                    RemindBroadcast.from = s;
+                    RemindBroadcast.to = d;
                     if (seatStatus.equals("")){
                         System.out.println("seat is available - can complete process");
+                        Intent intent = new Intent(seatsSelectionActivity.this, RemindBroadcast.class);
+                        PendingIntent pendingIntent = createPendingIntentGetBroadCast(seatsSelectionActivity.this,0,intent,0);
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+                        long timeAtButtonClicked = System.currentTimeMillis();
+                        long bounus;
+                        if (start_time - 30 <= 0){
+                            bounus = 1000 * 5;
+                        }
+                        else{
+                            bounus = 1000L * (start_time-30) * 60;
+                        }
+
+                        alarmManager.set(AlarmManager.RTC_WAKEUP,timeAtButtonClicked+bounus, pendingIntent);
                         // TODO: CATCHING FOR NOW THE SEAT WITHOUT PAYMENT FOR TESTING PURPOSES
                         setUserSeat(currSeatSelectionName, document.getId(), FirebaseAuth.getInstance().getUid());
                     }
@@ -275,8 +312,6 @@ public class seatsSelectionActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         Toast.makeText(seatsSelectionActivity.this, "Success!", Toast.LENGTH_LONG).show();
-
-
                         // Switch to the home activity
                         this.finish();
                         Intent switchActivitySearchRideIntent = new Intent(this, HomeActivity.class);
@@ -285,5 +320,20 @@ public class seatsSelectionActivity extends AppCompatActivity {
                         Log.d(TAG, "Error getting or setting documents: ", task.getException());
                     }
                 });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void createNotifyChannel(){
+        CharSequence name = "remChannel";
+        String description = "remind about drives";
+        int importnce = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = new NotificationChannel("rem",name,importnce);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

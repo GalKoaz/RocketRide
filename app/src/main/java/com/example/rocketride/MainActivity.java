@@ -5,11 +5,15 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -77,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         // Hide action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
         // get view flag
         Bundle extras = getIntent().getExtras();
         boolean viewFlag = false;
