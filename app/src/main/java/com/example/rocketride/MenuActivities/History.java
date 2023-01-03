@@ -20,15 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.rocketride.Adapters.HistoryRideListener;
-import com.example.rocketride.MainActivity;
-import com.example.rocketride.Models.DriverRideModel;
-import com.example.rocketride.Adapters.HistoryRecyclerViewAdapter;
+import com.example.rocketride.Login.Adapters.HistoryRideListener;
+import com.example.rocketride.Login.Adapters.HistoryRecyclerViewAdapter;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
 import com.example.rocketride.Models.RideModel;
-import com.example.rocketride.Adapters.SelectDriverListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;

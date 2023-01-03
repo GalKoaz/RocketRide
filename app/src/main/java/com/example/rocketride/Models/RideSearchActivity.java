@@ -19,12 +19,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.rocketride.Adapters.DriverRideRecyclerViewAdapter;
-import com.example.rocketride.Adapters.SelectDriverListener;
+import com.example.rocketride.Login.Adapters.DriverRideRecyclerViewAdapter;
+import com.example.rocketride.Login.Adapters.SelectDriverListener;
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.R;
 import com.example.rocketride.Ride.seatsSelectionActivity;
@@ -50,7 +49,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class RideSearchActivity extends AppCompatActivity implements SelectDriverListener {

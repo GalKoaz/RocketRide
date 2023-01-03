@@ -1,4 +1,4 @@
-package com.example.rocketride.Adapters;
+package com.example.rocketride.Login.Adapters;
 
 import static android.content.ContentValues.TAG;
 
@@ -12,7 +12,6 @@ import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +19,6 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.rocketride.Models.DriverRideModel;
 import com.example.rocketride.R;
 import com.google.firebase.storage.FirebaseStorage;

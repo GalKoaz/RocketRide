@@ -1,4 +1,4 @@
-package com.example.rocketride.Adapters;
+package com.example.rocketride.Login.Adapters;
 
 import com.example.rocketride.Models.DriverRideModel;
 

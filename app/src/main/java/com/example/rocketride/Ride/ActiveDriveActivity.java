@@ -174,11 +174,20 @@ public class ActiveDriveActivity extends AppCompatActivity {
         // Management buttons init
         startButton = findViewById(R.id.startRideButton);
         kickButton = findViewById(R.id.kickButton);
+        cancelRideButton = findViewById(R.id.cancelRideButton2);
         startButton.setOnClickListener(l -> {
             StartRide();
         });
         kickButton.setOnClickListener(l -> {
             kickUserFromRide(rideID, currUnavailableSeatSelectedName);
+        });
+        cancelRideButton.setOnClickListener(l -> {
+            if (userType.equals("driver")) {
+                cancelRide(rideID);
+            }
+            else{ // User is a rider
+                cancelRiderRide(rideID);
+            }
         });
     }
 
@@ -220,6 +229,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
         else if (currSeatAvailableSelected){
             System.out.println("unblocked");
             seatAvailableImageView.setVisibility(View.GONE);
+
             seatSelected = false;
             currSeatSelectionName = "";
             db.collection("drives").document(rideID).update(seatName, "");
