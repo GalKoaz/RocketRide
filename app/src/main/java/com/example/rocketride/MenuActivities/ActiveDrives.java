@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.rocketride.Adapters.ActiveDriveListener;
@@ -132,12 +133,12 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
         CollectionReference collectionReference = db.collection("drives");
         Query query = collectionReference.whereEqualTo("alive", true);
         getActDrives(query, false);
-
+//
 //        if(ActDrives.isEmpty()){
 //            Toast.makeText(this, "input is empty.", Toast.LENGTH_SHORT).show();
 //            // TODO: just for testing - remove it when not needed....
 //            for (int i = 0; i < 20; i++) {
-//                ActDrives.add(new RideModel("Ariel", "Tel-Aviv", "16/12/2022 0:19", "Ariel-University"));
+//                ActDrives.add(new RideModel("Ariel", "Tel-Aviv", "16/12/2022 0:19", "Ariel-University","678","gfda",false));
 //            }
 //            adapter = new ActiveDrivesActivityViewAdapter(this, ActDrives, this);
 //            recyclerView.setAdapter(adapter);
@@ -222,7 +223,7 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
     @Override
     public void onItemClicked(RideModel rideModel) {
         // TODO: move all active driver details with put_extra()
-
+        System.out.println(5);
         // Switch back to active driver activity
         this.finish();
         Intent switchActivityBecomeDriverIntent = new Intent(this, ActiveDriveActivity.class);

@@ -19,17 +19,13 @@ import android.widget.Toast;
 import com.example.rocketride.MenuActivities.ActiveDrives;
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.Models.RideModel;
-import com.example.rocketride.Models.RideSearchActivity;
 import com.example.rocketride.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 import carbon.widget.Button;
 
@@ -63,7 +59,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
             rightBottomUnavailableSeatView;
 
     // Management buttons
-    Button cancelRideButton, kickButton;
+    Button cancelRideButton, kickButton, startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +119,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
                 centerBottomSeat = findViewById(R.id.textViewBottomCenter),
                 rightBottomSeat = findViewById(R.id.textViewBottomRight);
 
-        ImageView backImageView = findViewById(R.id.seatsBackImageView),
-                nextImageView = findViewById(R.id.seatsNextImageView);
+        ImageView backImageView = findViewById(R.id.seatsBackImageView);
 
 
         driverSeatView.setVisibility(View.GONE);
@@ -167,12 +162,6 @@ public class ActiveDriveActivity extends AppCompatActivity {
         rightBottomSeat.setOnClickListener(l -> {
             availableChecks(rightBottomAvailableSeatView, rightBottomUnavailableSeatView,"right_bottom_seat");
         });
-
-        nextImageView.setOnClickListener(l -> {
-            completeSeatSelection();
-            Toast.makeText(ActiveDriveActivity.this, "next button clicked!", Toast.LENGTH_LONG).show();
-        });
-
         backImageView.setOnClickListener(l -> {
             // Intent back to searching a ride
             this.finish();
@@ -183,21 +172,27 @@ public class ActiveDriveActivity extends AppCompatActivity {
 
 
         // Management buttons init
-        cancelRideButton = findViewById(R.id.cancelRideButton);
+        startButton = findViewById(R.id.startRideButton);
         kickButton = findViewById(R.id.kickButton);
-
-        cancelRideButton.setOnClickListener(l -> {
-            if (userType.equals("driver")) {
-                cancelRide(rideID);
-            }
-            else{ // User is a rider
-                cancelRiderRide(rideID);
-            }
+        startButton.setOnClickListener(l -> {
+            StartRide();
         });
-
         kickButton.setOnClickListener(l -> {
             kickUserFromRide(rideID, currUnavailableSeatSelectedName);
         });
+    }
+
+    protected void StartRide(){
+        System.out.println(rideID);
+        db.collection("drives").document(rideID)
+                .update("alive", false).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        Log.d(TAG, "success with: " + rideID);
+
+                    }else{
+                        Log.d(TAG, "Error getting or setting documents: ", task.getException());
+                    }
+                });
     }
 
     protected void availableChecks(ImageView seatAvailableImageView, ImageView seatUnavailableImageView,  String seatName){
@@ -213,6 +208,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
 
         // Seat is unavailable and thus cannot be selected
         boolean currSeatUnavailableSelected = seatUnavailableImageView.getVisibility() == View.VISIBLE;
+        boolean currSeatAvailableSelected = seatAvailableImageView.getVisibility() == View.VISIBLE;
         if (currSeatUnavailableSelected){
             //TODO: if user is driver then make a cancellation button appear
             // else, do nothing.
@@ -221,18 +217,17 @@ public class ActiveDriveActivity extends AppCompatActivity {
             currUnavailableSeatSelectedView = seatUnavailableImageView;
             return;
         }
-
-        boolean currSeatAvailableSelected = seatAvailableImageView.getVisibility() == View.VISIBLE;
-        if (currSeatAvailableSelected){
+        else if (currSeatAvailableSelected){
+            System.out.println("unblocked");
             seatAvailableImageView.setVisibility(View.GONE);
             seatSelected = false;
             currSeatSelectionName = "";
+            db.collection("drives").document(rideID).update(seatName, "");
             return;
         }
-
-        // User have already selected an available seat
-        if (seatSelected){
-            currAvailableSeatSelectedView.setVisibility(View.GONE);
+        else{
+            System.out.println("blocked");
+            db.collection("drives").document(rideID).update(seatName, "X");
         }
 
         // User haven't selected any seat
@@ -271,60 +266,9 @@ public class ActiveDriveActivity extends AppCompatActivity {
     public void setSeatView(String carSeat, ImageView carAvailableSeatView, ImageView carUnavailableSeatView){
         System.out.println("car seat -> " + carSeat);
         if (carSeat.equals("")) carAvailableSeatView.setVisibility(View.GONE);
+        else if (carSeat.equals("X")) carAvailableSeatView.setVisibility(View.VISIBLE);
         else carUnavailableSeatView.setVisibility(View.VISIBLE);
     }
-
-    public void completeSeatSelection(){
-        // User tries to complete seat selection process without a seat selected
-        if (currSeatSelectionName.equals("")) {
-            Toast.makeText(ActiveDriveActivity.this, "You haven't selected a seat!", Toast.LENGTH_LONG).show();
-            System.out.println("seat selection.........");
-            return;
-        }
-        System.out.println("seat selection2.........");
-        // TODO: ADD THIS FIELD TO ANY OF DRIVES DOCUMENTS
-        // Check if the current seat status is available and didn't caught by other user.
-        Query query = db.collection("drives").whereEqualTo("_id", rideID);
-
-        query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String seatStatus = document.getString(currSeatSelectionName);
-                    System.out.println("seat status: " + currSeatSelectionName + " " + seatStatus);
-                    if (seatStatus.equals("")){
-                        System.out.println("seat is available - can complete process");
-
-                        // TODO: CATCHING FOR NOW THE SEAT WITHOUT PAYMENT FOR TESTING PURPOSES
-                        setUserSeat(currSeatSelectionName, document.getId(), FirebaseAuth.getInstance().getUid());
-                    }
-                    else{
-                        currAvailableSeatSelectedView.setVisibility(View.GONE);
-                        currUnavailableSeatSelectedView.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-            else {
-                Log.d(TAG, "Error getting documents: ", task.getException());
-            }
-        });
-    }
-
-    public void setUserSeat(String seatName, String documentID, String UID){
-        db.collection("drives").document(documentID).update(seatName, UID)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        Toast.makeText(ActiveDriveActivity.this, "Success!", Toast.LENGTH_LONG).show();
-
-                        // Switch to the home activity
-                        this.finish();
-                        Intent switchActivitySearchRideIntent = new Intent(this, HomeActivity.class);
-                        startActivity(switchActivitySearchRideIntent);
-                    }else{
-                        Log.d(TAG, "Error getting or setting documents: ", task.getException());
-                    }
-                });
-    }
-
     /**
      * Method cancels the given ride.
      * @param rideID ride's document id.
