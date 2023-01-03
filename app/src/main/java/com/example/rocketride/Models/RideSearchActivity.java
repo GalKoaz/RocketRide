@@ -1,6 +1,7 @@
 package com.example.rocketride.Models;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +35,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -66,6 +68,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
     private RateModelFirebaseHandler rateModelFirebaseHandler = new RateModelFirebaseHandler();
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_search);
@@ -224,6 +227,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void setUpCloseRides(){
         // TODO: here extract closest rides to current user.
         //       build all related objects afterwards and push them to
@@ -241,6 +245,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
      * Method sends a firestore query that extracts the current alive rides.
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     synchronized protected void getAliveRides(){
         // Create a reference to the rides collection
         CollectionReference rides = db.collection("drives");
@@ -253,9 +258,13 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
         int MINUTE = calendar.get(Calendar.MINUTE);
         int src_radius = 5;
         int dst_radius = 7;
-
-        Query query = rides.whereEqualTo("alive", true).whereEqualTo("date-d",DATE).whereEqualTo("date-m",MONTH).whereEqualTo("date-y",YEAR);
-
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Query query = rides.whereEqualTo("alive", true)
+                .whereEqualTo("date-d",DATE)
+                .whereEqualTo("date-m",MONTH)
+                .whereEqualTo("date-y",YEAR);
+                //.whereNotEqualTo("driver-id", userId);
+                //can be added after we stop testing
         // Store query result
         query.get()
                 .addOnCompleteListener(task -> {
@@ -268,6 +277,10 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
 
                             if ((CalculationByDistance(src_p,selectedSourcePlacePoint) > src_radius && CalculationByDistance(pickup_p,selectedSourcePlacePoint)>src_radius)
                                     || CalculationByDistance(dst_p,selectedDestPlacePoint) > dst_radius){
+                                continue;
+                            }
+                            if (document.get("center_bottom_seat").equals(userId) || document.get("left_bottom_seat").equals(userId)
+                            || document.get("near_driver_seat").equals(userId)  || document.get("right_bottom_seat").equals(userId) ){
                                 continue;
                             }
                             else {
