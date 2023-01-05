@@ -8,9 +8,10 @@ const {
 const getRate = async (req, res) => {
     const {driver_id : driverID} = req.params;
     // TODO: complete this - it's just for testing and a part of CRUD API
-    doc_ref = await getRateModel(driverID);
+    rateJSON = await getRateModel(driverID);
+    console.log(JSON.stringify(rateJSON))
 
-    res.status(200).json({response: 'good!', req_id: driverID});
+    res.status(200).json({response: rateJSON, req_id: driverID});
 }
 
 const postRate = async (req, res) => {
@@ -24,7 +25,11 @@ const postRate = async (req, res) => {
 }
 
 const updateRate = async (req, res) => {
-    res.json({response: 'good!'});
+    const rateJSON = req.body;
+    console.log(`RATE MODEL\n${JSON.stringify(rateJSON)}`);
+
+    doc_ref = await updateRateModel(rateJSON);
+    res.json({response: 'good!', result: rateJSON});
 }
 
 module.exports = {
