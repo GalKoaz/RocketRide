@@ -6,7 +6,7 @@ const {
     postRateModel
 } = require('../controllers/rateDriver');
 
-router.route('/').post(postRateModel);
-router.route('/').get(getRateModel);
+router.route('/').post(postRateModel).get(getRateModel);
+router.route('/:driver_id').get(getRateModel);
 
 module.exports = router;

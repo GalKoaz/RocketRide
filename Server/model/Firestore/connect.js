@@ -9,6 +9,7 @@ const connectDB = async () => {
         credential: cert(serviceAccount)
     });
 
+
     return getFirestore();
 }
 module.exports = connectDB
