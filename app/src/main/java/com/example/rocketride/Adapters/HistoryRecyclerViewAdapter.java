@@ -1,4 +1,4 @@
-package com.example.rocketride.Login.Adapters;
+package com.example.rocketride.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -20,8 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.rocketride.Login.Adapters.HistoryRideListener;
-import com.example.rocketride.Login.Adapters.HistoryRecyclerViewAdapter;
+import com.example.rocketride.Adapters.HistoryRideListener;
+import com.example.rocketride.Adapters.HistoryRecyclerViewAdapter;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
