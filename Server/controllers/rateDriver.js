@@ -7,7 +7,7 @@ const {
 
 const getRate = async (req, res) => {
     const {driver_id : driverID} = req.params;
-    // TODO: complete this - it's just for testing and a part of CRUD API
+
     rateJSON = await getRateModel(driverID);
     console.log(JSON.stringify(rateJSON))
 
@@ -20,7 +20,6 @@ const postRate = async (req, res) => {
 
     doc_ref = await addRateModel(rateJSON);
 
-    //TODO: get post parameters json with req.body
     res.json({response: 'good!', result: rateJSON});
 }
 

@@ -42,7 +42,7 @@ const updateRideAttr = async (rideID, attributesJSON) => {
 }
 
 // Adds a ride document given a JSON of ride attributes.
-const addRide = async (rideModel) => {
+const addRideModel = async (rideModel) => {
     try {
         // Add a new document with a generated ID
         const docRef = await db.collection(collectionName).add(rideModel);
@@ -53,7 +53,7 @@ const addRide = async (rideModel) => {
 }
 
 // Get all the alive rides
-const getAliveRides = async () => {
+const getAliveRidesModel = async () => {
     const drivesRef = db.collection(collectionName);
     const queryRef = ratesRef.where('alive', '==', true);
     try {
@@ -65,7 +65,7 @@ const getAliveRides = async () => {
 }
 
 // Get alive rides documents given a date (as a JSON).
-const getAliveRidesInDate = async (dateJSON) => {
+const getAliveRidesInDateModel = async (dateJSON) => {
     const drivesRef = db.collection(collectionName);
     const queryRef = ratesRef.where('alive', '==', true)
         .where('date-d', '==', dateJSON.day)
@@ -82,7 +82,7 @@ const getAliveRidesInDate = async (dateJSON) => {
 module.exports = {
     getRideByRideID,
     updateRideAttr,
-    addRide,
-    getAliveRides,
-    getAliveRidesInDate
+    addRideModel,
+    getAliveRidesModel,
+    getAliveRidesInDateModel
 };
