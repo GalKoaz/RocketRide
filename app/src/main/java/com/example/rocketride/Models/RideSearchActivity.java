@@ -22,8 +22,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.rocketride.Login.Adapters.DriverRideRecyclerViewAdapter;
-import com.example.rocketride.Login.Adapters.SelectDriverListener;
+import com.example.rocketride.Adapters.DriverRideRecyclerViewAdapter;
+import com.example.rocketride.Adapters.SelectDriverListener;
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.R;
 import com.example.rocketride.Ride.seatsSelectionActivity;
