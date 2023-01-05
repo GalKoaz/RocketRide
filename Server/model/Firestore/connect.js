@@ -3,13 +3,12 @@ const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestor
 
 // Function connects to firestore
 const connectDB = async () => {
-    const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+    const serviceAccount = require(`../../${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
 
     initializeApp({
         credential: cert(serviceAccount)
     });
 
-
-    return getFirestore();
+    return await getFirestore();
 }
 module.exports = connectDB
