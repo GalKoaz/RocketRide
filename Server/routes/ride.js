@@ -10,10 +10,11 @@ const {
 } = require('../controllers/ride');
 
 router.route('/').post(addRide);
-router.route('/:ride_id').get(getRide).put(updateRide);
-router.route('/alive').get(getAliveRides);
 
+router.route('/alive').get(getAliveRides);
 // Query url of date, e.g.: /alive?day=x&month=y&year=z
 router.route('/alive').get(getAliveRidesInDate);
+
+router.route('/:ride_id').get(getRide).put(updateRide);
 
 module.exports = router;
