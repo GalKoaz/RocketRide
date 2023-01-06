@@ -59,8 +59,8 @@ const getAliveRidesModel = async () => {
     try {
         const querySnapshots = await queryRef.get();
         // Check if there are any results for the query
-        if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => doc.data());
+        if (!querySnapshots.empty) {
+            return querySnapshots.docs.map(doc => doc.data());
         } else {
             return [];
         }
@@ -79,8 +79,8 @@ const getAliveRidesInDateModel = async (dateJSON) => {
     try {
         const querySnapshots = await queryRef.get();
         // Check if there are any results for the query
-        if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => doc.data());
+        if (!querySnapshots.empty) {
+            return querySnapshots.docs.map(doc => doc.data());
         } else {
             return [];
         }

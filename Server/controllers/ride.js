@@ -17,7 +17,7 @@ const getRide = async (req, res) => {
 }
 
 const getAliveRides = async (req, res) => {
-    const ridesJsonArray = await getAliveRides();
+    const ridesJsonArray = await getAliveRidesModel();
     console.log(JSON.stringify(ridesJsonArray));
     res.status(200).json({response: ridesJsonArray});
 }
