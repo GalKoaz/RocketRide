@@ -12,8 +12,12 @@ server.use(bodyParser.json());
 
 // Routers
 const rateDriverRouter = require('./routes/rateDriver');
+const rideRouter = require('./routes/ride');
+const userRouter = require('./routes/user');
 
 server.use('/api/v1/rate_driver', rateDriverRouter);
+server.use('/api/v1/rides', rideRouter);
+server.use('/api/v1/users', userRouter);
 
 const start = async () => {
   try {

@@ -9,8 +9,8 @@ const {
     updateRide
 } = require('../controllers/ride');
 
-router.route('/').post(addRide).put(updateRide);
-router.route('/:ride_id').get(getRide);
+router.route('/').post(addRide);
+router.route('/:ride_id').get(getRide).put(updateRide);
 router.route('/alive').get(getAliveRides);
 
 // Query url of date, e.g.: /alive?day=x&month=y&year=z

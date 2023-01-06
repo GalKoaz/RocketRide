@@ -1,12 +1,12 @@
 // Firestore db instance
-const connectDB = require('./connect')
+const {getFirestore} = require('./connect')
 const collectionName = 'users';
 
 // Database reference
 let db;
 
 const start = async () => {
-    db = await connectDB();
+    db = await getFirestore();
 }
 // start connecting to firestore
 start();

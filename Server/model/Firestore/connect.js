@@ -1,14 +1,13 @@
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-// Function connects to firestore
-const connectDB = async () => {
-    const serviceAccount = require(`../../${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
+// Function connects/certificate to firestore
+const serviceAccount = require(`../../${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
 
-    initializeApp({
-        credential: cert(serviceAccount)
-    });
+initializeApp({
+    credential: cert(serviceAccount)
+});
 
-    return await getFirestore();
-}
-module.exports = connectDB
+module.exports = {
+    getFirestore
+};

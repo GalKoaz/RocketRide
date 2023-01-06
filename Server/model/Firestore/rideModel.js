@@ -1,12 +1,12 @@
 // Firestore db instance
-const connectDB = require('./connect')
+const {getFirestore} = require('./connect')
 const collectionName = 'drives';
 
 // Database reference
 let db;
 
 const start = async () => {
-    db = await connectDB();
+    db = await getFirestore();
 }
 // start connecting to firestore
 start();
@@ -15,7 +15,7 @@ start();
 const getRideByRideID = async (rideID) => {
     try{
         const drivesRef = db.collection(collectionName);
-        const queryRef = ratesRef.where('_id', '==', rideID);
+        const queryRef = drivesRef.where('_id', '==', rideID);
         const querySnapshot = await queryRef.get();
 
         // Check if there are any results for the query
@@ -55,10 +55,15 @@ const addRideModel = async (rideModel) => {
 // Get all the alive rides
 const getAliveRidesModel = async () => {
     const drivesRef = db.collection(collectionName);
-    const queryRef = ratesRef.where('alive', '==', true);
+    const queryRef = drivesRef.where('alive', '==', true);
     try {
         const querySnapshots = await queryRef.get();
-        return querySnapshots;
+        // Check if there are any results for the query
+        if (!querySnapshot.empty) {
+            return querySnapshot.docs.map(doc => doc.data());
+        } else {
+            return [];
+        }
     } catch (error) {
         console.error('Error getting document', error);
     }
@@ -67,13 +72,18 @@ const getAliveRidesModel = async () => {
 // Get alive rides documents given a date (as a JSON).
 const getAliveRidesInDateModel = async (dateJSON) => {
     const drivesRef = db.collection(collectionName);
-    const queryRef = ratesRef.where('alive', '==', true)
+    const queryRef = drivesRef.where('alive', '==', true)
         .where('date-d', '==', dateJSON.day)
-        .where('date-d', '==', dateJSON.month)
-        .where('date-d', '==', dateJSON.year);
+        .where('date-m', '==', dateJSON.month)
+        .where('date-y', '==', dateJSON.year);
     try {
         const querySnapshots = await queryRef.get();
-        return querySnapshots;
+        // Check if there are any results for the query
+        if (!querySnapshot.empty) {
+            return querySnapshot.docs.map(doc => doc.data());
+        } else {
+            return [];
+        }
     } catch (error) {
         console.error('Error getting document', error);
     }
