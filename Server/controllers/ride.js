@@ -7,6 +7,8 @@ const {
     updateRideAttr
 } = require('../model/Firestore/rideModel');
 
+const { getUserDetails} = require('../model/Firestore/userModel');
+const { getRateModel } = require('../model/Firestore/rateModel');
 
 const getRide = async (req, res) => {
     const {ride_id: rideID} = req.params;
@@ -48,10 +50,22 @@ const updateRide = async (req, res) => {
     res.json({response: 'good!', result: attrJSON});
 }
 
+const getRideRiderDetails = async (req, res) => {
+    const {ride_id: rideID} = req.params;
+
+    const rideJSON = await getRideByRideID(rideID);
+    const driverID = await rideJSON['driver-id'];
+    let [userDetailsJSON, driverRateJSON] = await Promise.all([getUserDetails(driverID), getRateModel(driverID)]);
+
+    const responseJSON = Object.assign(rideJSON, userDetailsJSON, driverRateJSON);
+    res.json({response: responseJSON});
+}
+
 module.exports = {
     getRide,
     getAliveRides,
     getAliveRidesInDate,
     addRide,
-    updateRide
+    updateRide,
+    getRideRiderDetails
 };
