@@ -1,8 +1,11 @@
 package com.example.rocketride.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 public class RateModel {
+    @SerializedName("driver-id")
     private final String driverID;
     private double avg;
     private int voters_num;

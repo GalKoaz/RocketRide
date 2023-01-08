@@ -35,6 +35,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class History extends AppCompatActivity implements HistoryRideListener {
     private ArrayList<RideModel> expiredRides = new ArrayList<>();
     private FirebaseFirestore db;
@@ -187,27 +191,53 @@ public class History extends AppCompatActivity implements HistoryRideListener {
                 Toast.makeText(this, "Can't rate driver with 0!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            firebaseHandler.getRateModel(driverID, task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                        RateModel rateModel = new RateModel(
-                                document.getString("driver-id"),
-                                (double) document.get("avg"),
-                                Math.toIntExact(document.getLong("voters_num"))
-                        );
-
-                        // Add current user's vote into average
-                        rateModel.addVote(userRate);
-
-                        // Update the RateModel object to the RateModelFirebaseHandler
-                        firebaseHandler.updateRateModel(rateModel);
+            firebaseHandler.getRateModel(driverID, new Callback<RateModel>() {
+                @Override
+                public void onResponse(Call<RateModel> call, Response<RateModel> response) {
+                    // Bad response from server
+                    if (response.code() != 200){
+                        Toast.makeText(History.this, "Bad request!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
+                    // Ok response from the server
+                    RateModel rateModel = response.body();
+
+                    // Add current user's vote into average
+                    rateModel.addVote(userRate);
+
+                    // Update the RateModel object to the RateModelFirebaseHandler
+                    firebaseHandler.updateRateModel(rateModel);
+
+                }
+
+                @Override
+                public void onFailure(Call<RateModel> call, Throwable t) {
+                    System.out.println(t.toString());
+                    Toast.makeText(History.this, "Bad request - try again!", Toast.LENGTH_SHORT).show();
                 }
             });
+
+
+//            firebaseHandler.getRateModel(driverID, task -> {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                        RateModel rateModel = new RateModel(
+//                                document.getString("driver-id"),
+//                                (double) document.get("avg"),
+//                                Math.toIntExact(document.getLong("voters_num"))
+//                        );
+//
+//                        // Add current user's vote into average
+//                        rateModel.addVote(userRate);
+//
+//                        // Update the RateModel object to the RateModelFirebaseHandler
+//                        firebaseHandler.updateRateModel(rateModel);
+//                    }
+//                } else {
+//                    Log.d(TAG, "Error getting documents: ", task.getException());
+//                }
+//            });
         });
 
         closeView.setOnClickListener(l -> dialog.dismiss());
