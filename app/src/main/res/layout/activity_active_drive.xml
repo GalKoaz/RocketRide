@@ -273,6 +273,18 @@
         app:layout_constraintStart_toEndOf="@+id/textView20"
         app:layout_constraintTop_toBottomOf="@+id/driver_name" />
 
+    <Button
+        android:id="@+id/nev_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="nev"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewDriverUnavailable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_and_time"
+        app:layout_constraintVertical_bias="1.0" />
+
     <TextView
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
@@ -368,13 +380,13 @@
             android:id="@+id/startRideButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="164dp"
             android:text="start Ride"
             android:textColor="@color/white"
             app:carbon_backgroundTint="@color/purple_700"
             app:carbon_elevation="0dp"
             app:carbon_elevationSpotShadowColor="#8C9392"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />

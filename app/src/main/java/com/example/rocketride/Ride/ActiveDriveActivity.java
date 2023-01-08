@@ -2,10 +2,12 @@ package com.example.rocketride.Ride;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,11 +22,18 @@ import com.example.rocketride.MenuActivities.ActiveDrives;
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Source;
 
+import java.net.URI;
 import java.util.HashMap;
 
 import carbon.widget.Button;
@@ -105,7 +114,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
         leftBottomAvailableSeatView = findViewById(R.id.leftBottomAvailableImageView);
         centerBottomAvailableSeatView = findViewById(R.id.centerBottomAvailableImageView);
         rightBottomAvailableSeatView = findViewById(R.id.rightBottomAvailableImageView);
-
+        android.widget.Button go_to_nev =  findViewById(R.id.nev_b);
         // View images of the unavailable seats
         nearDriverUnavailableSeatView = findViewById(R.id.nearDriverUnavailableImageView);
         leftBottomUnavailableSeatView = findViewById(R.id.leftBottomUnavailableImageView);
@@ -146,7 +155,35 @@ public class ActiveDriveActivity extends AppCompatActivity {
         driverSeat.setOnClickListener(l -> {
             Toast.makeText(ActiveDriveActivity.this, "can't be selected!", Toast.LENGTH_LONG).show();
         });
+        go_to_nev.setOnClickListener(l -> {
+            DocumentReference docRef = db.collection("drives").document(rideID);
+            // Source can be CACHE, SERVER, or DEFAULT.
+            Source source = Source.CACHE;
 
+// Get the document, forcing the SDK to use the offline cache
+            docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // Document found in the offline cache
+                        DocumentSnapshot document = task.getResult();
+                        Double lat = (Double) document.get("pickup_lat");
+                        Double lon = (Double) document.get("pickup_lon");
+                        System.out.println(lat + " " + lon);
+                        Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("google.navigation:q="+ lat +","+lon+"&mode=d"));
+                        intent.setPackage("com.google.android.apps.maps");
+                        if(intent.resolveActivity(getPackageManager()) != null){
+                            startActivity(intent);
+                        }
+                    } else {
+                        Log.d(TAG, "Cached get failed: ", task.getException());
+                    }
+                }
+            });
+
+
+        });
         nearDriverSeat.setOnClickListener(l -> {
             availableChecks(nearDriverAvailableSeatView, nearDriverUnavailableSeatView, "near_driver_seat");
         });
