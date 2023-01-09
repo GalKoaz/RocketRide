@@ -35,6 +35,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class History extends AppCompatActivity implements HistoryRideListener {
     private ArrayList<RideModel> expiredRides = new ArrayList<>();
     private FirebaseFirestore db;
@@ -187,27 +191,33 @@ public class History extends AppCompatActivity implements HistoryRideListener {
                 Toast.makeText(this, "Can't rate driver with 0!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            firebaseHandler.getRateModel(driverID, task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                        RateModel rateModel = new RateModel(
-                                document.getString("driver-id"),
-                                (double) document.get("avg"),
-                                Math.toIntExact(document.getLong("voters_num"))
-                        );
+            firebaseHandler.getRateModel(
+                    driverID,
+                    // Server has respond well
+                    okGetResponse -> {
+                        // Ok response from the server
+                        RateModel rateModel = okGetResponse.body();
 
                         // Add current user's vote into average
                         rateModel.addVote(userRate);
 
                         // Update the RateModel object to the RateModelFirebaseHandler
-                        firebaseHandler.updateRateModel(rateModel);
+                        firebaseHandler.updateRateModel(
+                                rateModel,
+                                okUpdateResponse ->  Toast.makeText(History.this, "Rated successfully!", Toast.LENGTH_SHORT).show(),
+                                badUpdateResponse -> Toast.makeText(History.this, "Bad response!", Toast.LENGTH_SHORT).show(),
+                                failureUpdateResponse -> Toast.makeText(History.this, "Bad request!", Toast.LENGTH_SHORT).show()
+                        );
+                    },
+                    // Bad response from server
+                    badResponse -> Toast.makeText(History.this, "Bad request!", Toast.LENGTH_SHORT).show(),
+
+                    // Bad response from application
+                    failureResponse -> {
+                        System.out.println(failureResponse.toString());
+                        Toast.makeText(History.this, "Bad request - try again!", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            });
+            );
         });
 
         closeView.setOnClickListener(l -> dialog.dismiss());
