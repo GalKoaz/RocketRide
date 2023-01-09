@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketride.MainActivity;
+import com.example.rocketride.MenuActivities.History;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
@@ -409,7 +410,13 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     if (type.equals("driver")){
                         // Add initial rate for the driver
-                        rateModelFirebaseHandler.updateRateModel(new RateModel(UID, 0.0, 0));
+                        // Update the RateModel object to the RateModelFirebaseHandler
+                        rateModelFirebaseHandler.addRateModel(
+                                new RateModel(UID, 0.0, 0),
+                                okResponse ->  Toast.makeText(ProfileActivity.this, "Rated successfully!", Toast.LENGTH_SHORT).show(),
+                                badResponse -> Toast.makeText(ProfileActivity.this, "Bad response!", Toast.LENGTH_SHORT).show(),
+                                failureResponse -> Toast.makeText(ProfileActivity.this, "Bad request!", Toast.LENGTH_SHORT).show()
+                        );
                     }
                     String userID = documentReference.getId();
                     Log.d(TAG, "DocumentSnapshot added with ID: " + userID);

@@ -1,6 +1,7 @@
 package com.example.rocketride.Models;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -12,8 +13,8 @@ public interface RateAPICall {
     Call<RateModel> getDriverRate(@Path("parameter") String driverID);
 
     @POST("api/v1/rate_driver")
-    Call<RateModel> addDriverRate();
+    Call<RateModel> addDriverRate(@Body RateModel rateModel);
 
     @PUT("api/v1/rate_driver")
-    Call<RateModel> updateDriverRate();
+    Call<RateModel> updateDriverRate(@Body RateModel rateModel);
 }

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.rocketride.Login.ProfileActivity;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
@@ -143,8 +144,12 @@ public class BecomeDriver extends AppCompatActivity {
                 if (task.isSuccessful()){
                     // Add initial rate for the driver
                     RateModelFirebaseHandler rateModelFirebaseHandler = new RateModelFirebaseHandler();
-                    rateModelFirebaseHandler.updateRateModel(new RateModel(currUID, 0.0, 0));
-
+                    rateModelFirebaseHandler.addRateModel(
+                            new RateModel(currUID, 0.0, 0),
+                            okResponse ->  Log.d(TAG, "Rate model added!"),
+                            badResponse -> Toast.makeText(BecomeDriver.this, "Bad response!", Toast.LENGTH_SHORT).show(),
+                            failureResponse -> Toast.makeText(BecomeDriver.this, "Bad request!", Toast.LENGTH_SHORT).show()
+                    );
 
                     QuerySnapshot queryDocumentSnapshot = task.getResult();
                     DocumentSnapshot documentSnapshot = queryDocumentSnapshot.getDocuments().get(0);
