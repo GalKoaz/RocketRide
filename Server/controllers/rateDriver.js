@@ -11,7 +11,7 @@ const getRate = async (req, res) => {
     rateJSON = await getRateModel(driverID);
     console.log(JSON.stringify(rateJSON))
 
-    res.status(200).json({response: rateJSON, req_id: driverID});
+    res.status(200).json(rateJSON);
 }
 
 const postRate = async (req, res) => {
@@ -20,7 +20,7 @@ const postRate = async (req, res) => {
 
     doc_ref = await addRateModel(rateJSON);
 
-    res.json({response: 'good!', result: rateJSON});
+    res.status(201).json({response: 'good!', result: rateJSON});
 }
 
 const updateRate = async (req, res) => {
@@ -28,7 +28,7 @@ const updateRate = async (req, res) => {
     console.log(`RATE MODEL\n${JSON.stringify(rateJSON)}`);
 
     doc_ref = await updateRateModel(rateJSON);
-    res.json({response: 'good!', result: rateJSON});
+    res.status(204).json({response: 'good!', result: rateJSON});
 }
 
 module.exports = {

@@ -15,7 +15,7 @@ start();
 const addRateModel = async (rateModel) => {
     try {
         // Add a new document with a generated ID
-        const docRef = await db.collection(collectionName).add(rateModel);
+        const docRef = await db.collection(collectionName).doc(rateModel['driver-id']).set(rateModel);
         console.log(`DocumentSnapshot added with ID: ${docRef.id}`);
     } catch (error) {
         console.error('Error adding document', error);
@@ -45,7 +45,7 @@ const getRateModel = async (driverID) => {
 const updateRateModel = async (rateModel) =>{
     try {
         // Update a new document with a generated ID
-        const docRef = await db.collection(collectionName).doc(rateModel['driver-id']).set(rateModel);
+        const docRef = await db.collection(collectionName).doc(rateModel['driver-id']).update(rateModel);
         console.log(`DocumentSnapshot added with ID: ${docRef.id}`);
     } catch (error) {
         console.error('Error updating document', error);
