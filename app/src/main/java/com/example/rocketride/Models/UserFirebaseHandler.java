@@ -56,8 +56,6 @@ public class UserFirebaseHandler {
 
     public void addUserModel(UserModel userModel, Consumer<Response<HashMap<String, Object>>> onGoodResponse,
                              Consumer<Response<HashMap<String, Object>>> onBadResponse, Consumer<Throwable> onFailure) {
-        System.out.println("inner addUSERFUN");
-
         // Add a new document with a generated ID
         Call<HashMap<String, Object>> call = myAPICall.addUser(userModel);
         call.enqueue(new Callback<HashMap<String, Object>>() {
@@ -67,16 +65,12 @@ public class UserFirebaseHandler {
                 if (response.code() != 201){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         onBadResponse.accept(response);
-                        System.out.println("bad addUSERFUN");
-
                     }
                     return;
                 }
                 // Good response
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     onGoodResponse.accept(response);
-                    System.out.println("good addUSERFUN");
-
                 }
             }
 
@@ -85,7 +79,6 @@ public class UserFirebaseHandler {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     onFailure.accept(t);
                     System.out.println(t);
-
                 }
             }
         });
@@ -159,7 +152,6 @@ public class UserFirebaseHandler {
             addDriverModel(driverModel, onGoodResponse, onBadResponse, onFailure);
             return;
         }
-        System.out.println("ssssssssss addUSERFUN");
         // User is a rider
         addUserModel(userModel, onGoodResponse, onBadResponse, onFailure);
     }
