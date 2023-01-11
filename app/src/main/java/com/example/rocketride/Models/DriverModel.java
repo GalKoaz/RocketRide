@@ -1,9 +1,18 @@
 package com.example.rocketride.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 public class DriverModel extends userModel{
-    private String ID, driverLicenseImageLink, plateNumber;
+    @SerializedName("ID")
+    private String ID;
+
+    @SerializedName("driver_license_link")
+    private String driverLicenseImageLink;
+
+    @SerializedName("plate_number")
+    private String plateNumber;
 
     public DriverModel(String UID, String firstName, String lastName, String phoneNumber, String profileImageLink, String email, String ID, String driverLicenseImageLink, String plateNumber) {
         super(UID, "driver", firstName, lastName, phoneNumber, profileImageLink, email);

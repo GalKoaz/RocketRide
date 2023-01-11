@@ -1,10 +1,30 @@
 package com.example.rocketride.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 public class userModel {
+    @SerializedName("UID")
+    protected String UID;
 
-    protected String UID, type, firstName, lastName, phoneNumber, profileImageLink, email;
+    @SerializedName("type")
+    protected String type;
+
+    @SerializedName("first_name")
+    protected String firstName;
+
+    @SerializedName("last_name")
+    protected String lastName;
+
+    @SerializedName("phone_number")
+    protected String phoneNumber;
+
+    @SerializedName("profile_image_link")
+    protected String profileImageLink;
+
+    @SerializedName("email")
+    protected String email;
 
     public userModel(String UID, String type, String firstName, String lastName, String phoneNumber, String profileImageLink, String email) {
         this.UID = UID;
