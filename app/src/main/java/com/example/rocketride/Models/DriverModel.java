@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 
-public class DriverModel extends userModel{
+public class DriverModel extends UserModel {
     @SerializedName("ID")
     private String ID;
 

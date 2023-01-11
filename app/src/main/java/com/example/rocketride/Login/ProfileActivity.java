@@ -22,11 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocketride.MainActivity;
-import com.example.rocketride.MenuActivities.History;
 import com.example.rocketride.Models.DriverModel;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
-import com.example.rocketride.Models.userModel;
+import com.example.rocketride.Models.UserFirebaseHandler;
+import com.example.rocketride.Models.UserModel;
 import com.example.rocketride.R;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
@@ -49,10 +49,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
+import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -65,7 +67,10 @@ public class ProfileActivity extends AppCompatActivity {
     private String userIdToken, userEmailExtras, userPasswordExtras, userPhoneNumberExtras;
     private String firstNameDriver, lastNameDriver, idNumber, plateNumber;
     private String firstNameRider, lastNameRider;
+
+    // Database handlers
     private RateModelFirebaseHandler rateModelFirebaseHandler = new RateModelFirebaseHandler();
+    private UserFirebaseHandler userFirebaseHandler = new UserFirebaseHandler();
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -380,47 +385,59 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     protected void storeRiderDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName){
-        userModel user = new userModel(UID, "rider", firstName, lastName,userPhone, "", userEmail);
-        addUser(user.getUserHashMap(), "rider");
+        UserModel user = new UserModel(UID, "rider", firstName, lastName,userPhone, "", userEmail);
+        addUser(user, "rider");
     }
 
     protected void storeDriverDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName, String idNumber, String plateNumber){
         DriverModel driver = new DriverModel(UID, firstName, lastName, userPhone, "", userEmail, idNumber, "", plateNumber);
-        addUser(driver.getDriverHashMap(), "driver");
+        addUser(driver, "driver");
     }
 
-    protected void addUser(Map<String, Object> userMap, String type){
-        // Add a new document with a generated ID
-        db.collection("users")
-                .add(userMap)
-                .addOnSuccessListener(documentReference -> {
+    protected void addUser(UserModel userModel, String type){
+        userFirebaseHandler.addUserByType(
+                userModel,
+                type,
+                addUserOkResponse -> {
+                    Log.d(TAG, "Succeeded adding " + type + "!" + "\nGot from server response: " + addUserOkResponse.body().get("response"));
                     if (type.equals("driver")){
                         // Add initial rate for the driver
                         // Update the RateModel object to the RateModelFirebaseHandler
                         rateModelFirebaseHandler.addRateModel(
                                 new RateModel(UID, 0.0, 0),
-                                okResponse ->  Toast.makeText(ProfileActivity.this, "Rated successfully!", Toast.LENGTH_SHORT).show(),
-                                badResponse -> Toast.makeText(ProfileActivity.this, "Bad response!", Toast.LENGTH_SHORT).show(),
-                                failureResponse -> Toast.makeText(ProfileActivity.this, "Bad request!", Toast.LENGTH_SHORT).show()
+                                rateOkResponse ->  Toast.makeText(ProfileActivity.this, "Rated successfully!", Toast.LENGTH_SHORT).show(),
+                                rateBadResponse -> Toast.makeText(ProfileActivity.this, "Bad response!", Toast.LENGTH_SHORT).show(),
+                                rateFailureResponse -> Toast.makeText(ProfileActivity.this, "Bad request!", Toast.LENGTH_SHORT).show()
                         );
                     }
-                    String userID = documentReference.getId();
-                    Log.d(TAG, "DocumentSnapshot added with ID: " + userID);
-                    uploadProfileImageByType(type, userID, documentReference);
-        });
+                    uploadProfileImageByType(type);
+                },
+                addUserBadResponse -> Log.e(TAG, "Bad response from server adding user!"),
+                addUserFailureResponse -> Log.e(TAG, "Failure sending server request adding user!")
+        );
     }
 
-    protected void uploadProfileImageByType(String type, String userID, DocumentReference documentReference){
+    protected void uploadProfileImageByType(String type){
         StorageReference childRef;
         UploadTask uploadTask;
         String profileImageDirLink = "/Images/Profiles/" + UID + "/";
         String driverLicenseDirLink = "/Images/DriverLicenses/" + UID + "/";
+        HashMap<String, Object> fieldsToUpdate = new HashMap<>();
 
         // If the current user is a rider then upload his image
         if (type.equals("rider")) {
             childRef = storageRef.child(profileImageDirLink + RiderImageUri.getLastPathSegment());
             uploadTask = childRef.putFile(RiderImageUri);
-            documentReference.update("profile_image_link", profileImageDirLink + RiderImageUri.getLastPathSegment());
+            fieldsToUpdate.put("profile_image_link", profileImageDirLink + RiderImageUri.getLastPathSegment());
+
+            // Upload profile link to user document
+            userFirebaseHandler.updateUserModelFields(
+                    UID,
+                    fieldsToUpdate,
+                    okResponse -> Log.d(TAG, "Update succeeded: " + okResponse.body().get("response") + "!"),
+                    badResponse -> Log.e(TAG, "Bad response for update from server: " + badResponse.body().get("response") + "!"),
+                    failureResponse -> Log.e(TAG, "Fail to send request to server!")
+            );
             listenUploadProgress(uploadTask);
             return;
         }
@@ -429,15 +446,23 @@ public class ProfileActivity extends AppCompatActivity {
         // Upload driver profile image.
         childRef = storageRef.child(profileImageDirLink + DriverProfileImageUri.getLastPathSegment());
         uploadTask = childRef.putFile(DriverProfileImageUri);
-        documentReference.update("profile_image_link",  profileImageDirLink + DriverProfileImageUri.getLastPathSegment());
+        fieldsToUpdate.put("profile_image_link", profileImageDirLink + DriverProfileImageUri.getLastPathSegment());
         listenUploadProgress(uploadTask);
 
         // Upload the driver license to the corresponded directory
         childRef = storageRef.child(driverLicenseDirLink + DriverLicenseImageUri.getLastPathSegment());
         uploadTask = childRef.putFile(DriverLicenseImageUri);
-        documentReference.update("driver_license_link",  driverLicenseDirLink + DriverLicenseImageUri.getLastPathSegment());
+        fieldsToUpdate.put("driver_license_link", driverLicenseDirLink + DriverLicenseImageUri.getLastPathSegment());
         listenUploadProgress(uploadTask);
 
+        // Upload links to user document
+        userFirebaseHandler.updateUserModelFields(
+                UID,
+                fieldsToUpdate,
+                okResponse -> Log.d(TAG, "Update succeeded: " + okResponse.body().get("response") + "!"),
+                badResponse -> Log.e(TAG, "Bad response for update from server: " + badResponse.body().get("response") + "!"),
+                failureResponse -> Log.e(TAG, "Fail to send request to server!")
+        );
     }
 
     protected void listenUploadProgress(UploadTask uploadTask){

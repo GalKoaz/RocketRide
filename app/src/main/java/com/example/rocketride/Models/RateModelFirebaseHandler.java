@@ -76,7 +76,7 @@ public class RateModelFirebaseHandler {
             @Override
             public void onResponse(Call<RateModel> call, Response<RateModel> response) {
                 Log.d(TAG, "response code " + response.code());
-                if (response.code() != 204){
+                if (response.code() != 200){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         onBadResponse.accept(response);
                     }
