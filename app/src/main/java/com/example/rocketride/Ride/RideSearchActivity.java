@@ -357,20 +357,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                                     System.out.println("result size: " + result.size());
                                                     Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                                        if (sort_alg == 0){
-                                                            result.sort(new sort_by_best_fit());
-                                                        }
-                                                        else if (sort_alg == 1){
-                                                            result.sort(new sort_by_best_rating());
-                                                        }
-                                                        else if (sort_alg == 2){
-                                                            result.sort(new sort_by_best_time());
-                                                        }
-                                                        else{
-                                                            result.sort(new sort_by_best_price());
-                                                        }
-                                                    }
+                                                    sort_the_results();
                                                     adapter = new DriverRideRecyclerViewAdapter(this, result, this);
                                                     recyclerView.setAdapter(adapter);
                                                     recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -422,7 +409,22 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
             }
         });
     }
-
+    public void sort_the_results(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (sort_alg == 0){
+                result.sort(new sort_by_best_fit());
+            }
+            else if (sort_alg == 1){
+                result.sort(new sort_by_best_rating());
+            }
+            else if (sort_alg == 2){
+                result.sort(new sort_by_best_time());
+            }
+            else{
+                result.sort(new sort_by_best_price());
+            }
+        }
+    }
 
     // function calculate the distance from one point to other in map.
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
