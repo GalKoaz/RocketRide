@@ -38,7 +38,7 @@ const addRide = async (req, res) => {
 
     doc_ref = await addRideModel(rideJSON);
 
-    res.json({response: 'good!', result: rideJSON});
+    res.status(201).json({response: 'good!', result: rideJSON});
 }
 
 const updateRide = async (req, res) => {
@@ -47,7 +47,7 @@ const updateRide = async (req, res) => {
     console.log(`RIDE MODEL\n${JSON.stringify(attrJSON)}`);
 
     doc_ref = await updateRideAttr(ride_id, attrJSON);
-    res.json({response: 'good!', result: attrJSON});
+    res.status(200).json({response: 'good!', result: attrJSON});
 }
 
 const getRideRiderDetails = async (req, res) => {
@@ -58,7 +58,7 @@ const getRideRiderDetails = async (req, res) => {
     let [userDetailsJSON, driverRateJSON] = await Promise.all([getUserDetails(driverID), getRateModel(driverID)]);
 
     const responseJSON = Object.assign(rideJSON, userDetailsJSON, driverRateJSON);
-    res.json({response: responseJSON});
+    res.status(200).json({response: responseJSON});
 }
 
 module.exports = {
