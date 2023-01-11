@@ -293,10 +293,10 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                 Task<Map<String, Object>> driverDetailsTask = getDriverDetails((String) document.get("driver-id"));
                                 driverDetailsTask.addOnCompleteListener(taskDriverDetails -> {
                                     if (taskDriverDetails.isSuccessful()) {
-                                        rateModelFirebaseHandler.getRateModelTask(document.getString("driver-id")).addOnCompleteListener(getRateTask -> {
-                                            if (getRateTask.isSuccessful()){
-                                                if (getRateTask.getResult().isPresent()){
-                                                    RateModel rateModel = getRateTask.getResult().get();
+                                        rateModelFirebaseHandler.getRateModel(
+                                                document.getString("driver-id"),
+                                                okResponse -> {
+                                                    RateModel rateModel = okResponse.body();
                                                     HashMap<String, Object> driverDetails = (HashMap<String, Object>) taskDriverDetails.getResult();
                                                     System.out.println("before driver-id");
                                                     String pickupName = (String) document.get("pickup_name");
@@ -374,15 +374,11 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                                     adapter = new DriverRideRecyclerViewAdapter(this, result, this);
                                                     recyclerView.setAdapter(adapter);
                                                     recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                                                },
+                                                badResponse -> Log.e(TAG, "Error getting driver's rating!"),
+                                                failureResponse -> Log.e(TAG, "Error sending a request to server for rating!")
+                                        );
 
-                                                }
-                                            }
-                                            else{
-                                                Log.e(TAG, "Error getting driver's rating: ", task.getException());
-
-                                            }
-
-                                        });
                                     } else {
                                         Log.e(TAG, "Error getting driver details: ", task.getException());
                                     }
