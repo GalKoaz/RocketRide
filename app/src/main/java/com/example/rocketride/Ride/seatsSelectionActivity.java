@@ -5,8 +5,6 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -17,7 +15,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -28,7 +25,6 @@ import android.widget.Toast;
 
 import com.example.rocketride.MenuActivities.HomeActivity;
 import com.example.rocketride.Models.RemindBroadcast;
-import com.example.rocketride.Models.RideSearchActivity;
 import com.example.rocketride.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;

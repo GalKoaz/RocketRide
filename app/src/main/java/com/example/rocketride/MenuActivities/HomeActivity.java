@@ -34,7 +34,7 @@ import android.widget.Toast;
 import com.example.rocketride.Ride.CreateDriveActivity;
 import com.example.rocketride.MainActivity;
 import com.example.rocketride.R;
-import com.example.rocketride.Models.RideSearchActivity;
+import com.example.rocketride.Ride.RideSearchActivity;
 import com.firebase.geofire.GeoFire;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
