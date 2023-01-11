@@ -351,9 +351,7 @@ public class RideSearchActivity extends AppCompatActivity implements SelectDrive
                                                     double w = (CalculationByDistance(src_p, selectedSourcePlacePoint) + CalculationByDistance(pickup_p, selectedSourcePlacePoint)
                                                             + CalculationByDistance(dst_p, selectedDestPlacePoint)) * (1 / (h * 60 + min + 1) - DRM.price);
                                                     DRM.setLocationPoints(src_p, dst_p, pickup_p, w);
-                                                    result.add(
-                                                            DRM
-                                                    );
+                                                    result.add(DRM);
                                                     System.out.println("result size: " + result.size());
                                                     Log.d(TAG, document.getId() + " => " + document.getData());
 

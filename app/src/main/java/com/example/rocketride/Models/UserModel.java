@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 
-public class userModel {
+public class UserModel {
     @SerializedName("UID")
     protected String UID;
 
@@ -26,7 +26,7 @@ public class userModel {
     @SerializedName("email")
     protected String email;
 
-    public userModel(String UID, String type, String firstName, String lastName, String phoneNumber, String profileImageLink, String email) {
+    public UserModel(String UID, String type, String firstName, String lastName, String phoneNumber, String profileImageLink, String email) {
         this.UID = UID;
         this.type = type;
         this.firstName = firstName;
@@ -116,7 +116,7 @@ public class userModel {
 
     @Override
     public String toString() {
-        return "userModel{" +
+        return "UserModel{" +
                 "UID='" + UID + '\'' +
                 ", type='" + type + '\'' +
                 ", firstName='" + firstName + '\'' +
