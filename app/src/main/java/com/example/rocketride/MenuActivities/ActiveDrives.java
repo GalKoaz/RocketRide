@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.rocketride.MenuActivities.Adapters.ActiveDriveListener;
-import com.example.rocketride.MenuActivities.Adapters.ActiveDrivesActivityViewAdapter;
+import com.example.rocketride.Adapters.ActiveDriveListener;
+import com.example.rocketride.Adapters.ActiveDrivesActivityViewAdapter;
 import com.example.rocketride.R;
 import com.example.rocketride.Models.RideModel;
 import com.example.rocketride.Ride.ActiveDriveActivity;

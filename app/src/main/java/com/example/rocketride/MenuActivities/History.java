@@ -20,8 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.rocketride.MenuActivities.Adapters.HistoryRideListener;
-import com.example.rocketride.MenuActivities.Adapters.HistoryRecyclerViewAdapter;
+import com.example.rocketride.Adapters.HistoryRideListener;
+import com.example.rocketride.Adapters.HistoryRecyclerViewAdapter;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
 import com.example.rocketride.R;
@@ -34,10 +34,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class History extends AppCompatActivity implements HistoryRideListener {
     private ArrayList<RideModel> expiredRides = new ArrayList<>();

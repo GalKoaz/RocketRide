@@ -1,4 +1,4 @@
-package com.example.rocketride.MenuActivities.Adapters;
+package com.example.rocketride.Adapters;
 
 import static android.content.ContentValues.TAG;
 
