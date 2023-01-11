@@ -1,7 +1,7 @@
-package com.example.rocketride.Adapters;
+package com.example.rocketride.MenuActivities.Adapters;
 
 import com.example.rocketride.Models.RideModel;
 
-public interface HistoryRideListener {
+public interface ActiveDriveListener {
     void onItemClicked(RideModel rideModel);
 }

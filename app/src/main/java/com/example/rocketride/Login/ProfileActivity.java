@@ -23,8 +23,10 @@ import android.widget.Toast;
 
 import com.example.rocketride.MainActivity;
 import com.example.rocketride.MenuActivities.History;
+import com.example.rocketride.Models.DriverModel;
 import com.example.rocketride.Models.RateModel;
 import com.example.rocketride.Models.RateModelFirebaseHandler;
+import com.example.rocketride.Models.userModel;
 import com.example.rocketride.R;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
@@ -378,29 +380,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     protected void storeRiderDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName){
-        Map<String, Object> riderUserMap = new HashMap<>();
-        riderUserMap.put("UID", UID);
-        riderUserMap.put("email", userEmail);
-        riderUserMap.put("phone_number", userPhone);
-        riderUserMap.put("first_name", firstName);
-        riderUserMap.put("last_name", lastName);
-        riderUserMap.put("type", "rider");
-
-        addUser(riderUserMap, "rider");
+        userModel user = new userModel(UID, "rider", firstName, lastName,userPhone, "", userEmail);
+        addUser(user.getUserHashMap(), "rider");
     }
 
     protected void storeDriverDetailsInFirestore(String userEmail, String userPhone, String firstName, String lastName, String idNumber, String plateNumber){
-        Map<String, Object> driverUserMap = new HashMap<>();
-        driverUserMap.put("UID", UID);
-        driverUserMap.put("email", userEmail);
-        driverUserMap.put("phone_number", userPhone);
-        driverUserMap.put("first_name", firstName);
-        driverUserMap.put("last_name", lastName);
-        driverUserMap.put("ID", idNumber);
-        driverUserMap.put("plate_number", plateNumber);
-        driverUserMap.put("type", "driver");
-
-        addUser(driverUserMap, "driver");
+        DriverModel driver = new DriverModel(UID, firstName, lastName, userPhone, "", userEmail, idNumber, "", plateNumber);
+        addUser(driver.getDriverHashMap(), "driver");
     }
 
     protected void addUser(Map<String, Object> userMap, String type){

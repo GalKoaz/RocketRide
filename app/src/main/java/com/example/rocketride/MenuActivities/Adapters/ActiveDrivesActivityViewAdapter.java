@@ -1,4 +1,4 @@
-package com.example.rocketride.Adapters;
+package com.example.rocketride.MenuActivities.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
