@@ -30,6 +30,16 @@ const getUserDetails = async (userID) => {
     }
 }
 
+const addUserModel = async (userModel) => {
+    try{
+        const ratesRef = db.collection(collectionName);
+        await ratesRef.add(userModel);
+    } catch (error) {
+        console.error('Error getting document', error);
+    }
+}
+
 module.exports = {
-    getUserDetails
+    getUserDetails,
+    addUserModel
 };

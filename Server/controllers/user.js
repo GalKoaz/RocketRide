@@ -1,6 +1,7 @@
 // Model functions
 const {
-    getUserDetails
+    getUserDetails,
+    addUserModel
 } = require('../model/Firestore/userModel');
 
 const getUser = async (req, res) => {
@@ -9,6 +10,13 @@ const getUser = async (req, res) => {
     res.status(200).json({response: userJSON});
 }
 
+const addUser = async (req, res) => {
+    const userJSON = req.body;
+    await addUserModel(userJSON);
+    res.status(201).json(userJSON);
+}
+
 module.exports = {
-    getUser
+    getUser,
+    addUser
 };
