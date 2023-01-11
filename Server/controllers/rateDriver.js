@@ -28,7 +28,7 @@ const updateRate = async (req, res) => {
     console.log(`RATE MODEL\n${JSON.stringify(rateJSON)}`);
 
     doc_ref = await updateRateModel(rateJSON);
-    res.status(204).json({response: 'good!', result: rateJSON});
+    res.status(200).json({response: 'good!', result: rateJSON});
 }
 
 module.exports = {
