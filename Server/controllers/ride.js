@@ -15,13 +15,13 @@ const getRide = async (req, res) => {
 
     const rideJSON = await getRideByRideID(rideID);
 
-    res.status(200).json({response: rideJSON});
+    res.status(200).json(rideJSON);
 }
 
 const getAliveRides = async (req, res) => {
     const ridesJsonArray = await getAliveRidesModel();
     console.log(JSON.stringify(ridesJsonArray));
-    res.status(200).json({response: ridesJsonArray});
+    res.status(200).json(ridesJsonArray);
 }
 
 const getAliveRidesInDate = async (req, res) => {
@@ -29,7 +29,7 @@ const getAliveRidesInDate = async (req, res) => {
     console.log(JSON.stringify(queryDateJSON));
     const ridesJsonArray = await getAliveRidesInDateModel(queryDateJSON);
 
-    res.status(200).json({response: ridesJsonArray});
+    res.status(200).json(ridesJsonArray);
 }
 
 const addRide = async (req, res) => {
@@ -38,7 +38,7 @@ const addRide = async (req, res) => {
 
     doc_ref = await addRideModel(rideJSON);
 
-    res.status(201).json({response: 'good!', result: rideJSON});
+    res.status(201).json({response: 'good!'});
 }
 
 const updateRide = async (req, res) => {
@@ -47,7 +47,7 @@ const updateRide = async (req, res) => {
     console.log(`RIDE MODEL\n${JSON.stringify(attrJSON)}`);
 
     doc_ref = await updateRideAttr(ride_id, attrJSON);
-    res.status(200).json({response: 'good!', result: attrJSON});
+    res.status(200).json({response: 'good!'});
 }
 
 const getRideRiderDetails = async (req, res) => {
@@ -58,7 +58,7 @@ const getRideRiderDetails = async (req, res) => {
     let [userDetailsJSON, driverRateJSON] = await Promise.all([getUserDetails(driverID), getRateModel(driverID)]);
 
     const responseJSON = Object.assign(rideJSON, userDetailsJSON, driverRateJSON);
-    res.status(200).json({response: responseJSON});
+    res.status(200).json(responseJSON);
 }
 
 module.exports = {
