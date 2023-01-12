@@ -5,18 +5,6 @@ import static android.content.ContentValues.TAG;
 import android.os.Build;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import retrofit2.Call;
@@ -26,8 +14,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RateModelFirebaseHandler {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String COLLECTION_NAME = "rates";
     private String BASE_URL = "http://10.0.2.2:5000/";
 
     // Retrofit builder
