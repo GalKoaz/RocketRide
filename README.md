@@ -7,8 +7,8 @@
   <summary>Content</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#App Demonstration">Languages and Tools</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#app-demonstration">App Demonstration</a></li>
+    <li><a href="#unified-modeling-language">Unified Modeling Language</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
   </ol>
 </details>
@@ -27,16 +27,41 @@ The participants in the system are called drivers and riders. Drivers have a car
 
 ## App Demonstration
 
-#####     &emsp;&emsp;&emsp;&emsp; Intro	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Login &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;		Signup	&emsp;&emsp;&emsp;&emsp;		Verification Phone		&emsp;	 Verification Code
+#####     &emsp;&emsp;&emsp;&emsp; Intro	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Login &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;		Signup	&emsp;&emsp;&emsp;&emsp;		Verification Phone		&emsp;	 Verification Code
 
-<img src="https://i.ibb.co/KLxgfxZ/welcome.png" alt="welcome" width=145 border="0" style="border:1px solid #000000; margin:1px"/><img src="https://i.ibb.co/5MyxFjs/login.png" alt="login" width=145 border="0"/><img src="https://i.ibb.co/hLVy1S2/signup.png" alt="signup" width=145 border="0"/><img src="https://i.ibb.co/zZYq8NH/verfication1.png" alt="verfication1" width=145 border="0"/><img src="https://i.ibb.co/cyz8xn9/verfication2.png" alt="verfication2" width=145 border="0"/>
+<img src="https://i.ibb.co/KLxgfxZ/welcome.png" alt="welcome" width=145 border="0" /><img src="https://i.ibb.co/5MyxFjs/login.png" alt="login" width=145 border="0"/><img src="https://i.ibb.co/hLVy1S2/signup.png" alt="signup" width=145 border="0"/><img src="https://i.ibb.co/zZYq8NH/verfication1.png" alt="verfication1" width=145 border="0"/><img src="https://i.ibb.co/cyz8xn9/verfication2.png" alt="verfication2" width=145 border="0"/>
 
-#####     &emsp; Rider Or Driver		&emsp;&emsp;&emsp;&emsp;  Select Image 	&emsp;&emsp;&emsp;	  Ride - Complete&emsp;&emsp;&emsp;&emsp;&emsp;	Home&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  Menu
-
-
-<img src="https://i.ibb.co/q0qGnzR/ridedrive.png" alt="ridedrive"  width=145 border="0"/><img src="https://i.ibb.co/x1wDcwN/chooseimage.png" alt="chooseimage" width=145 border="0"/><img src="https://i.ibb.co/mqHBTDG/riderdone.png" alt="riderdone" width=145 border="0"/><img src="https://i.ibb.co/CP8tJ40/home.png" alt="home" width=145 border="0"/><img src="https://i.ibb.co/XWYc0f3/menu.png" alt="menu" width=145 border="0"/>
+#####     &emsp; Rider Or Driver		&emsp;&emsp;&emsp;&emsp;  Select Image 	&emsp;&emsp;&emsp;	  Ride - Complete&emsp;&emsp;&emsp;&emsp;&emsp;	Home&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  Menu
 
 
+<img src="https://i.ibb.co/q0qGnzR/ridedrive.png" alt="ridedrive"  width=145 border="0"/><img src="https://i.ibb.co/x1wDcwN/chooseimage.png" alt="chooseimage" width=145 border="0"/><img src="https://i.ibb.co/mqHBTDG/riderdone.png" alt="riderdone" width=145 border="0"/><img src="https://i.ibb.co/dfQVx79/Home.png" alt="Home" width=145 border="0"/><img src="https://i.ibb.co/XWYc0f3/menu.png" alt="menu" width=145 border="0"/>
+
+#####     &emsp; Become A Driver		&emsp;&emsp;&emsp;  Create Ride 	&emsp;&emsp;&emsp;&emsp;	  Search Ride &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sort &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Select Seat
+
+
+<img src="https://i.ibb.co/GQGcv4p/become-ADriver.png" alt="become-ADriver" width=145 border="0"/><img src="https://i.ibb.co/HFCKNNq/Create-Drive.png" alt="Create-Drive" width=145 border="0"/><img src="https://i.ibb.co/3YcjKgr/SEARCH.png" alt="SEARCH" width=145 border="0"/><img src="https://i.ibb.co/gz5q1pb/Sort.png" alt="Sort" width=145 border="0"/><img src="https://i.ibb.co/FbNmjc5/SEAT.png" alt="SEAT" width=145 border="0"/>
+
+#####     &emsp; History		&emsp;&emsp;&emsp;  Create Ride 	&emsp;&emsp;&emsp;&emsp;	  Search Ride &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sort &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Select Seat
+
+
+<img src="https://i.ibb.co/Gv8X3hK/history.png" alt="history" width=145 border="0"/><img src="https://i.ibb.co/X2Yxv2S/activedr.png" alt="activedr" width=145 border="0"/><img src="https://i.ibb.co/3YcjKgr/SEARCH.png" alt="SEARCH" width=145 border="0"/><img src="https://i.ibb.co/gz5q1pb/Sort.png" alt="Sort" width=145 border="0"/><img src="https://i.ibb.co/XZ2t4dm/logout.png" alt="logout" width=145 border="0"/>
+
+
+## Unified Modeling Language
+
+<img src="https://i.ibb.co/8XhwTPj/Whats-App-Image-2022-12-29-at-19-59-41.jpg" alt="Whats-App-Image-2022-12-29-at-19-59-41"  width=600 border="0"/>
+<br>
+<img src="https://i.ibb.co/Qb1F5bm/Whats-App-Image-2022-12-29-at-20-00-57.jpg" alt="Whats-App-Image-2022-12-29-at-20-00-57" width=600 border="0"/>
+<br>
+<img src="https://i.ibb.co/DCcB0zR/Whats-App-Image-2022-12-29-at-20-02-19.jpg" alt="Whats-App-Image-2022-12-29-at-20-02-19" width=600 border="0"/>
+<br>
+<img src="https://i.ibb.co/jzLW5T3/Whats-App-Image-2022-12-29-at-20-19-56.jpg" alt="Whats-App-Image-2022-12-29-at-20-19-56" width=600 border="0"/>
+<br>
+<img src="https://i.ibb.co/swcsHMY/model.png" alt="model" width=600 border="0"/>
+<br>
+<img src="https://i.ibb.co/ngBWfWF/Whats-App-Image-2022-12-29-at-19-59-40.jpg" alt="Whats-App-Image-2022-12-29-at-19-59-40" width=600 border="0"/>
+<br>
+<img src="https://i.ibb.co/ZJZdPxQ/Whats-App-Image-2022-12-29-at-19-59-41-1.jpg" alt="Whats-App-Image-2022-12-29-at-19-59-41-1" width=600 border="0"/>
 
 
 ## Design Pages Beta Version
