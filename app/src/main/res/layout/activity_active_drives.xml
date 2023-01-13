@@ -79,14 +79,6 @@
             app:tabRippleColor="#74D2FD">
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/myCreatedDrivesTabItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Created Rides"
-                tools:layout_editor_absoluteX="200dp"
-                tools:layout_editor_absoluteY="36dp" />
-
-            <com.google.android.material.tabs.TabItem
                 android:id="@+id/myDrivesTabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,6 +86,14 @@
 
                 tools:layout_editor_absoluteX="2dp"
                 tools:layout_editor_absoluteY="45dp" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/myCreatedDrivesTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Created Rides"
+                tools:layout_editor_absoluteX="200dp"
+                tools:layout_editor_absoluteY="36dp" />
 
         </com.google.android.material.tabs.TabLayout>
     </carbon.widget.ConstraintLayout>
