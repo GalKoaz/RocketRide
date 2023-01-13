@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,7 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +39,7 @@ import com.google.firebase.firestore.Source;
 import java.net.URI;
 import java.util.HashMap;
 
-import carbon.widget.Button;
+
 
 public class ActiveDriveActivity extends AppCompatActivity {
     final int Duration_time = 2500;
@@ -68,7 +71,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
             rightBottomUnavailableSeatView;
 
     // Management buttons
-    Button cancelRideButton, kickButton, startButton;
+    Button cancelRideButton, kickButton, startButton, navigationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +117,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
         leftBottomAvailableSeatView = findViewById(R.id.leftBottomAvailableImageView);
         centerBottomAvailableSeatView = findViewById(R.id.centerBottomAvailableImageView);
         rightBottomAvailableSeatView = findViewById(R.id.rightBottomAvailableImageView);
-        android.widget.Button go_to_nev =  findViewById(R.id.nev_b);
+
         // View images of the unavailable seats
         nearDriverUnavailableSeatView = findViewById(R.id.nearDriverUnavailableImageView);
         leftBottomUnavailableSeatView = findViewById(R.id.leftBottomUnavailableImageView);
@@ -155,35 +158,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
         driverSeat.setOnClickListener(l -> {
             Toast.makeText(ActiveDriveActivity.this, "can't be selected!", Toast.LENGTH_LONG).show();
         });
-        go_to_nev.setOnClickListener(l -> {
-            DocumentReference docRef = db.collection("drives").document(rideID);
-            // Source can be CACHE, SERVER, or DEFAULT.
-            Source source = Source.CACHE;
 
-// Get the document, forcing the SDK to use the offline cache
-            docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        // Document found in the offline cache
-                        DocumentSnapshot document = task.getResult();
-                        Double lat = (Double) document.get("pickup_lat");
-                        Double lon = (Double) document.get("pickup_lon");
-                        System.out.println(lat + " " + lon);
-                        Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("google.navigation:q="+ lat +","+lon+"&mode=d"));
-                        intent.setPackage("com.google.android.apps.maps");
-                        if(intent.resolveActivity(getPackageManager()) != null){
-                            startActivity(intent);
-                        }
-                    } else {
-                        Log.d(TAG, "Cached get failed: ", task.getException());
-                    }
-                }
-            });
-
-
-        });
         nearDriverSeat.setOnClickListener(l -> {
             availableChecks(nearDriverAvailableSeatView, nearDriverUnavailableSeatView, "near_driver_seat");
         });
@@ -209,15 +184,24 @@ public class ActiveDriveActivity extends AppCompatActivity {
 
 
         // Management buttons init
-        startButton = findViewById(R.id.startRideButton);
-        kickButton = findViewById(R.id.kickButton);
-        cancelRideButton = findViewById(R.id.cancelRideButton2);
+        LinearLayout rootView = (LinearLayout)findViewById(R.id.buttonsBarConstraint);
+        LinearLayout buttonsBarLayout = rootView.findViewById(R.id.buttonsBarLinear);
+        startButton = buttonsBarLayout.findViewById(R.id.startRideButton);
+        kickButton = buttonsBarLayout.findViewById(R.id.kickButton);
+        cancelRideButton = buttonsBarLayout.findViewById(R.id.cancelRideButton);
+        navigationButton =  buttonsBarLayout.findViewById(R.id.navigationButton);
+
+        // Listeners for buttons
         startButton.setOnClickListener(l -> {
             StartRide();
         });
+
+        // Kick user button listener
         kickButton.setOnClickListener(l -> {
             kickUserFromRide(rideID, currUnavailableSeatSelectedName);
         });
+
+        // Cancel ride button listener
         cancelRideButton.setOnClickListener(l -> {
             if (userType.equals("driver")) {
                 cancelRide(rideID);
@@ -226,8 +210,37 @@ public class ActiveDriveActivity extends AppCompatActivity {
                 cancelRiderRide(rideID);
             }
         });
+
+        // Navigation listener
+        navigationButton.setOnClickListener(l -> {
+            DocumentReference docRef = db.collection("drives").document(rideID);
+            // Source can be CACHE, SERVER, or DEFAULT.
+            Source source = Source.CACHE;
+
+            // Get the document, forcing the SDK to use the offline cache
+            docRef.get(source).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Document found in the offline cache
+                    DocumentSnapshot document = task.getResult();
+                    Double lat = (Double) document.get("pickup_lat");
+                    Double lon = (Double) document.get("pickup_lon");
+                    System.out.println(lat + " " + lon);
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("google.navigation:q="+ lat +","+lon+"&mode=d"));
+                    intent.setPackage("com.google.android.apps.maps");
+                    if(intent.resolveActivity(getPackageManager()) != null){
+                        startActivity(intent);
+                    }
+                } else {
+                    Log.d(TAG, "Cached get failed: ", task.getException());
+                }
+            });
+
+
+        });
     }
 
+    // Method that starts the ride
     protected void StartRide(){
         System.out.println(rideID);
         db.collection("drives").document(rideID)
@@ -389,6 +402,7 @@ public class ActiveDriveActivity extends AppCompatActivity {
         });
     }
 
+    // Method clears a given seat in the ride that has the given rideID
     public void clearSeat(String userSeatName, String rideID){
         db.collection("drives").document(rideID)
                 .update(userSeatName, "").addOnCompleteListener(task -> {
@@ -399,10 +413,9 @@ public class ActiveDriveActivity extends AppCompatActivity {
                         Log.d(TAG, "Error getting or setting documents: ", task.getException());
                     }
                 });
-
     }
 
-
+    // Method kicks a user from the ride
     public void kickUserFromRide(String rideID, String userSeat){
         db.collection("drives").document(rideID)
                 .update(userSeat, "").addOnCompleteListener(task -> {
