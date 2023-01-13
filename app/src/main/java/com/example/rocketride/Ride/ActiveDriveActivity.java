@@ -191,6 +191,11 @@ public class ActiveDriveActivity extends AppCompatActivity {
         cancelRideButton = buttonsBarLayout.findViewById(R.id.cancelRideButton);
         navigationButton =  buttonsBarLayout.findViewById(R.id.navigationButton);
 
+        // If the user is a rider than start ride button isn't presented
+        if (userType.equals("rider")) {
+            startButton.setVisibility(View.GONE);
+        }
+
         // Listeners for buttons
         startButton.setOnClickListener(l -> {
             StartRide();
