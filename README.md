@@ -29,20 +29,12 @@ The participants in the system are called drivers and riders. Drivers have a car
 
 #####     &emsp;&emsp;&emsp;&emsp; Intro	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Login &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;		Signup	&emsp;&emsp;&emsp;&emsp;		Verification Phone		&emsp;	 Verification Code
 
-<img src="https://i.ibb.co/KLxgfxZ/welcome.png" alt="welcome" width=145 border="0"/>
-<img src="https://i.ibb.co/5MyxFjs/login.png" alt="login" width=145 border="0"/>
-<img src="https://i.ibb.co/hLVy1S2/signup.png" alt="signup" width=145 border="0"/>
-<img src="https://i.ibb.co/zZYq8NH/verfication1.png" alt="verfication1" width=145 border="0"/>
-<img src="https://i.ibb.co/cyz8xn9/verfication2.png" alt="verfication2" width=145 border="0"/>
+<img src="https://i.ibb.co/KLxgfxZ/welcome.png" alt="welcome" width=145 border="0"/><img src="https://i.ibb.co/5MyxFjs/login.png" alt="login" width=145 border="0"/><img src="https://i.ibb.co/hLVy1S2/signup.png" alt="signup" width=145 border="0"/><img src="https://i.ibb.co/zZYq8NH/verfication1.png" alt="verfication1" width=145 border="0"/><img src="https://i.ibb.co/cyz8xn9/verfication2.png" alt="verfication2" width=145 border="0"/>
 
 #####     &emsp; Rider Or Driver		&emsp;&emsp;&emsp;&emsp;  Select Image 	&emsp;&emsp;&emsp;	  Ride - Complete&emsp;&emsp;&emsp;&emsp;&emsp;	Home&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  Menu
 
 
-<img src="https://i.ibb.co/q0qGnzR/ridedrive.png" alt="ridedrive"  width=145 border="0"/>
-<img src="https://i.ibb.co/x1wDcwN/chooseimage.png" alt="chooseimage" width=145 border="0"/>
-<img src="https://i.ibb.co/mqHBTDG/riderdone.png" alt="riderdone" width=145 border="0"/>
-<img src="https://i.ibb.co/CP8tJ40/home.png" alt="home" width=145 border="0"/>
-<img src="https://i.ibb.co/XWYc0f3/menu.png" alt="menu" width=145 border="0"/>
+<img src="https://i.ibb.co/q0qGnzR/ridedrive.png" alt="ridedrive"  width=145 border="0"/><img src="https://i.ibb.co/x1wDcwN/chooseimage.png" alt="chooseimage" width=145 border="0"/><img src="https://i.ibb.co/mqHBTDG/riderdone.png" alt="riderdone" width=145 border="0"/><img src="https://i.ibb.co/CP8tJ40/home.png" alt="home" width=145 border="0"/><img src="https://i.ibb.co/XWYc0f3/menu.png" alt="menu" width=145 border="0"/>
 
 
 
