@@ -41,10 +41,16 @@ The participants in the system are called drivers and riders. Drivers have a car
 
 <img src="https://i.ibb.co/GQGcv4p/become-ADriver.png" alt="become-ADriver" width=145 border="0"/><img src="https://i.ibb.co/HFCKNNq/Create-Drive.png" alt="Create-Drive" width=145 border="0"/><img src="https://i.ibb.co/3YcjKgr/SEARCH.png" alt="SEARCH" width=145 border="0"/><img src="https://i.ibb.co/gz5q1pb/Sort.png" alt="Sort" width=145 border="0"/><img src="https://i.ibb.co/FbNmjc5/SEAT.png" alt="SEAT" width=145 border="0"/>
 
-#####     &emsp; History		&emsp;&emsp;&emsp;  Create Ride 	&emsp;&emsp;&emsp;&emsp;	  Search Ride &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sort &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Select Seat
+#####     &emsp;&emsp;&emsp; History		&emsp;&emsp;&emsp;&emsp;&emsp;  Active Drives 	&emsp;&emsp;&emsp;&emsp;	  Drive Panel &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Kick &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Navigate
 
 
-<img src="https://i.ibb.co/Gv8X3hK/history.png" alt="history" width=145 border="0"/><img src="https://i.ibb.co/X2Yxv2S/activedr.png" alt="activedr" width=145 border="0"/><img src="https://i.ibb.co/3YcjKgr/SEARCH.png" alt="SEARCH" width=145 border="0"/><img src="https://i.ibb.co/gz5q1pb/Sort.png" alt="Sort" width=145 border="0"/><img src="https://i.ibb.co/XZ2t4dm/logout.png" alt="logout" width=145 border="0"/>
+<img src="https://i.ibb.co/Gv8X3hK/history.png" alt="history" width=145 border="0"/><img src="https://i.ibb.co/NKQgS5F/act.png" alt="act" width=145 border="0"/><img src="https://i.ibb.co/gtvMpfK/myride.png" alt="myride" width=145 border="0"/><img src="https://i.ibb.co/N1j9nDB/kick.png" alt="kick" width=145 border="0"/><img src="https://i.ibb.co/ZmLQFpq/route.png" alt="route" width=145  border="0"/>
+
+
+#####     &emsp;&emsp;&emsp; History		&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  Rating 	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Log out
+
+
+<img src="https://i.ibb.co/zRVjSqh/history1.png" alt="history1" width=145 border="0"/><img src="https://i.ibb.co/vjM8mL7/rating.png" alt="rating" width=145 border="0"/><img src="https://i.ibb.co/XZ2t4dm/logout.png" alt="logout" width=145 border="0"/>
 
 
 ## Unified Modeling Language
