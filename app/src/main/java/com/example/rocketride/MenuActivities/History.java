@@ -136,7 +136,8 @@ public class History extends AppCompatActivity implements HistoryRideListener {
                                 document.getString("pickup_name"),
                                 document.getString("driver-id"),
                                 document.getString("_id"),
-                                Boolean.TRUE.equals(document.getBoolean("canceled"))
+                                Boolean.TRUE.equals(document.getBoolean("canceled")),
+                                document.getDouble("price")
                         ));
                         System.out.println(expiredRides);
                     }

@@ -215,7 +215,8 @@ public class ActiveDrives extends AppCompatActivity implements ActiveDriveListen
                 document.getString("pickup_name"),
                 document.getString("driver-id"),
                 document.getString("_id"),
-                Boolean.TRUE.equals(document.getBoolean("canceled")));
+                Boolean.TRUE.equals(document.getBoolean("canceled")),
+                document.getDouble("price"));
     }
 
     @Override

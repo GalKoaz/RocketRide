@@ -15,7 +15,9 @@ public class RideModel implements Serializable {
 
 
     // Constructor
-    public RideModel(String source, String destination, String date, String pickup, String driverID, String rideID, boolean canceled) {
+    public RideModel(String source, String destination, String date,
+                     String pickup, String driverID, String rideID,
+                     boolean canceled, double price) {
         this.source = source;
         this.destination = destination;
         this.date = date;
@@ -23,6 +25,7 @@ public class RideModel implements Serializable {
         this.driverID = driverID;
         this.rideID = rideID;
         this.canceled = canceled;
+        this.price = price;
     }
 
     // getters
