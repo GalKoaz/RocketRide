@@ -3,6 +3,7 @@ const {
     getRideByRideID,
     getAliveRidesModel,
     getAliveRidesInDateModel,
+    getExpiredRidesModel,
     addRideModel,
     updateRideAttr
 } = require('../model/Firestore/rideModel');
@@ -19,6 +20,12 @@ const getRide = async (req, res) => {
 }
 
 const getAliveRides = async (req, res) => {
+    // Query url of date, e.g.: /alive?day=x&month=y&year=z
+    if(req.query.day && req.query.month && req.query.year) {
+        await getAliveRidesInDate(req, res);
+        return;
+    }
+    // Regular request: /alive
     const ridesJsonArray = await getAliveRidesModel();
     console.log(JSON.stringify(ridesJsonArray));
     res.status(200).json(ridesJsonArray);
@@ -26,9 +33,19 @@ const getAliveRides = async (req, res) => {
 
 const getAliveRidesInDate = async (req, res) => {
     const queryDateJSON = req.query;
-    console.log(JSON.stringify(queryDateJSON));
-    const ridesJsonArray = await getAliveRidesInDateModel(queryDateJSON);
 
+    // Convert the json values from string to integers
+    Object.keys(queryDateJSON).map(function(key, index) {
+        queryDateJSON[key] = parseInt(queryDateJSON[key]);
+    });
+    const ridesJsonArray = await getAliveRidesInDateModel(queryDateJSON);
+    console.log(ridesJsonArray)
+    res.status(200).json(ridesJsonArray);
+}
+
+const getExpiredRides = async (req, res) => {
+    const ridesJsonArray = await getExpiredRidesModel();
+    console.log(JSON.stringify(ridesJsonArray));
     res.status(200).json(ridesJsonArray);
 }
 
@@ -65,6 +82,7 @@ module.exports = {
     getRide,
     getAliveRides,
     getAliveRidesInDate,
+    getExpiredRides,
     addRide,
     updateRide,
     getRideRiderDetails

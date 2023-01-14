@@ -89,10 +89,28 @@ const getAliveRidesInDateModel = async (dateJSON) => {
     }
 }
 
+// Get all the expired rides
+const getExpiredRidesModel = async () => {
+    const drivesRef = db.collection(collectionName);
+    const queryRef = drivesRef.where('alive', '==', false);
+    try {
+        const querySnapshots = await queryRef.get();
+        // Check if there are any results for the query
+        if (!querySnapshots.empty) {
+            return querySnapshots.docs.map(doc => doc.data());
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error getting document', error);
+    }
+}
+
 module.exports = {
     getRideByRideID,
     updateRideAttr,
     addRideModel,
     getAliveRidesModel,
-    getAliveRidesInDateModel
+    getAliveRidesInDateModel,
+    getExpiredRidesModel
 };
